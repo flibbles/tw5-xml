@@ -1,0 +1,21 @@
+{
+        "description": "Testing & documentation for tw5-transform",
+        "plugins": [
+                "tiddlywiki/jasmine",
+                "tiddlywiki/xmldom"
+        ],
+        "themes": [
+                "tiddlywiki/vanilla",
+                "tiddlywiki/snowwhite"
+        ],
+        "build": {
+                "test": [
+                        "--output", "./docs/",
+                        "--rendertiddler","$:/core/save/all","test.html","text/plain"
+                ],
+                "demo": [
+                        "--output", "./docs/",
+                        "--rendertiddler","$:/core/save/all","index.html","text/plain", "", "publishFilter", "-[prefix[test/]] -$:/plugins/tiddlywiki/jasmine -$:/plugins/tiddlywiki/xmldom"
+                ]
+        }
+}
