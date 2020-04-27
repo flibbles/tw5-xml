@@ -1,0 +1,7 @@
+description: XML file
+extension: .xml
+tags: $:/tags/Exporter
+title: $:/plugins/flibbles/xml/XmlFile
+
+<?xml version="1.0" encoding="UTF-8"?>
+&lt;tiddlers><$list filter=<<__exportFilter__>> >&lt;tiddler><$list variable="field" filter="[<currentTiddler>fields[]]">&lt;<$text text=<<field>> />><$text text={{{[<currentTiddler>get<field>]}}} />&lt;/<$text text=<<field>> />></$list>&lt;/tiddler></$list>&lt;/tiddlers>
