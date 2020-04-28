@@ -4,6 +4,8 @@ Tests the XML deserializer.
 
 \*/
 
+var utils = require("test/utils");
+
 describe("Importer", function() {
 
 const prolog = '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -94,8 +96,13 @@ it("unrelated xml file", function() {
 });
 
 it("malformed xml file", function() {
-	var text = "<dogs>Roofus</wrong";
-	var rtn = importXml(text, {title: "myDogs.xml"});
+	var text = "<dogs>Roofus</wrong",
+		rtn;
+	utils.monkeyPatch(console, "warn", () => null, function() {
+	utils.monkeyPatch(console, "error", () => null, function() {
+		rtn = importXml(text, {title: "myDogs.xml"});
+	});
+	});
 	expect(rtn.length).toBe(1);
 	expect(rtn[0].title).toBe("myDogs.xml");
 	expect(rtn[0].text).toBe(text);

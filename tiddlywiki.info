@@ -2,6 +2,7 @@
         "description": "Testing & documentation for tw5-transform",
         "plugins": [
                 "tiddlywiki/jasmine",
+                "tiddlywiki/highlight",
                 "tiddlywiki/xmldom"
         ],
         "themes": [
@@ -11,7 +12,7 @@
         "build": {
                 "test": [
                         "--output", "./docs/",
-                        "--rendertiddler","$:/core/save/all","test.html","text/plain"
+                        "--rendertiddler","$:/core/save/all","test.html","text/plain", "", "publishFilter", "-$:/plugins/tiddlywiki/xmldom"
                 ],
                 "demo": [
                         "--output", "./docs/",
