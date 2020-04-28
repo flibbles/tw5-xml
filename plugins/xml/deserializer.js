@@ -46,7 +46,7 @@ function deserializeTiddler(domNode) {
 	var node = domNode.firstChild;
 	while (node) {
 		if (node.tagName !== undefined) {
-			if (node.childNodes.length > 1 || node.firstChild.nodeType == node.nodeType) {
+			if (node.childNodes.length != 1 || node.firstChild.nodeType == node.nodeType) {
 				// This field appears to be written as unescaped XML.
 				// Very well. We'll still take it.
 				fields[node.tagName] = node.innerHTML;

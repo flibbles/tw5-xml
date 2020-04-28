@@ -4,7 +4,7 @@ Tests the XML deserializer.
 
 \*/
 
-describe("Deserializer", function() {
+describe("Importer", function() {
 
 const prolog = '<?xml version="1.0" encoding="UTF-8"?>\n';
 
@@ -15,7 +15,7 @@ function importXml(xmlAsText, options) {
 	return wiki.deserializeTiddlers("text/xml",xmlAsText,tiddlerFields,options);
 };
 
-it("deserializes many", function() {
+it("many", function() {
 	var rtn = importXml(`<?xml version="1.0" encoding="ISO-8859-1"?>
 <tiddlers>
  <tiddler>
@@ -36,7 +36,7 @@ it("deserializes many", function() {
 	expect(rtn[1].text).toBe("Body2");
 });
 
-it("deserializes one", function() {
+it("one", function() {
 	var rtn = importXml(`<?xml version="1.0" encoding="ISO-8859-1"?>
  <tiddler>
   <title>Title</title>
@@ -48,22 +48,34 @@ it("deserializes one", function() {
 	expect(rtn[0].text).toBe("Body");
 });
 
-it("deserializes unescaped xml", function() {
+it("unescaped xml", function() {
 	var rtn = importXml(prolog + `<tiddler>
   <title>T1</title><text><A>Atext</A></text></tiddler>`);
  expect(rtn[0].text).toBe("<A>Atext</A>");
 
 	rtn = importXml(prolog + `<tiddler>
   <title>T1</title><text>text first<p>paragraph</p>Text</text></tiddler>`);
- expect(rtn[0].text).toBe("text first<p>paragraph</p>Text");
+	expect(rtn[0].text).toBe("text first<p>paragraph</p>Text");
 });
 
-it("deserializes escaped xml", function() {
+it("escaped xml", function() {
 	var rtn = importXml(prolog + `<tiddler>
   <title>T1</title>
   <text>&lt;A&gt;Text&lt;/A&gt;</text>
  </tiddler>`);
- expect(rtn[0].text).toBe("<A>Text</A>");
+	expect(rtn[0].text).toBe("<A>Text</A>");
+});
+
+it("empty fields", function() {
+	var rtn = importXml(prolog + `<tiddler>
+	<title>MyTitle</title>
+	<text></text>
+	<something></something>
+</tiddler>`);
+	expect(rtn[0].title).toBe("MyTitle");
+	expect(rtn[0].text).toBe("");
+	expect(rtn[0].something).toBe("");
+	expect(rtn[0].anything).toBe(undefined);
 });
 
 });
