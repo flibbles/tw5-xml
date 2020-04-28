@@ -37,6 +37,11 @@ exports["text/xml"] = function(text,fields) {
 		}
 	} else if (elem.tagName === "tiddler") {
 		results.push(deserializeTiddler(elem));
+	} else {
+		var rtn = $tw.utils.extend(Object.create(null), fields);
+		rtn.text = text;
+		rtn.type = "text/xml";
+		results.push(rtn);
 	}
 	return results;
 };

@@ -8,9 +8,9 @@ describe("Importer", function() {
 
 const prolog = '<?xml version="1.0" encoding="UTF-8"?>\n';
 
-function importXml(xmlAsText, options) {
+function importXml(xmlAsText, fields) {
 	var wiki = new $tw.Wiki();
-	var tiddlerFields = { title: "import.xml", type: "text/xml" };
+	var tiddlerFields = Object.assign({ title: "import.xml", type: "text/xml" }, fields);
 	var options = { deserializer: undefined };
 	return wiki.deserializeTiddlers("text/xml",xmlAsText,tiddlerFields,options);
 };
@@ -36,12 +36,12 @@ it("many", function() {
 	expect(rtn[1].text).toBe("Body2");
 });
 
-it("one", function() {
+it("single tiddler", function() {
 	var rtn = importXml(`<?xml version="1.0" encoding="ISO-8859-1"?>
- <tiddler>
-  <title>Title</title>
-  <text>Body</text>
- </tiddler>`);
+<tiddler>
+ <title>Title</title>
+ <text>Body</text>
+</tiddler>`);
 	expect(rtn.length).toBe(1);
 	expect(Object.keys(rtn[0]).length).toBe(2);
 	expect(rtn[0].title).toBe("Title");
@@ -49,8 +49,9 @@ it("one", function() {
 });
 
 it("unescaped xml", function() {
-	var rtn = importXml(prolog + `<tiddler>
-  <title>T1</title><text><A>Atext</A></text></tiddler>`);
+	var rtn = importXml(prolog + `<tiddlers>
+ <tiddler><title>T1</title><text><A>Atext</A></text></tiddler>
+</tiddlers>`);
  expect(rtn[0].text).toBe("<A>Atext</A>");
 
 	rtn = importXml(prolog + `<tiddler>
@@ -59,23 +60,46 @@ it("unescaped xml", function() {
 });
 
 it("escaped xml", function() {
-	var rtn = importXml(prolog + `<tiddler>
+	var rtn = importXml(prolog + `<tiddlers>
+ <tiddler>
   <title>T1</title>
   <text>&lt;A&gt;Text&lt;/A&gt;</text>
- </tiddler>`);
+ </tiddler>
+</tiddlers>`);
 	expect(rtn[0].text).toBe("<A>Text</A>");
 });
 
 it("empty fields", function() {
-	var rtn = importXml(prolog + `<tiddler>
-	<title>MyTitle</title>
-	<text></text>
-	<something></something>
-</tiddler>`);
+	var rtn = importXml(prolog + `<tiddlers>
+	<tiddler>
+		<title>MyTitle</title>
+		<text></text>
+		<something></something>
+	</tiddler>
+</tiddlers>`);
 	expect(rtn[0].title).toBe("MyTitle");
 	expect(rtn[0].text).toBe("");
 	expect(rtn[0].something).toBe("");
 	expect(rtn[0].anything).toBe(undefined);
+});
+
+it("unrelated xml file", function() {
+	var text = prolog + "<dogs><dog>Roofus</dog></dogs>";
+	var rtn = importXml(text, {title: "myDogs.xml", other: "value"});
+	expect(rtn.length).toBe(1);
+	expect(rtn[0].title).toBe("myDogs.xml");
+	expect(rtn[0].text).toBe(text);
+	expect(rtn[0].type).toBe("text/xml");
+	expect(rtn[0].other).toBe("value");
+});
+
+it("malformed xml file", function() {
+	var text = "<dogs>Roofus</wrong";
+	var rtn = importXml(text, {title: "myDogs.xml"});
+	expect(rtn.length).toBe(1);
+	expect(rtn[0].title).toBe("myDogs.xml");
+	expect(rtn[0].text).toBe(text);
+	expect(rtn[0].type).toBe("text/xml");
 });
 
 });
