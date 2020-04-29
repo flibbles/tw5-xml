@@ -34,13 +34,16 @@ XslWidget.prototype.execute = function() {
 	var DOMParser = xmlDom.DOMParser;
 	this.foreach = this.getAttribute("for-each");
 	this.variableName = this.getAttribute("variable", "xmlNode");
-	this.xmlTitle = this.getAttribute("tiddler",this.getVariable("currentTiddler"));
+	//this.xmlTitle = this.getAttribute("tiddler",this.getVariable("currentTiddler"));
+	this.xmlTitle = this.getVariable("currentTiddler");
 	var tiddler = this.wiki.getTiddler(this.xmlTitle);
 	var members = [];
 	if (tiddler) {
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(tiddler.fields.text, "text/xml");
-		var iterator = doc.evaluate(this.foreach, doc.documentElement, null, xmlDom.XPathResult.ANY_TYPE, null );
+		var contextVariable = this.variables["xsl-node-state"];
+		var contextNode = contextVariable ? contextVariable.node : doc.documentElement;
+		var iterator = doc.evaluate(this.foreach, contextNode, null, xmlDom.XPathResult.ANY_TYPE, null );
 		var node = iterator.iterateNext();
 		while (node) {
 			members.push(this.makeItemTemplate(node));
@@ -68,8 +71,9 @@ XslWidget.prototype.makeItemTemplate = function(node) {
 			]}]}];
 		}
 	}
+
 	// Return the list item
-	return {type: "listitem", itemTitle: node.textContent, variableName: this.variableName, children: templateTree};
+	return {type: "xslnode", node: node, variableName: this.variableName, children: templateTree};
 };
 
 XslWidget.prototype.refresh = function(changedTiddlers) {
@@ -81,5 +85,42 @@ XslWidget.prototype.refresh = function(changedTiddlers) {
 		return this.refreshChildren(changedTiddlers);
 	}
 };
+
+/*
+Widget exists for each loop of XslWidget. Holds current state of that iteration.
+*/
+var XslNodeWidget = function(parseTreeNode,options) {
+	this.initialise(parseTreeNode,options);
+};
+
+XslNodeWidget.prototype = new Widget();
+
+XslNodeWidget.prototype.render = function(parent,nextSibling) {
+	this.parentDomNode = parent;
+	this.computeAttributes();
+	this.execute();
+	this.renderChildren(parent,nextSibling);
+};
+
+/*
+Compute the internal state of the widget
+*/
+XslNodeWidget.prototype.execute = function() {
+	// Set the current list item title
+	this.setVariable(this.parseTreeNode.variableName,this.parseTreeNode.node.textContent);
+	this.setVariable("xsl-node-state",this.parseTreeNode.node.localName);
+	this.variables["xsl-node-state"].node = this.parseTreeNode.node;
+	// Construct the child widgets
+	this.makeChildWidgets();
+};
+
+/*
+Selectively refreshes the widget if needed. Returns true if the widget or any of its children needed re-rendering
+*/
+XslNodeWidget.prototype.refresh = function(changedTiddlers) {
+	return this.refreshChildren(changedTiddlers);
+};
+
+exports.xslnode = XslNodeWidget;
 
 })();
