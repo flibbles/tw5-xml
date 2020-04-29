@@ -53,4 +53,17 @@ it("can nest for-each loops", function() {
 	expect(test).toBe("<p>\nA\nB</p><p>\nC</p>");
 });
 
+it("can nest across different contexts", function() {
+	var wiki = new $tw.Wiki();
+	wiki.addTiddlers([
+		{title: "A", type: "text/xml",
+		 text: "<subdocs><subdoc attr='vA1' /><subdoc attr='vA2' /></subdocs>"},
+		{title: "B", type: "text/xml",
+		 text: "<subdocs><subdoc attr='vB' /></subdocs>"}]);
+	var text = transform("<docs><doc>A</doc><doc>B</doc></docs>",
+		"<$xsl for-each='/docs/doc'>\n\n<$tiddler tiddler=<<xmlNode>>><$xsl for-each='./subdoc/@attr'>\n<<xmlNode>></$xsl></$tiddler></$xsl>",
+		{wiki: wiki});
+	expect(text).toBe("<p>\nvA1\nvA2</p><p>\nvB</p>");
+});
+
 });
