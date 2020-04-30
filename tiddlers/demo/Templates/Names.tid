@@ -1,0 +1,10 @@
+title: Template/Names
+
+!! All names in file
+
+<ul>
+<$xsl for-each="//name">
+
+<li><<xmlNode>></li>
+</$xsl>
+</ul>

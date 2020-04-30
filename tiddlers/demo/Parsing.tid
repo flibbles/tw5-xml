@@ -4,3 +4,7 @@ title: Parsing
 //TW-XML// introduces a parser to properly display XML tiddlers. This parser integrates with //tiddlywiki/highlight// to produce the syntax highlighting you see below.
 
 <<split Parsing/Simple.xml>>
+
+If an xml document has a `<?tiddlywiki?>` processing instruction, the template specified in that is used as a template to render the tiddler by default.
+
+<<split Parsing/Process.xml>>

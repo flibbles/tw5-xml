@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?tiddlywiki template="Templates/Names"?>
+<directory>
+  <contact>
+    <name>Martha</name>
+    <address>145 Martha Lane</address>
+  </contact>
+  <contact>
+    <name>Johnny</name>
+    <address>Somewhere else</address>
+  </contact>
+</directory>
