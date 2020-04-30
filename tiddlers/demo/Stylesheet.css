@@ -1,0 +1,31 @@
+.xml-transform-text {
+        padding: 0px;
+}
+
+.xml-transform-text pre {
+        padding: 6px;
+        margin: 0px;
+        border: none;
+}
+
+.xml-transform-source {
+        float: left;
+        width: 49%;
+        border: 1px solid #cccccc;
+        margin-top: 0px;
+        margin-bottom: 0px;
+}
+
+.xml-transform-preview {
+        float: right;
+        width: 49%;
+        margin-left: 0px;
+        margin-right: 0px;
+        border: 1px solid #cccccc;
+        padding: 3px;
+}
+
+.xml-transform-description {
+        clear: both;
+        padding-top: 5px;
+}

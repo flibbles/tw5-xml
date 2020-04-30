@@ -1,0 +1,11 @@
+caption: simple
+tags: Transform
+title: Transform/Simple.tid
+
+!! Dog list
+
+<ul>
+<$xsl variable="name" for-each="/dogs/dog/@name">
+<li><<name>></li>
+</$xsl>
+</ul>

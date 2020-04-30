@@ -1,0 +1,7 @@
+title: $:/
+
+DefaultTiddlers: [[XML for Tiddlywiki]] Features
+SiteTitle: TiddlyXML
+SiteSubtitle: XML features for Tiddlywiki 
+
+themes/tiddlywiki/vanilla/options/sidebarlayout: fluid-fixed

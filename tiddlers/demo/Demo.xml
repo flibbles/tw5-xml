@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<dogs>
+	<dog name="Roofus">
+		<trick>Shake hands</trick>
+		<trick>Speak</trick>
+	</dog>
+	<dog name="Splinter">
+		<trick>Fetch</trick>
+	</dog>
+</dogs>

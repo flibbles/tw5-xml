@@ -1,0 +1,9 @@
+tags: Features
+title: Transform
+
+Through the `<$xsl>` widget, you can iterate through and extract data from XML tiddlers using XPath. Click a tab to see various templates parsing the XML document using a variety of techniques.
+
+<$macrocall $name="tabs"
+            tabsList="[tag[Transform]]"
+            default="Demo.xml"
+            template="Templates/Transform" />
