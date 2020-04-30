@@ -19,7 +19,8 @@ var XmlParser = function(type,text,options) {
 			type: "transclude",
 			attributes: {
 				tiddler: {type: "string", value: template}
-			}
+			},
+			isBlock: true
 		}];
 	} else {
 		this.tree = [{
