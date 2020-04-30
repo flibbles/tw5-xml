@@ -1,0 +1,6 @@
+tags: Features
+title: Parsing
+
+//TW-XML// introduces a parser to properly display XML tiddlers. This parser integrates with //tiddlywiki/highlight// to produce the syntax highlighting you see below.
+
+<<split Parsing/Simple.xml """{{Parsing/Simple.xml}}""">>

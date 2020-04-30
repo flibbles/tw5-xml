@@ -1,0 +1,18 @@
+tags: Features
+title: Import/Export
+
+//tw-xml// comes with importing and exporting to XML. Bulk files can be exported to xml. The files's will come out like:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<tiddlers>
+ <tiddler>
+  <title>MyTiddler1</title>
+  <text>Escaped text content</text>
+  <!--...other fields -->
+ </tiddler>
+ <!-- ...other tiddlers -->
+</tiddlers>
+```
+
+These same sort of files can be imported as well. If an XML file is uploaded which doesn't have `<tiddlers>` as a root element, it'll be uploaded as-is as an XML file with the correct type.

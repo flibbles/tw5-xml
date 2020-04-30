@@ -2,16 +2,13 @@ title: Templates/Transform
 
 !! <$link>{{!!caption}}</$link>
 
-@@.xml-transform-source
-<div class="xml-transform-text"><pre><$view tiddler=<<currentTab>>/></pre></div>
-@@
+<$macrocall
+	$name="split"
+	left-code=<<currentTab>>
+	preview="""<$tiddler tiddler="Demo.xml" >
 
-<div class="xml-transform-preview">
+<$transclude tiddler=<<currentTab>> />
 
-<$tiddler tiddler="Demo.xml" ><$transclude tiddler=<<currentTab>> /></$tiddler>
+</$tiddler>""" />
 
-</div>
-
-@@.xml-transform-description
 <$transclude tiddler=<<currentTab>> field="description" />
-@@

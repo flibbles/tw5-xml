@@ -17,12 +17,20 @@ function transform(xml, template, options) {
 };
 
 it("works with or without prolog", function() {
-	var template = "<$xsl for-each='/dogs/dog/@name'><<xmlNode>></$xsl>";
+	var template = "<$xsl for-each='dogs/dog/@name'><<xmlNode>></$xsl>";
 	var text = transform("<dogs><dog name='Dots'/></dogs>", template);
 	expect(text).toBe("<p>Dots</p>");
 	text = transform(prolog + "<dogs><dog name='Dots'/></dogs>", template);
 	expect(text).toBe("<p>Dots</p>");
+});
 
+it('starts at root element', function() {
+	var xml = "<dogs><dog name='Dots'/></dogs>";
+	var text;
+	text = transform(xml,"<$xsl for-each='/dogs/dog/@name'><<xmlNode>></$xsl>");
+	expect(text).toBe("<p>Dots</p>");
+	text = transform(xml, "<$xsl for-each='dogs/dog/@name'><<xmlNode>></$xsl>");
+	expect(text).toBe("<p>Dots</p>");
 });
 
 it("block vs inline", function() {
@@ -61,7 +69,7 @@ it("can nest across different contexts", function() {
 		{title: "B", type: "text/xml",
 		 text: "<subdocs><subdoc attr='vB' /></subdocs>"}]);
 	var text = transform("<docs><doc>A</doc><doc>B</doc></docs>",
-		"<$xsl for-each='/docs/doc'>\n\n<$tiddler tiddler=<<xmlNode>>><$xsl for-each='./subdoc/@attr'>\n<<xmlNode>></$xsl></$tiddler></$xsl>",
+		"<$xsl for-each='/docs/doc'>\n\n<$tiddler tiddler=<<xmlNode>>><$xsl for-each='subdocs/subdoc/@attr'>\n<<xmlNode>></$xsl></$tiddler></$xsl>",
 		{wiki: wiki});
 	expect(text).toBe("<p>\nvA1\nvA2</p><p>\nvB</p>");
 });

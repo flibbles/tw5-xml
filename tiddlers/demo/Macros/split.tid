@@ -1,0 +1,16 @@
+tags: $:/tags/Macro
+title: Macros/split
+
+\define split(left-code, preview)
+@@.xml-left-source
+<div class="xml-left-text"><pre><$view tiddler=<<__left-code__>>/></pre></div>
+@@
+
+<div class="xml-right">
+
+$preview$
+
+</div>
+
+<div class="xml-clear" />
+\end

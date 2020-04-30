@@ -42,7 +42,7 @@ XslWidget.prototype.execute = function() {
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(tiddler.fields.text, "text/xml");
 		var contextVariable = this.variables[this.variableContext()];
-		var contextNode = contextVariable ? contextVariable.node : doc.documentElement;
+		var contextNode = contextVariable ? contextVariable.node : doc;
 		var iterator = doc.evaluate(this.foreach, contextNode, null, xmlDom.XPathResult.ANY_TYPE, null );
 		var node = iterator.iterateNext();
 		while (node) {

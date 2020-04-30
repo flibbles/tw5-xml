@@ -5,5 +5,5 @@ Through the `<$xsl>` widget, you can iterate through and extract data from XML t
 
 <$macrocall $name="tabs"
             tabsList="[tag[Transform]]"
-            default="Demo.xml"
+            default="Transform/Simple"
             template="Templates/Transform" />

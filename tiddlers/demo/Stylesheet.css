@@ -1,14 +1,14 @@
-.xml-transform-text {
+.xml-left-text {
         padding: 0px;
 }
 
-.xml-transform-text pre {
+.xml-left-text pre {
         padding: 6px;
         margin: 0px;
         border: none;
 }
 
-.xml-transform-source {
+.xml-left-source {
         float: left;
         width: 49%;
         border: 1px solid #cccccc;
@@ -16,16 +16,26 @@
         margin-bottom: 0px;
 }
 
-.xml-transform-preview {
+.xml-right {
         float: right;
         width: 49%;
         margin-left: 0px;
         margin-right: 0px;
         border: 1px solid #cccccc;
-        padding: 3px;
+        padding: 0px;
 }
 
-.xml-transform-description {
+.xml-right > * {
+	margin-left: 3px;
+}
+
+.xml-right > pre {
+        padding: 6px;
+        margin: 0px;
+        border: none;
+}
+
+.xml-clear {
         clear: both;
         padding-top: 5px;
 }
