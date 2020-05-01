@@ -109,4 +109,12 @@ it("malformed xml file", function() {
 	expect(rtn[0].type).toBe("text/xml");
 });
 
+it("can include processing instructions", function() {
+	var text = "<tiddlers><tiddler><title>My Dogs</title><text><?tiddlywiki template='test'?><dog>Roofus</dog></text></tiddler></tiddlers>";
+	var rtn = importXml(text);
+	expect(rtn.length).toBe(1);
+	expect(rtn[0].title).toBe("My Dogs");
+	expect(rtn[0].text).toBe("<?tiddlywiki template='test'?><dog>Roofus</dog>");
+});
+
 });
