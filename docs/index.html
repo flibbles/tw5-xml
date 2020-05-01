@@ -197,6 +197,8 @@ Error message and password prompt
 
 <li>Transform</li>
 
+<li>Transform/Nested</li>
+
 <li>Transform/Simple</li>
 
 <li>Versions</li>
@@ -10004,6 +10006,21 @@ These templates all modify [[this XML file|Demo.xml]].
             tabsList=&quot;[tag[Transform]]&quot;
             default=&quot;Transform/Simple&quot;
             template=&quot;Templates/Transform&quot; /&gt;
+</pre>
+</div>
+<div caption="nested" description="`&lt;$xsl&gt;` elements can be nested. Inner `&lt;$xsl&gt;` widgets will start their XPath queries from the node set by the outer widget's context. This allows for nested iteration." list-before="" tags="Transform" title="Transform/Nested">
+<pre>!! Dog list
+
+&lt;$xsl for-each=&quot;/dogs/dog&quot;&gt;
+
+!!! &lt;$xsl for-each=&quot;@name&quot; variable=&quot;name&quot;&gt;&lt;&lt;name&gt;&gt;&lt;/$xsl&gt;
+
+&lt;ul&gt;
+ &lt;$xsl variable=&quot;trick&quot; for-each=&quot;./trick&quot;&gt;
+  &lt;li&gt;&lt;&lt;trick&gt;&gt;&lt;/li&gt;
+ &lt;/$xsl&gt;
+&lt;/ul&gt;
+&lt;/$xsl&gt;
 </pre>
 </div>
 <div caption="simple" list-before="" tags="Transform" title="Transform/Simple">
