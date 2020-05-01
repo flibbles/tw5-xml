@@ -15,6 +15,7 @@
 			"--rendertiddler","$:/core/save/all","test.html","text/plain", "", "publishFilter", "-$:/plugins/tiddlywiki/xmldom"
 		],
 		"demo": [
+			"--setfield", "$:/plugins/flibbles/xml", "created", "Templates/release-date", "text/plain",
 			"--output", "./docs/",
 			"--rendertiddler","$:/core/save/all","index.html","text/plain", "", "publishFilter", "-[prefix[test/]] -$:/plugins/tiddlywiki/jasmine -$:/plugins/tiddlywiki/xmldom"
 		]

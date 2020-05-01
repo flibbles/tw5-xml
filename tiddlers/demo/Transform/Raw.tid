@@ -1,6 +1,0 @@
-caption: (raw)
-description: This template simple transcludes the demo XML. With this plugin, any raw XML files render as block text. tw-xml also integrates with `tiddlywiki/highlight` plugin to give the syntax highlighting that you see here.<br>Click <$link>here</$link> to open it directly.
-tags: Transform
-title: Transform/Raw
-
-{{}}
