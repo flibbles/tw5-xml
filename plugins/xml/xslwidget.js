@@ -39,10 +39,17 @@ XslWidget.prototype.execute = function() {
 	var tiddler = this.wiki.getTiddler(this.xmlTitle);
 	var members = [];
 	if (tiddler) {
-		var parser = new DOMParser();
-		var doc = parser.parseFromString(tiddler.fields.text, "text/xml");
 		var contextVariable = this.variables[this.variableContext()];
-		var contextNode = contextVariable ? contextVariable.node : doc;
+		var contextNode, doc;
+		if (contextVariable) {
+			contextNode = contextVariable.node;
+			doc = contextNode.ownerDocument;
+		} else {
+			var contextNode = contextVariable ? contextVariable.node : doc;
+			var parser = new DOMParser();
+			doc = parser.parseFromString(tiddler.fields.text, "text/xml");
+			contextNode = doc;
+		}
 		var iterator = doc.evaluate(this.foreach, contextNode, null, xmlDom.XPathResult.ANY_TYPE, null );
 		var node = iterator.iterateNext();
 		while (node) {
