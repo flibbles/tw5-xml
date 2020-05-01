@@ -33,6 +33,13 @@ it('starts at root element', function() {
 	expect(text).toBe("<p>Dots</p>");
 });
 
+it('deals with illegal xpath gracefully', function() {
+	var xml = "<dogs />";
+	var wiki = new $tw.Wiki();
+	var text = transform("<dogs/>", "<$xsl for-each='/dogs/' />", {wiki: wiki});
+	expect(text).toBe('<p><span class="tc-error">Invalid XPath expression: /dogs/</span></p>');
+});
+
 it("block vs inline", function() {
 	var xml = "<root><elem>A</elem><elem>B</elem><elem>C</elem></root>";
 	var template = "<$xsl for-each='/root/elem'><<xmlNode>></$xsl>";

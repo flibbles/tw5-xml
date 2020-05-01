@@ -50,11 +50,19 @@ XslWidget.prototype.execute = function() {
 			doc = parser.parseFromString(tiddler.fields.text, "text/xml");
 			contextNode = doc;
 		}
-		var iterator = doc.evaluate(this.foreach, contextNode, null, xmlDom.XPathResult.ANY_TYPE, null );
-		var node = iterator.iterateNext();
-		while (node) {
-			members.push(this.makeItemTemplate(node));
-			node = iterator.iterateNext();
+		try {
+			var iterator = doc.evaluate(this.foreach, contextNode, null, xmlDom.XPathResult.ANY_TYPE, null );
+			var node = iterator.iterateNext();
+			while (node) {
+				members.push(this.makeItemTemplate(node));
+				node = iterator.iterateNext();
+			}
+		} catch(e) {
+			members.push({type: "element", tag: "span", attributes: {
+				"class": {type: "string", value: "tc-error"}
+			}, children: [
+				{type: "text", text: $tw.language.getString("flibbles/xml/Error/InvalidXPath", {variables: {xpath: this.foreach}})}
+			]});
 		}
 	}
 	this.makeChildWidgets(members);
