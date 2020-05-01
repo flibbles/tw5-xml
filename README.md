@@ -7,3 +7,5 @@ This plugin provides several tools which allow for manipulating and parsing XML 
 * Allows rendering of XML tiddlers, as well as the ability to directly render XML files using templates instead of showing their raw data.
 
 This plugin is a work in progress. It's not ready to be used yet.
+
+For a demonstration, and for documentation, see the [tiddlywiki demo site](https://flibbles.github.io/tw5-xml/).
