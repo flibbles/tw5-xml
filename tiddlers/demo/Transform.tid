@@ -1,7 +1,7 @@
 tags: Features
 title: Transform
 
-Through the `<$xsl>` widget, you can iterate through and extract data from XML tiddlers using XPath. Click a tab to see various templates parsing the XML document using a variety of techniques.
+Through the `<$xpath>` widget, you can iterate through and extract data from XML tiddlers using XPath. Click a tab to see various templates parsing the XML document using a variety of techniques.
 
 These templates all modify [[this XML file|Demo.xml]].
 

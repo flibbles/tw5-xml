@@ -1,18 +1,18 @@
 caption: nested
-description: `<$xsl>` elements can be nested. Inner `<$xsl>` widgets will start their XPath queries from the node set by the outer widget's context. This allows for nested iteration.
+description: `<$xpath>` elements can be nested. Inner `<$xpath>` widgets will start their XPath queries from the node set by the outer widget's context. This allows for nested iteration.
 list-before: 
 tags: Transform
 title: Transform/Nested
 
 !! Dog list
 
-<$xsl for-each="/dogs/dog">
+<$xpath for-each="/dogs/dog">
 
-!!! <$xsl for-each="@name" variable="name"><<name>></$xsl>
+!!! <$xpath for-each="@name" variable="name"><<name>></$xpath>
 
 <ul>
- <$xsl variable="trick" for-each="./trick">
+ <$xpath variable="trick" for-each="./trick">
   <li><<trick>></li>
- </$xsl>
+ </$xpath>
 </ul>
-</$xsl>
+</$xpath>

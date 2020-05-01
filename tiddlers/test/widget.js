@@ -17,7 +17,7 @@ function transform(xml, template, options) {
 };
 
 it("works with or without prolog", function() {
-	var template = "<$xsl for-each='dogs/dog/@name'><<xmlNode>></$xsl>";
+	var template = "<$xpath for-each='dogs/dog/@name'><<xmlNode>></$xpath>";
 	var text = transform("<dogs><dog name='Dots'/></dogs>", template);
 	expect(text).toBe("<p>Dots</p>");
 	text = transform(prolog + "<dogs><dog name='Dots'/></dogs>", template);
@@ -27,44 +27,44 @@ it("works with or without prolog", function() {
 it('starts at root element', function() {
 	var xml = "<dogs><dog name='Dots'/></dogs>";
 	var text;
-	text = transform(xml,"<$xsl for-each='/dogs/dog/@name'><<xmlNode>></$xsl>");
+	text = transform(xml,"<$xpath for-each='/dogs/dog/@name'><<xmlNode>></$xpath>");
 	expect(text).toBe("<p>Dots</p>");
-	text = transform(xml, "<$xsl for-each='dogs/dog/@name'><<xmlNode>></$xsl>");
+	text = transform(xml, "<$xpath for-each='dogs/dog/@name'><<xmlNode>></$xpath>");
 	expect(text).toBe("<p>Dots</p>");
 });
 
 it('deals with illegal xpath gracefully', function() {
 	var xml = "<dogs />";
 	var wiki = new $tw.Wiki();
-	var text = transform("<dogs/>", "<$xsl for-each='/dogs/' />", {wiki: wiki});
+	var text = transform("<dogs/>", "<$xpath for-each='/dogs/' />", {wiki: wiki});
 	expect(text).toBe('<p><span class="tc-error">Invalid XPath expression: /dogs/</span></p>');
 });
 
 it("block vs inline", function() {
 	var xml = "<root><elem>A</elem><elem>B</elem><elem>C</elem></root>";
-	var template = "<$xsl for-each='/root/elem'><<xmlNode>></$xsl>";
+	var template = "<$xpath for-each='/root/elem'><<xmlNode>></$xpath>";
 	var text;
-	text = transform(xml, "<$xsl for-each='/root/elem'>\n<<xmlNode>></$xsl>");
+	text = transform(xml, "<$xpath for-each='/root/elem'>\n<<xmlNode>></$xpath>");
 	expect(text).toBe("<p>\nA\nB\nC</p>");
-	text = transform(xml, "<$xsl for-each='/root/elem'>\n\n<<xmlNode>></$xsl>");
+	text = transform(xml, "<$xpath for-each='/root/elem'>\n\n<<xmlNode>></$xpath>");
 	expect(text).toBe("<p>A</p><p>B</p><p>C</p>");
 });
 
 it("can for-each loop", function() {
 	var text = transform(
 		prolog + "<dogs><dog>Ruffus</dog><dog>Skippy</dog></dogs>",
-		"<$xsl for-each='/dogs/dog'>(<<xmlNode>>)</$xsl>");
+		"<$xpath for-each='/dogs/dog'>(<<xmlNode>>)</$xpath>");
 	expect(text).toBe("<p>(Ruffus)(Skippy)</p>");
 
 	text = transform(
 		"<dogs><dog name='Ruffus' /><dog name='Marley' /></dogs>",
-		"<$xsl variable='name' for-each='/dogs/dog/@name'><<name>> </$xsl>");
+		"<$xpath variable='name' for-each='/dogs/dog/@name'><<name>> </$xpath>");
 	expect(text).toBe("<p>Ruffus Marley </p>");
 });
 
 it("can nest for-each loops", function() {
 	var test = transform("<dogs><dog><trick name='A'/><trick name='B'/></dog><dog><trick name='C'/></dog></dogs>",
-		"<$xsl for-each='/dogs/dog'>\n\n<$xsl variable='trick' for-each='./trick/@name'>\n<<trick>></$xsl></$xsl>");
+		"<$xpath for-each='/dogs/dog'>\n\n<$xpath variable='trick' for-each='./trick/@name'>\n<<trick>></$xpath></$xpath>");
 	expect(test).toBe("<p>\nA\nB</p><p>\nC</p>");
 });
 
@@ -76,7 +76,7 @@ it("can nest across different contexts", function() {
 		{title: "B", type: "text/xml",
 		 text: "<subdocs><subdoc attr='vB' /></subdocs>"}]);
 	var text = transform("<docs><doc>A</doc><doc>B</doc></docs>",
-		"<$xsl for-each='/docs/doc'>\n\n<$tiddler tiddler=<<xmlNode>>><$xsl for-each='subdocs/subdoc/@attr'>\n<<xmlNode>></$xsl></$tiddler></$xsl>",
+		"<$xpath for-each='/docs/doc'>\n\n<$tiddler tiddler=<<xmlNode>>><$xpath for-each='subdocs/subdoc/@attr'>\n<<xmlNode>></$xpath></$tiddler></$xpath>",
 		{wiki: wiki});
 	expect(text).toBe("<p>\nvA1\nvA2</p><p>\nvB</p>");
 });

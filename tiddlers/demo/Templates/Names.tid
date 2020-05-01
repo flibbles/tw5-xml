@@ -3,7 +3,7 @@ title: Templates/Names
 !! All names in file
 
 <ul>
- <$xsl for-each="//name">
+ <$xpath for-each="//name">
   <li><<xmlNode>></li>
-  </$xsl>
+  </$xpath>
 </ul>

@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/flibbles/xml/xslwidget.js
+title: $:/plugins/flibbles/xml/widgets/xpath.js
 type: application/javascript
 module-type: widget
 
@@ -14,23 +14,23 @@ xslt widget
 
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
 
-var XslWidget = function(parseTreeNode,options) {
+var XPathWidget = function(parseTreeNode,options) {
 	this.initialise(parseTreeNode,options);
 };
 
-XslWidget.prototype = new Widget();
+XPathWidget.prototype = new Widget();
 
-exports.xsl = XslWidget;
+exports.xpath = XPathWidget;
 
-XslWidget.prototype.render = function(parent,nextSibling) {
+XPathWidget.prototype.render = function(parent,nextSibling) {
 	this.parentDomNode = parent;
 	this.computeAttributes();
 	this.execute();
 	this.renderChildren(parent,nextSibling);
 };
 
-XslWidget.prototype.execute = function() {
-	var xmlDom = require("./xmldom");
+XPathWidget.prototype.execute = function() {
+	var xmlDom = require("../xmldom");
 	var DOMParser = xmlDom.DOMParser;
 	this.foreach = this.getAttribute("for-each");
 	this.variableName = this.getAttribute("variable", "xmlNode");
@@ -71,7 +71,7 @@ XslWidget.prototype.execute = function() {
 /*
 Compose the template for a list item
 */
-XslWidget.prototype.makeItemTemplate = function(node) {
+XPathWidget.prototype.makeItemTemplate = function(node) {
 	var templateTree;
 	// Compose the transclusion of the template
 	if(false) {
@@ -91,11 +91,11 @@ XslWidget.prototype.makeItemTemplate = function(node) {
 	return {type: "xslnode", contextName: this.variableContext(), node: node, variableName: this.variableName, children: templateTree};
 };
 
-XslWidget.prototype.variableContext = function() {
+XPathWidget.prototype.variableContext = function() {
 	return "xml-node-state-" + this.xmlTitle;
 };
 
-XslWidget.prototype.refresh = function(changedTiddlers) {
+XPathWidget.prototype.refresh = function(changedTiddlers) {
 	var changedAttributes = this.computeAttributes();
 	if(changedAttributes.xslt || changedAttributes.tiddler || changedTiddlers[this.tiddler]) {
 		this.refreshSelf();
@@ -106,7 +106,8 @@ XslWidget.prototype.refresh = function(changedTiddlers) {
 };
 
 /*
-Widget exists for each loop of XslWidget. Holds current state of that iteration.
+Widget exists for each loop of XPathWidget. Holds current state of
+that iteration.
 */
 var XslNodeWidget = function(parseTreeNode,options) {
 	this.initialise(parseTreeNode,options);

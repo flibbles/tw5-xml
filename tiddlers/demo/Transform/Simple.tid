@@ -6,7 +6,7 @@ title: Transform/Simple
 !! Dog list
 
 <ul>
-<$xsl variable="name" for-each="/dogs/dog/@name">
+<$xpath variable="name" for-each="/dogs/dog/@name">
 <li><<name>></li>
-</$xsl>
+</$xpath>
 </ul>
