@@ -1,0 +1,3 @@
+created: 20200501005833080
+
+* Fixed issue where Firefox would fail with nested XPath
