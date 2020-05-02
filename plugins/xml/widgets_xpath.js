@@ -33,6 +33,7 @@ XPathWidget.prototype.execute = function() {
 	var xmlDom = require("../xmldom");
 	var DOMParser = xmlDom.DOMParser;
 	this.foreach = this.getAttribute("for-each");
+	this.valueof = this.getAttribute("value-of");
 	this.variableName = this.getAttribute("variable", "xmlNode");
 	//this.xmlTitle = this.getAttribute("tiddler",this.getVariable("currentTiddler"));
 	this.xmlTitle = this.getVariable("currentTiddler");
@@ -50,12 +51,24 @@ XPathWidget.prototype.execute = function() {
 			doc = parser.parseFromString(tiddler.fields.text, "text/xml");
 			contextNode = doc;
 		}
+		var resolver = function(nsPrefix) {
+			return "http://dognet.com";
+		}
+		resolver.lookupNamespaceURI = resolver;
+		//var resolver = doc.createNSResolver(doc.documentElement);
 		try {
-			var iterator = doc.evaluate(this.foreach, contextNode, null, xmlDom.XPathResult.ANY_TYPE, null );
-			var node = iterator.iterateNext();
-			while (node) {
-				members.push(this.makeItemTemplate(node));
-				node = iterator.iterateNext();
+			if (this.valueof) {
+				var value = doc.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE);
+				if (value) {
+					members.push({type: "text", text: value.stringValue});
+				}
+			} else {
+				var iterator = doc.evaluate(this.foreach, contextNode, resolver, xmlDom.XPathResult.ANY_TYPE, null );
+				var node = iterator.iterateNext();
+				while (node) {
+					members.push(this.makeItemTemplate(node));
+					node = iterator.iterateNext();
+				}
 			}
 		} catch(e) {
 			members.push({type: "element", tag: "span", attributes: {

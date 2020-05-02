@@ -62,10 +62,28 @@ it("can for-each loop", function() {
 	expect(text).toBe("<p>Ruffus Marley </p>");
 });
 
+it('can get value of', function() {
+	var text = transform("<dogs><dog>Roofus</dog><dog>Skippy</dog></dogs>",
+		"<$xpath value-of='/dogs/dog' />");
+	expect(text).toBe("<p>Roofus</p>");
+});
+
 it("can nest for-each loops", function() {
 	var test = transform("<dogs><dog><trick name='A'/><trick name='B'/></dog><dog><trick name='C'/></dog></dogs>",
 		"<$xpath for-each='/dogs/dog'>\n\n<$xpath variable='trick' for-each='./trick/@name'>\n<<trick>></$xpath></$xpath>");
 	expect(test).toBe("<p>\nA\nB</p><p>\nC</p>");
+});
+
+it("can handle specified namespaces", function() {
+	var text = "<dogs xmlns:dg='http://dognet.com'><dg:dog>Roofus</dg:dog></dogs>";
+	var rtn = transform(text, "<$xpath value-of='//dg:dog' />");
+	expect(rtn).toBe("<p>Roofus</p>");
+});
+
+it("can handle default namespaces", function() {
+	var text = "<dogs xmlns='http://dognet.com'><dog>Roofus</dog></dogs>";
+	var rtn = transform(text, "<$xpath value-of='/ns:dogs/ns:dog' />");
+	expect(rtn).toBe("<p>Roofus</p>");
 });
 
 it("can nest across different contexts", function() {

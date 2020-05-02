@@ -42,7 +42,12 @@ if ($tw.browser) {
 				return buffer.join('');
 			}
 		});
-	Object.getPrototypeOf(doc).evaluate = function(xpathExpression, contextNode, namespaceResolver, resultType, result) {
+	var docPrototype = Object.getPrototypeOf(doc);
+	docPrototype.evaluate = function(xpathExpression, contextNode, namespaceResolver, resultType, result) {
 		return xpath.evaluate(xpathExpression, contextNode, namespaceResolver, resultType, result);
 	};
+	docPrototype.createNSResolver = function(node) {
+		return xpath.createNSResolver(node);
+	};
 }
+
