@@ -1,3 +1,4 @@
 title: $:/language/flibbles/xml/
 
-Error/InvalidXPath: Invalid XPath expression: <<xpath>>
+Error/XPath/SyntaxError: Invalid XPath expression: <<xpath>>
+Error/XPath/NamespaceError: Could not resolve namespaces in XPath expression: <<xpath>>

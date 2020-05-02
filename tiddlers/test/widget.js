@@ -34,10 +34,11 @@ it('starts at root element', function() {
 });
 
 it('deals with illegal xpath gracefully', function() {
-	var xml = "<dogs />";
-	var wiki = new $tw.Wiki();
-	var text = transform("<dogs/>", "<$xpath for-each='/dogs/' />", {wiki: wiki});
+	var text = transform("<dogs/>", "<$xpath for-each='/dogs/' />");
 	expect(text).toBe('<p><span class="tc-error">Invalid XPath expression: /dogs/</span></p>');
+
+	text = transform("<dogs/>", "<$xpath value-of='/bad:dogs' />");
+	expect(text).toBe('<p><span class="tc-error">Could not resolve namespaces in XPath expression: /bad:dogs</span></p>');
 });
 
 it("block vs inline", function() {

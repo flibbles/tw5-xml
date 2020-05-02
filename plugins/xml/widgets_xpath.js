@@ -65,29 +65,63 @@ XPathWidget.prototype.execute = function() {
 			return variable ? variable.value : docResolver.lookupNamespaceURI(nsPrefix);
 		}
 		resolver.lookupNamespaceURI = resolver;
-		try {
-			if (this.valueof) {
+		if (this.valueof) {
+			try {
 				var value = doc.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE);
 				if (value) {
 					members.push({type: "text", text: value.stringValue});
 				}
-			} else {
-				var iterator = doc.evaluate(this.foreach, contextNode, resolver, xmlDom.XPathResult.ANY_TYPE, null );
-				var node = iterator.iterateNext();
-				while (node) {
-					members.push(this.makeItemTemplate(node));
-					node = iterator.iterateNext();
-				}
+			} catch (e) {
+				members.push(makeError(e, this.valueof));
 			}
-		} catch(e) {
-			members.push({type: "element", tag: "span", attributes: {
-				"class": {type: "string", value: "tc-error"}
-			}, children: [
-				{type: "text", text: $tw.language.getString("flibbles/xml/Error/InvalidXPath", {variables: {xpath: this.foreach}})}
-			]});
+		} else {
+			var node = undefined;
+			try {
+				var iterator = doc.evaluate(this.foreach, contextNode, resolver, xmlDom.XPathResult.ANY_TYPE, null );
+				node = iterator.iterateNext();
+			} catch(e) {
+				members.push(makeError(e, this.foreach));
+			}
+			while (node) {
+				members.push(this.makeItemTemplate(node));
+				node = iterator.iterateNext();
+			}
 		}
 	}
 	this.makeChildWidgets(members);
+};
+
+function makeError(e, xpath) {
+	var code, msg;
+	switch (e.name) {
+		case "NamespaceError":
+		case "SyntaxError":
+			code = e.name;
+			break;
+		case "Error":
+			if (e.message.indexOf("Cannot resolve QName") == 0) {
+				code = "NamespaceError";
+			} else if (e.message.indexOf("Invalid expression") == 0) {
+				code = "SyntaxError";
+			}
+			break;
+	}
+	if (code) {
+		msg = $tw.language.getString("flibbles/xml/Error/XPath/" + code,
+			{variables: {xpath: xpath}});
+	} else {
+		// This message will be wildly inconsistent across implementations,
+		// but it's better that we show this than something generic.
+		msg = e.message;
+		console.warn(e.code);
+		console.warn(e.name);
+		console.warn(e.message);
+	}
+	return {type: "element", tag: "span", attributes: {
+			"class": {type: "string", value: "tc-error"}
+		}, children: [
+			{type: "text", text: msg}
+		]};
 };
 
 /*
