@@ -1,0 +1,17 @@
+caption: namespaces
+description: <p>`<$xpath>` supports namespaces in three ways.</p><ol><li>If the namespaces are defined on the documentElement, `<$xpath>` will automatically identify them.</li><li>You can also declare namespaces as attributes in `<$xpath>`, As seen in the example</li><li>You can define namespaces like any other variable using `<$set>`, `<$vars>`, or `/define`. Your namespaces can even be globally defined using <<tag $:/tags/Macro>>.</li></ol>
+tags: Transform
+title: Transform/Namespaces
+
+!! Dogs who've visited the vet
+
+<$xpath xmlns:vet="https://vets.com"
+	for-each="//dog[vet:history]/@name" />
+
+!! Checkup dates
+
+<$set name="xmlns:vet" value="https://vets.com">
+
+<$xpath for-each="//vet:checkup/@date" />
+
+</$set>

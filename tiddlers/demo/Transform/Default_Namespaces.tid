@@ -1,0 +1,14 @@
+caption: default namespaces
+description:<p>Default namespaces in XML are supported. However, XPath requires that all namespaced elements in a query be specified by a prefix, even if they use a default namespace within the target XML. Unprefixed elements in XPath queries are ''always'' considered to have null-namespace.</p><p>In this example, the `<breed>` element of the owners belongs to the default namespace "//<$text text="https://real-people.com" />//". It does not use a prefix. For XPath, we must assign a prefix to that namespace ("//rp//" in this case) and use it in the query when specifying those elements.</p><p>This may be a hassle, but it prevents ambiguity when performing XPath queries on XML where the default namespace may change throughout the document.</p>
+list-after: Transform/Namespaces
+tags: Transform
+title: Transform/Default Namespaces
+
+!! Dog Breeds
+
+<$xpath for-each="//breed" />
+
+!! Owner Breeds
+
+<$xpath xmlns:rp="https://real-people.com"
+	for-each="//rp:breed" />

@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<dogs>
-	<dog name="Roofus">
-		<trick>Shake hands</trick>
-		<trick>Speak</trick>
-	</dog>
-	<dog name="Splinter">
-		<trick>Fetch</trick>
-	</dog>
+<dogs xmlns:vet="https://vets.com">
+
+  <dog name="Roofus">
+    <breed>Afghan Hound</breed>
+    <trick>Shake hands</trick>
+    <trick>Speak</trick>
+  </dog>
+
+  <dog name="Splinter">
+    <breed>Doberman</breed>
+    <trick>Fetch</trick>
+    <vet:history>
+      <vet:checkup date="Apr 18th 2020"/>
+    </vet:history>
+  </dog>
+
+  <dog name="Muffins">
+    <breed>Pomeranian</breed>
+    <trick>Play dead</trick>
+    <owner xmlns="https://real-people.com">
+      <breed>hairless human</breed>
+    </owner>
+    <vet:history>
+      <vet:checkup date="Apr 18th 2019"/>
+      <vet:checkup date="Mar 12th 2019"/>
+    </vet:history>
+  </dog>
+
 </dogs>

@@ -8,7 +8,7 @@ title: Transform/Nested
 
 <$xpath for-each="/dogs/dog">
 
-!!! <$xpath for-each="@name" variable="name"><<name>></$xpath>
+!!! <$xpath value-of="@name" />
 
 <ul>
  <$xpath variable="trick" for-each="./trick">

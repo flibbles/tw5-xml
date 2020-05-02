@@ -102,10 +102,8 @@ XPathWidget.prototype.makeItemTemplate = function(node) {
 		if(this.parseTreeNode.children && this.parseTreeNode.children.length > 0) {
 			templateTree = this.parseTreeNode.children;
 		} else {
-			// Default template is a link to the title
-			templateTree = [{type: "element", tag: this.parseTreeNode.isBlock ? "div" : "span", children: [{type: "link", attributes: {to: {type: "string", value: title}}, children: [
-					{type: "text", text: title}
-			]}]}];
+			// Default template is to print out each result
+			templateTree = [{type: "element", tag: this.parseTreeNode.isBlock ? "div" : "span", children: [{type: "text", text: node.textContent}]}];
 		}
 	}
 

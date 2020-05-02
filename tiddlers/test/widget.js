@@ -62,6 +62,14 @@ it("can for-each loop", function() {
 	expect(text).toBe("<p>Ruffus Marley </p>");
 });
 
+it("can for-each loop without body", function() {
+	var text = "<dogs><dog>Ruffus</dog><dog>Skippy</dog></dogs>";
+	var output = transform(text, "<$xpath for-each='/dogs/dog' />");
+	expect(output).toBe("<p><span>Ruffus</span><span>Skippy</span></p>");
+	var output = transform(text, "<$xpath for-each='/dogs/dog' />\n");
+	expect(output).toBe("<div>Ruffus</div><div>Skippy</div>");
+});
+
 it('can get value of', function() {
 	var text = transform("<dogs><dog>Roofus</dog><dog>Skippy</dog></dogs>",
 		"<$xpath value-of='/dogs/dog' />");
