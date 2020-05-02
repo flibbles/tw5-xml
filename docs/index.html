@@ -197,6 +197,10 @@ Error message and password prompt
 
 <li>Transform</li>
 
+<li>Transform/Default Namespaces</li>
+
+<li>Transform/Namespaces</li>
+
 <li>Transform/Nested</li>
 
 <li>Transform/Simple</li>
@@ -206,6 +210,8 @@ Error message and password prompt
 <li>Versions/0.1.0</li>
 
 <li>Versions/0.1.1</li>
+
+<li>Versions/0.2.0</li>
 
 <li>XML for Tiddlywiki</li>
 
@@ -9541,7 +9547,7 @@ Error message and password prompt
 <div title="$:/isEncrypted">
 <pre>no</pre>
 </div>
-<div author="Flibbles" core-version="&gt;=5.1.14" created="20200501005833080" dependents="" description="XML - import/export/rendering/transforming" list="readme" plugin-type="plugin" source="https://github.com/flibbles/tw5-xml" title="$:/plugins/flibbles/xml" type="application/json" version="0.1.1">
+<div author="Flibbles" core-version="&gt;=5.1.14" created="20200502211737368" dependents="" description="XML - import/export/rendering/transforming" list="readme" plugin-type="plugin" source="https://github.com/flibbles/tw5-xml" title="$:/plugins/flibbles/xml" type="application/json" version="0.2.0">
 <pre>{
     &quot;tiddlers&quot;: {
         &quot;$:/plugins/flibbles/xml/XmlFile&quot;: {
@@ -9563,23 +9569,27 @@ Error message and password prompt
             &quot;group&quot;: &quot;Developer&quot;,
             &quot;name&quot;: &quot;text/xml&quot;
         },
+        &quot;$:/language/flibbles/xml/Error/InvalidXPath&quot;: {
+            &quot;title&quot;: &quot;$:/language/flibbles/xml/Error/InvalidXPath&quot;,
+            &quot;text&quot;: &quot;Invalid XPath expression: &lt;&lt;xpath&gt;&gt;&quot;
+        },
         &quot;$:/plugins/flibbles/xml/xmlparser.js&quot;: {
             &quot;title&quot;: &quot;$:/plugins/flibbles/xml/xmlparser.js&quot;,
             &quot;text&quot;: &quot;/*\\\ntitle: $:/plugins/flibbles/xml/xmlparser.js\ntype: application/javascript\nmodule-type: parser\n\nThe XML parser displays itself as xml.\n\n\\*/\n(function(){\n\n/*jslint node: true, browser: true */\n/*global $tw: false */\n\&quot;use strict\&quot;;\n\nvar XmlParser = function(type,text,options) {\n\tvar template = getTemplate(text);\n\tif (template) {\n\t\tthis.tree = [{\n\t\t\ttype: \&quot;transclude\&quot;,\n\t\t\tattributes: {\n\t\t\t\ttiddler: {type: \&quot;string\&quot;, value: template}\n\t\t\t},\n\t\t\tisBlock: true\n\t\t}];\n\t} else {\n\t\tthis.tree = [{\n\t\t\ttype: \&quot;codeblock\&quot;,\n\t\t\tattributes: {\n\t\t\t\tcode: {type: \&quot;string\&quot;, value: text},\n\t\t\t\tlanguage: {type: \&quot;string\&quot;, value: \&quot;xml\&quot;}\n\t\t\t}\n\t\t}];\n\t}\n};\n\nfunction getTemplate(text) {\n\tvar DOMParser = require(\&quot;./xmldom\&quot;).DOMParser;\n\tvar parser = new DOMParser();\n\tvar doc = parser.parseFromString(text, \&quot;text/xml\&quot;);\n\tvar node = doc.firstChild;\n\twhile (node) {\n\t\tif (node.target === \&quot;tiddlywiki\&quot;) {\n\t\t\t// TODO: This needs to be much more robust\n\t\t\tvar regexp = /template\\s*=\\s*['\&quot;]([^'\&quot;]*)['\&quot;]/\n\t\t\tvar match = node.data.match(regexp)\n\t\t\tif (match) {\n\t\t\t\treturn match[1];\n\t\t\t}\n\t\t}\n\t\tnode = node.nextSibling;\n\t}\n\treturn undefined;\n};\n\nexports[\&quot;text/xml\&quot;] = XmlParser;\n\n})();\n&quot;,
             &quot;type&quot;: &quot;application/javascript&quot;,
             &quot;module-type&quot;: &quot;parser&quot;
         },
-        &quot;$:/plugins/flibbles/xml/xmldom.js&quot;: {
-            &quot;title&quot;: &quot;$:/plugins/flibbles/xml/xmldom.js&quot;,
-            &quot;text&quot;: &quot;/*\\\ntitle: $:/plugins/flibbles/xml/xmldom.js\ntype: application/javascript\nmodule-type: library\n\nMakes available the XMLDom, either through a browser's native support, or\nthe tiddlywiki plugin.\n\\*/\n\nif ($tw.browser) {\n\texports.DOMParser = DOMParser;\n\texports.XPathResult = XPathResult;\n} else {\n\tvar parser, xpath;\n\ttry {\n\t\tthrow \&quot;\&quot;;\n\t\tvar DOM = require('xmldom');\n\t\texports.DOMParser = DOM.DOMParser;\n\t} catch (e) {\n\t\tvar parser = require(\&quot;$:/plugins/tiddlywiki/xmldom/dom-parser\&quot;);\n\t\texports.DOMParser = parser.DOMParser;\n\t}\n\ttry {\n\t\txpath = require('xpath');\n\t\texports.XPathResult = xpath.XPathResult;\n\t} catch (e) {\n\t\txpath = {\n\t\t\tevaluate: function() {throw \&quot;xpath is required on Node.JS for this operation. Install xpath with 'npm install xpath'\&quot;; }\n\t\t};\n\t\texports.XPathResult = Object.create(null);\n\t}\n\tvar doc = (new exports.DOMParser()).parseFromString(\&quot;&lt;elem/&gt;\&quot;);\n\t\tvar proto = Object.getPrototypeOf(doc.documentElement);\n\t\tObject.defineProperty(proto, \&quot;innerHTML\&quot;, {\n\t\t\tget: function() {\n\t\t\t\tvar child = this.firstChild;\n\t\t\t\t\tbuffer = [];\n\t\t\t\twhile (child) {\n\t\t\t\t\tbuffer.push(child.toString());\n\t\t\t\t\tchild = child.nextSibling;\n\t\t\t\t}\n\t\t\t\treturn buffer.join('');\n\t\t\t}\n\t\t});\n\tObject.getPrototypeOf(doc).evaluate = function(xpathExpression, contextNode, namespaceResolver, resultType, result) {\n\t\treturn xpath.evaluate(xpathExpression, contextNode, namespaceResolver, resultType, result);\n\t};\n}\n&quot;,
-            &quot;type&quot;: &quot;application/javascript&quot;,
-            &quot;module-type&quot;: &quot;library&quot;
-        },
-        &quot;$:/plugins/flibbles/xml/xslwidget.js&quot;: {
-            &quot;title&quot;: &quot;$:/plugins/flibbles/xml/xslwidget.js&quot;,
-            &quot;text&quot;: &quot;/*\\\ntitle: $:/plugins/flibbles/xml/xslwidget.js\ntype: application/javascript\nmodule-type: widget\n\nxslt widget\n\n\\*/\n(function(){\n\n/*jslint node: true, browser: true */\n/*global $tw: false */\n\&quot;use strict\&quot;;\n\nvar Widget = require(\&quot;$:/core/modules/widgets/widget.js\&quot;).widget;\n\nvar XslWidget = function(parseTreeNode,options) {\n\tthis.initialise(parseTreeNode,options);\n};\n\nXslWidget.prototype = new Widget();\n\nexports.xsl = XslWidget;\n\nXslWidget.prototype.render = function(parent,nextSibling) {\n\tthis.parentDomNode = parent;\n\tthis.computeAttributes();\n\tthis.execute();\n\tthis.renderChildren(parent,nextSibling);\n};\n\nXslWidget.prototype.execute = function() {\n\tvar xmlDom = require(\&quot;./xmldom\&quot;);\n\tvar DOMParser = xmlDom.DOMParser;\n\tthis.foreach = this.getAttribute(\&quot;for-each\&quot;);\n\tthis.variableName = this.getAttribute(\&quot;variable\&quot;, \&quot;xmlNode\&quot;);\n\t//this.xmlTitle = this.getAttribute(\&quot;tiddler\&quot;,this.getVariable(\&quot;currentTiddler\&quot;));\n\tthis.xmlTitle = this.getVariable(\&quot;currentTiddler\&quot;);\n\tvar tiddler = this.wiki.getTiddler(this.xmlTitle);\n\tvar members = [];\n\tif (tiddler) {\n\t\tvar contextVariable = this.variables[this.variableContext()];\n\t\tvar contextNode, doc;\n\t\tif (contextVariable) {\n\t\t\tcontextNode = contextVariable.node;\n\t\t\tdoc = contextNode.ownerDocument;\n\t\t} else {\n\t\t\tvar contextNode = contextVariable ? contextVariable.node : doc;\n\t\t\tvar parser = new DOMParser();\n\t\t\tdoc = parser.parseFromString(tiddler.fields.text, \&quot;text/xml\&quot;);\n\t\t\tcontextNode = doc;\n\t\t}\n\t\tvar iterator = doc.evaluate(this.foreach, contextNode, null, xmlDom.XPathResult.ANY_TYPE, null );\n\t\tvar node = iterator.iterateNext();\n\t\twhile (node) {\n\t\t\tmembers.push(this.makeItemTemplate(node));\n\t\t\tnode = iterator.iterateNext();\n\t\t}\n\t}\n\tthis.makeChildWidgets(members);\n};\n\n/*\nCompose the template for a list item\n*/\nXslWidget.prototype.makeItemTemplate = function(node) {\n\tvar templateTree;\n\t// Compose the transclusion of the template\n\tif(false) {\n\t\ttemplateTree = [{type: \&quot;transclude\&quot;, attributes: {tiddler: {type: \&quot;string\&quot;, value: template}}}];\n\t} else {\n\t\tif(this.parseTreeNode.children &amp;&amp; this.parseTreeNode.children.length &gt; 0) {\n\t\t\ttemplateTree = this.parseTreeNode.children;\n\t\t} else {\n\t\t\t// Default template is a link to the title\n\t\t\ttemplateTree = [{type: \&quot;element\&quot;, tag: this.parseTreeNode.isBlock ? \&quot;div\&quot; : \&quot;span\&quot;, children: [{type: \&quot;link\&quot;, attributes: {to: {type: \&quot;string\&quot;, value: title}}, children: [\n\t\t\t\t\t{type: \&quot;text\&quot;, text: title}\n\t\t\t]}]}];\n\t\t}\n\t}\n\n\t// Return the list item\n\treturn {type: \&quot;xslnode\&quot;, contextName: this.variableContext(), node: node, variableName: this.variableName, children: templateTree};\n};\n\nXslWidget.prototype.variableContext = function() {\n\treturn \&quot;xml-node-state-\&quot; + this.xmlTitle;\n};\n\nXslWidget.prototype.refresh = function(changedTiddlers) {\n\tvar changedAttributes = this.computeAttributes();\n\tif(changedAttributes.xslt || changedAttributes.tiddler || changedTiddlers[this.tiddler]) {\n\t\tthis.refreshSelf();\n\t\treturn true;\n\t} else {\n\t\treturn this.refreshChildren(changedTiddlers);\n\t}\n};\n\n/*\nWidget exists for each loop of XslWidget. Holds current state of that iteration.\n*/\nvar XslNodeWidget = function(parseTreeNode,options) {\n\tthis.initialise(parseTreeNode,options);\n};\n\nXslNodeWidget.prototype = new Widget();\n\nXslNodeWidget.prototype.render = function(parent,nextSibling) {\n\tthis.parentDomNode = parent;\n\tthis.computeAttributes();\n\tthis.execute();\n\tthis.renderChildren(parent,nextSibling);\n};\n\n/*\nCompute the internal state of the widget\n*/\nXslNodeWidget.prototype.execute = function() {\n\t// Set the current list item title\n\tthis.setVariable(this.parseTreeNode.variableName,this.parseTreeNode.node.textContent);\n\tthis.setVariable(this.parseTreeNode.contextName,this.parseTreeNode.node.localName);\n\tthis.variables[this.parseTreeNode.contextName].node = this.parseTreeNode.node;\n\t// Construct the child widgets\n\tthis.makeChildWidgets();\n};\n\n/*\nSelectively refreshes the widget if needed. Returns true if the widget or any of its children needed re-rendering\n*/\nXslNodeWidget.prototype.refresh = function(changedTiddlers) {\n\treturn this.refreshChildren(changedTiddlers);\n};\n\nexports.xslnode = XslNodeWidget;\n\n})();\n&quot;,
+        &quot;$:/plugins/flibbles/xml/widgets/xpath.js&quot;: {
+            &quot;title&quot;: &quot;$:/plugins/flibbles/xml/widgets/xpath.js&quot;,
+            &quot;text&quot;: &quot;/*\\\ntitle: $:/plugins/flibbles/xml/widgets/xpath.js\ntype: application/javascript\nmodule-type: widget\n\nxslt widget\n\n\\*/\n(function(){\n\n/*jslint node: true, browser: true */\n/*global $tw: false */\n\&quot;use strict\&quot;;\n\nvar Widget = require(\&quot;$:/core/modules/widgets/widget.js\&quot;).widget;\n\nvar XPathWidget = function(parseTreeNode,options) {\n\tthis.initialise(parseTreeNode,options);\n};\n\nXPathWidget.prototype = new Widget();\n\nexports.xpath = XPathWidget;\n\nXPathWidget.prototype.render = function(parent,nextSibling) {\n\tthis.parentDomNode = parent;\n\tthis.computeAttributes();\n\tthis.execute();\n\tthis.renderChildren(parent,nextSibling);\n};\n\nXPathWidget.prototype.execute = function() {\n\tvar xmlDom = require(\&quot;../xmldom\&quot;);\n\tvar DOMParser = xmlDom.DOMParser;\n\tthis.foreach = this.getAttribute(\&quot;for-each\&quot;);\n\tthis.valueof = this.getAttribute(\&quot;value-of\&quot;);\n\tthis.variableName = this.getAttribute(\&quot;variable\&quot;, \&quot;xmlNode\&quot;);\n\t//this.xmlTitle = this.getAttribute(\&quot;tiddler\&quot;,this.getVariable(\&quot;currentTiddler\&quot;));\n\tthis.xmlTitle = this.getVariable(\&quot;currentTiddler\&quot;);\n\n\tfor (var attribute in this.attributes) {\n\t\tif (attribute.substr(0, 6) === \&quot;xmlns:\&quot;) {\n\t\t\tthis.setVariable(attribute,this.attributes[attribute]);\n\t\t}\n\t}\n\n\tvar tiddler = this.wiki.getTiddler(this.xmlTitle);\n\tvar members = [];\n\tif (tiddler) {\n\t\tvar contextVariable = this.variables[this.variableContext()];\n\t\tvar contextNode, doc;\n\t\tif (contextVariable) {\n\t\t\tcontextNode = contextVariable.node;\n\t\t\tdoc = contextNode.ownerDocument;\n\t\t} else {\n\t\t\tvar contextNode = contextVariable ? contextVariable.node : doc;\n\t\t\tvar parser = new DOMParser();\n\t\t\tdoc = parser.parseFromString(tiddler.fields.text, \&quot;text/xml\&quot;);\n\t\t\tcontextNode = doc;\n\t\t}\n\t\tvar docResolver = doc.createNSResolver(doc);\n\t\tvar self = this;\n\t\tvar resolver = function(nsPrefix) {\n\t\t\tvar variable = self.variables[\&quot;xmlns:\&quot; + nsPrefix];\n\t\t\treturn variable ? variable.value : docResolver.lookupNamespaceURI(nsPrefix);\n\t\t}\n\t\tresolver.lookupNamespaceURI = resolver;\n\t\ttry {\n\t\t\tif (this.valueof) {\n\t\t\t\tvar value = doc.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE);\n\t\t\t\tif (value) {\n\t\t\t\t\tmembers.push({type: \&quot;text\&quot;, text: value.stringValue});\n\t\t\t\t}\n\t\t\t} else {\n\t\t\t\tvar iterator = doc.evaluate(this.foreach, contextNode, resolver, xmlDom.XPathResult.ANY_TYPE, null );\n\t\t\t\tvar node = iterator.iterateNext();\n\t\t\t\twhile (node) {\n\t\t\t\t\tmembers.push(this.makeItemTemplate(node));\n\t\t\t\t\tnode = iterator.iterateNext();\n\t\t\t\t}\n\t\t\t}\n\t\t} catch(e) {\n\t\t\tmembers.push({type: \&quot;element\&quot;, tag: \&quot;span\&quot;, attributes: {\n\t\t\t\t\&quot;class\&quot;: {type: \&quot;string\&quot;, value: \&quot;tc-error\&quot;}\n\t\t\t}, children: [\n\t\t\t\t{type: \&quot;text\&quot;, text: $tw.language.getString(\&quot;flibbles/xml/Error/InvalidXPath\&quot;, {variables: {xpath: this.foreach}})}\n\t\t\t]});\n\t\t}\n\t}\n\tthis.makeChildWidgets(members);\n};\n\n/*\nCompose the template for a list item\n*/\nXPathWidget.prototype.makeItemTemplate = function(node) {\n\tvar templateTree;\n\t// Compose the transclusion of the template\n\tif(false) {\n\t\ttemplateTree = [{type: \&quot;transclude\&quot;, attributes: {tiddler: {type: \&quot;string\&quot;, value: template}}}];\n\t} else {\n\t\tif(this.parseTreeNode.children &amp;&amp; this.parseTreeNode.children.length &gt; 0) {\n\t\t\ttemplateTree = this.parseTreeNode.children;\n\t\t} else {\n\t\t\t// Default template is to print out each result\n\t\t\ttemplateTree = [{type: \&quot;element\&quot;, tag: this.parseTreeNode.isBlock ? \&quot;div\&quot; : \&quot;span\&quot;, children: [{type: \&quot;text\&quot;, text: node.textContent}]}];\n\t\t}\n\t}\n\n\t// Return the list item\n\treturn {type: \&quot;xslnode\&quot;, contextName: this.variableContext(), node: node, variableName: this.variableName, children: templateTree};\n};\n\nXPathWidget.prototype.variableContext = function() {\n\treturn \&quot;xml-node-state-\&quot; + this.xmlTitle;\n};\n\nXPathWidget.prototype.refresh = function(changedTiddlers) {\n\tvar changedAttributes = this.computeAttributes();\n\tif(changedAttributes.xslt || changedAttributes.tiddler || changedTiddlers[this.tiddler]) {\n\t\tthis.refreshSelf();\n\t\treturn true;\n\t} else {\n\t\treturn this.refreshChildren(changedTiddlers);\n\t}\n};\n\n/*\nWidget exists for each loop of XPathWidget. Holds current state of\nthat iteration.\n*/\nvar XslNodeWidget = function(parseTreeNode,options) {\n\tthis.initialise(parseTreeNode,options);\n};\n\nXslNodeWidget.prototype = new Widget();\n\nXslNodeWidget.prototype.render = function(parent,nextSibling) {\n\tthis.parentDomNode = parent;\n\tthis.computeAttributes();\n\tthis.execute();\n\tthis.renderChildren(parent,nextSibling);\n};\n\n/*\nCompute the internal state of the widget\n*/\nXslNodeWidget.prototype.execute = function() {\n\t// Set the current list item title\n\tthis.setVariable(this.parseTreeNode.variableName,this.parseTreeNode.node.textContent);\n\tthis.setVariable(this.parseTreeNode.contextName,this.parseTreeNode.node.localName);\n\tthis.variables[this.parseTreeNode.contextName].node = this.parseTreeNode.node;\n\t// Construct the child widgets\n\tthis.makeChildWidgets();\n};\n\n/*\nSelectively refreshes the widget if needed. Returns true if the widget or any of its children needed re-rendering\n*/\nXslNodeWidget.prototype.refresh = function(changedTiddlers) {\n\treturn this.refreshChildren(changedTiddlers);\n};\n\nexports.xslnode = XslNodeWidget;\n\n})();\n&quot;,
             &quot;type&quot;: &quot;application/javascript&quot;,
             &quot;module-type&quot;: &quot;widget&quot;
+        },
+        &quot;$:/plugins/flibbles/xml/xmldom.js&quot;: {
+            &quot;title&quot;: &quot;$:/plugins/flibbles/xml/xmldom.js&quot;,
+            &quot;text&quot;: &quot;/*\\\ntitle: $:/plugins/flibbles/xml/xmldom.js\ntype: application/javascript\nmodule-type: library\n\nMakes available the XMLDom, either through a browser's native support, or\nthe tiddlywiki plugin.\n\\*/\n\nif ($tw.browser) {\n\texports.DOMParser = DOMParser;\n\texports.XPathResult = XPathResult;\n} else {\n\tvar parser, xpath;\n\ttry {\n\t\t//throw \&quot;\&quot;;\n\t\tvar DOM = require('xmldom');\n\t\texports.DOMParser = DOM.DOMParser;\n\t} catch (e) {\n\t\tvar parser = require(\&quot;$:/plugins/tiddlywiki/xmldom/dom-parser\&quot;);\n\t\texports.DOMParser = parser.DOMParser;\n\t}\n\ttry {\n\t\txpath = require('xpath');\n\t\texports.XPathResult = xpath.XPathResult;\n\t} catch (e) {\n\t\txpath = {\n\t\t\tevaluate: function() {throw \&quot;xpath is required on Node.JS for this operation. Install xpath with 'npm install xpath'\&quot;; }\n\t\t};\n\t\texports.XPathResult = Object.create(null);\n\t}\n\tvar doc = (new exports.DOMParser()).parseFromString(\&quot;&lt;elem/&gt;\&quot;);\n\t\tvar proto = Object.getPrototypeOf(doc.documentElement);\n\t\tObject.defineProperty(proto, \&quot;innerHTML\&quot;, {\n\t\t\tget: function() {\n\t\t\t\tvar child = this.firstChild;\n\t\t\t\t\tbuffer = [];\n\t\t\t\twhile (child) {\n\t\t\t\t\tbuffer.push(child.toString());\n\t\t\t\t\tchild = child.nextSibling;\n\t\t\t\t}\n\t\t\t\treturn buffer.join('');\n\t\t\t}\n\t\t});\n\tvar docPrototype = Object.getPrototypeOf(doc);\n\tdocPrototype.evaluate = function(xpathExpression, contextNode, namespaceResolver, resultType, result) {\n\t\treturn xpath.evaluate(xpathExpression, contextNode, namespaceResolver, resultType, result);\n\t};\n\tdocPrototype.createNSResolver = function(node) {\n\t\treturn xpath.createNSResolver(node);\n\t};\n}\n\n&quot;,
+            &quot;type&quot;: &quot;application/javascript&quot;,
+            &quot;module-type&quot;: &quot;library&quot;
         }
     }
 }</pre>
@@ -9794,14 +9804,34 @@ Error message and password prompt
 </div>
 <div title="Demo.xml" type="text/xml">
 <pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
-&lt;dogs&gt;
-	&lt;dog name=&quot;Roofus&quot;&gt;
-		&lt;trick&gt;Shake hands&lt;/trick&gt;
-		&lt;trick&gt;Speak&lt;/trick&gt;
-	&lt;/dog&gt;
-	&lt;dog name=&quot;Splinter&quot;&gt;
-		&lt;trick&gt;Fetch&lt;/trick&gt;
-	&lt;/dog&gt;
+&lt;dogs xmlns:vet=&quot;https://vets.com&quot;&gt;
+
+  &lt;dog name=&quot;Roofus&quot;&gt;
+    &lt;breed&gt;Afghan Hound&lt;/breed&gt;
+    &lt;trick&gt;Shake hands&lt;/trick&gt;
+    &lt;trick&gt;Speak&lt;/trick&gt;
+  &lt;/dog&gt;
+
+  &lt;dog name=&quot;Splinter&quot;&gt;
+    &lt;breed&gt;Doberman&lt;/breed&gt;
+    &lt;trick&gt;Fetch&lt;/trick&gt;
+    &lt;vet:history&gt;
+      &lt;vet:checkup date=&quot;Apr 18th 2020&quot;/&gt;
+    &lt;/vet:history&gt;
+  &lt;/dog&gt;
+
+  &lt;dog name=&quot;Muffins&quot;&gt;
+    &lt;breed&gt;Pomeranian&lt;/breed&gt;
+    &lt;trick&gt;Play dead&lt;/trick&gt;
+    &lt;owner xmlns=&quot;https://real-people.com&quot;&gt;
+      &lt;breed&gt;hairless human&lt;/breed&gt;
+    &lt;/owner&gt;
+    &lt;vet:history&gt;
+      &lt;vet:checkup date=&quot;Apr 18th 2019&quot;/&gt;
+      &lt;vet:checkup date=&quot;Mar 12th 2019&quot;/&gt;
+    &lt;/vet:history&gt;
+  &lt;/dog&gt;
+
 &lt;/dogs&gt;
 </pre>
 </div>
@@ -9941,9 +9971,9 @@ If an xml document has a `&lt;?tiddlywiki?&gt;` processing instruction, the temp
 <pre>!! All names in file
 
 &lt;ul&gt;
- &lt;$xsl for-each=&quot;//name&quot;&gt;
+ &lt;$xpath for-each=&quot;//name&quot;&gt;
   &lt;li&gt;&lt;&lt;xmlNode&gt;&gt;&lt;/li&gt;
-  &lt;/$xsl&gt;
+  &lt;/$xpath&gt;
 &lt;/ul&gt;
 </pre>
 </div>
@@ -10000,7 +10030,7 @@ If an xml document has a `&lt;?tiddlywiki?&gt;` processing instruction, the temp
 </pre>
 </div>
 <div tags="Features" title="Transform">
-<pre>Through the `&lt;$xsl&gt;` widget, you can iterate through and extract data from XML tiddlers using XPath. Click a tab to see various templates parsing the XML document using a variety of techniques.
+<pre>Through the `&lt;$xpath&gt;` widget, you can iterate through and extract data from XML tiddlers using XPath. Click a tab to see various templates parsing the XML document using a variety of techniques.
 
 These templates all modify [[this XML file|Demo.xml]].
 
@@ -10010,28 +10040,54 @@ These templates all modify [[this XML file|Demo.xml]].
             template=&quot;Templates/Transform&quot; /&gt;
 </pre>
 </div>
-<div caption="nested" description="`&lt;$xsl&gt;` elements can be nested. Inner `&lt;$xsl&gt;` widgets will start their XPath queries from the node set by the outer widget's context. This allows for nested iteration." list-before="" tags="Transform" title="Transform/Nested">
+<div caption="default namespaces" description="&lt;p&gt;Default namespaces in XML are supported. However, XPath requires that all namespaced elements in a query be specified by a prefix, even if they use a default namespace within the target XML. Unprefixed elements in XPath queries are ''always'' considered to have null-namespace.&lt;/p&gt;&lt;p&gt;In this example, the `&lt;breed&gt;` element of the owners belongs to the default namespace &quot;//&lt;$text text=&quot;https://real-people.com&quot; /&gt;//&quot;. It does not use a prefix. For XPath, we must assign a prefix to that namespace (&quot;//rp//&quot; in this case) and use it in the query when specifying those elements.&lt;/p&gt;&lt;p&gt;This may be a hassle, but it prevents ambiguity when performing XPath queries on XML where the default namespace may change throughout the document.&lt;/p&gt;" list-after="Transform/Namespaces" tags="Transform" title="Transform/Default Namespaces">
+<pre>!! Dog Breeds
+
+&lt;$xpath for-each=&quot;//breed&quot; /&gt;
+
+!! Owner Breeds
+
+&lt;$xpath xmlns:rp=&quot;https://real-people.com&quot;
+	for-each=&quot;//rp:breed&quot; /&gt;
+</pre>
+</div>
+<div caption="namespaces" description="&lt;p&gt;`&lt;$xpath&gt;` supports namespaces in three ways.&lt;/p&gt;&lt;ol&gt;&lt;li&gt;If the namespaces are defined on the documentElement, `&lt;$xpath&gt;` will automatically identify them.&lt;/li&gt;&lt;li&gt;You can also declare namespaces as attributes in `&lt;$xpath&gt;`, As seen in the example&lt;/li&gt;&lt;li&gt;You can define namespaces like any other variable using `&lt;$set&gt;`, `&lt;$vars&gt;`, or `/define`. Your namespaces can even be globally defined using &lt;&lt;tag $:/tags/Macro&gt;&gt;.&lt;/li&gt;&lt;/ol&gt;" tags="Transform" title="Transform/Namespaces">
+<pre>!! Dogs who've visited the vet
+
+&lt;$xpath xmlns:vet=&quot;https://vets.com&quot;
+	for-each=&quot;//dog[vet:history]/@name&quot; /&gt;
+
+!! Checkup dates
+
+&lt;$set name=&quot;xmlns:vet&quot; value=&quot;https://vets.com&quot;&gt;
+
+&lt;$xpath for-each=&quot;//vet:checkup/@date&quot; /&gt;
+
+&lt;/$set&gt;
+</pre>
+</div>
+<div caption="nested" description="`&lt;$xpath&gt;` elements can be nested. Inner `&lt;$xpath&gt;` widgets will start their XPath queries from the node set by the outer widget's context. This allows for nested iteration." list-before="" tags="Transform" title="Transform/Nested">
 <pre>!! Dog list
 
-&lt;$xsl for-each=&quot;/dogs/dog&quot;&gt;
+&lt;$xpath for-each=&quot;/dogs/dog&quot;&gt;
 
-!!! &lt;$xsl for-each=&quot;@name&quot; variable=&quot;name&quot;&gt;&lt;&lt;name&gt;&gt;&lt;/$xsl&gt;
+!!! &lt;$xpath value-of=&quot;@name&quot; /&gt;
 
 &lt;ul&gt;
- &lt;$xsl variable=&quot;trick&quot; for-each=&quot;./trick&quot;&gt;
+ &lt;$xpath variable=&quot;trick&quot; for-each=&quot;./trick&quot;&gt;
   &lt;li&gt;&lt;&lt;trick&gt;&gt;&lt;/li&gt;
- &lt;/$xsl&gt;
+ &lt;/$xpath&gt;
 &lt;/ul&gt;
-&lt;/$xsl&gt;
+&lt;/$xpath&gt;
 </pre>
 </div>
 <div caption="simple" list-before="" tags="Transform" title="Transform/Simple">
 <pre>!! Dog list
 
 &lt;ul&gt;
-&lt;$xsl variable=&quot;name&quot; for-each=&quot;/dogs/dog/@name&quot;&gt;
+&lt;$xpath variable=&quot;name&quot; for-each=&quot;/dogs/dog/@name&quot;&gt;
 &lt;li&gt;&lt;&lt;name&gt;&gt;&lt;/li&gt;
-&lt;/$xsl&gt;
+&lt;/$xpath&gt;
 &lt;/ul&gt;
 </pre>
 </div>
@@ -10050,6 +10106,12 @@ These templates all modify [[this XML file|Demo.xml]].
 </div>
 <div created="20200501005833080" title="Versions/0.1.1">
 <pre>* Fixed issue where Firefox would fail with nested XPath
+</pre>
+</div>
+<div created="20200502211737368" title="Versions/0.2.0">
+<pre>* Changed `&lt;$xsl&gt;` to `&lt;$xpath&gt;`
+* Added preliminary namespace support. Subject to change.
+* Slightly better error handling
 </pre>
 </div>
 <div title="XML for Tiddlywiki">
