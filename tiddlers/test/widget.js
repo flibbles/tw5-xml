@@ -82,7 +82,7 @@ it("can handle specified namespaces", function() {
 
 it("can handle default namespaces", function() {
 	var text = "<dogs xmlns='http://dognet.com'><dog>Roofus</dog></dogs>";
-	var rtn = transform(text, "<$xpath value-of='/ns:dogs/ns:dog' />");
+	var rtn = transform(text, "<$xpath xmlns:ns='http://dognet.com' value-of='/ns:dogs/ns:dog' />");
 	expect(rtn).toBe("<p>Roofus</p>");
 });
 

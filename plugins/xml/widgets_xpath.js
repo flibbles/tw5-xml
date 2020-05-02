@@ -37,6 +37,13 @@ XPathWidget.prototype.execute = function() {
 	this.variableName = this.getAttribute("variable", "xmlNode");
 	//this.xmlTitle = this.getAttribute("tiddler",this.getVariable("currentTiddler"));
 	this.xmlTitle = this.getVariable("currentTiddler");
+
+	for (var attribute in this.attributes) {
+		if (attribute.substr(0, 6) === "xmlns:") {
+			this.setVariable(attribute,this.attributes[attribute]);
+		}
+	}
+
 	var tiddler = this.wiki.getTiddler(this.xmlTitle);
 	var members = [];
 	if (tiddler) {
@@ -51,11 +58,13 @@ XPathWidget.prototype.execute = function() {
 			doc = parser.parseFromString(tiddler.fields.text, "text/xml");
 			contextNode = doc;
 		}
+		var docResolver = doc.createNSResolver(doc);
+		var self = this;
 		var resolver = function(nsPrefix) {
-			return "http://dognet.com";
+			var variable = self.variables["xmlns:" + nsPrefix];
+			return variable ? variable.value : docResolver.lookupNamespaceURI(nsPrefix);
 		}
 		resolver.lookupNamespaceURI = resolver;
-		//var resolver = doc.createNSResolver(doc.documentElement);
 		try {
 			if (this.valueof) {
 				var value = doc.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE);
