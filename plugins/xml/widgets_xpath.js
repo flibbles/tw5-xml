@@ -58,7 +58,7 @@ XPathWidget.prototype.execute = function() {
 			doc = parser.parseFromString(tiddler.fields.text, "text/xml");
 			contextNode = doc;
 		}
-		var docResolver = doc.createNSResolver(doc);
+		var docResolver = doc.createNSResolver(contextNode);
 		var self = this;
 		var resolver = function(nsPrefix) {
 			var variable = self.variables["xmlns:" + nsPrefix];

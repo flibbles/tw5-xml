@@ -64,11 +64,19 @@ it("can for-each loop", function() {
 });
 
 it("can for-each loop without body", function() {
-	var text = "<dogs><dog>Ruffus</dog><dog>Skippy</dog></dogs>";
-	var output = transform(text, "<$xpath for-each='/dogs/dog' />");
+	var output, text = "<dogs><dog breed='hot dog'>Ruffus</dog><dog breed='small'>Skippy</dog></dogs>";
+	// inline
+	output = transform(text, "<$xpath for-each='/dogs/dog' />");
 	expect(output).toBe("<p><span>Ruffus</span><span>Skippy</span></p>");
-	var output = transform(text, "<$xpath for-each='/dogs/dog' />\n");
+	// block
+	output = transform(text, "<$xpath for-each='/dogs/dog' />\n");
 	expect(output).toBe("<div>Ruffus</div><div>Skippy</div>");
+	// direct text reference
+	output = transform(text, "<$xpath for-each='/dogs/dog/text()' />\n");
+	expect(output).toBe("<div>Ruffus</div><div>Skippy</div>");
+	// attribute
+	output = transform(text, "<$xpath for-each='/dogs/dog/@breed' />\n");
+	expect(output).toBe("<div>hot dog</div><div>small</div>");
 });
 
 it('can get value of', function() {
@@ -83,9 +91,34 @@ it("can nest for-each loops", function() {
 	expect(test).toBe("<p>\nA\nB</p><p>\nC</p>");
 });
 
-it("can handle specified namespaces", function() {
+it("can infer specified namespaces", function() {
 	var text = "<dogs xmlns:dg='http://dognet.com'><dg:dog>Roofus</dg:dog></dogs>";
 	var rtn = transform(text, "<$xpath value-of='//dg:dog' />");
+	expect(rtn).toBe("<p>Roofus</p>");
+});
+
+it("inherits namespace settings", function() {
+	var text = "<dg:dogs xmlns:dg='http://dognet.com'><dg:dog>Roofus</dg:dog></dg:dogs>";
+	var rtn = transform(text, "\\define xmlns:dg() http://dognet.com\n<$xpath value-of='/dg:dogs/dg:dog' />");
+	expect(rtn).toBe("<p>Roofus</p>");
+});
+
+it("can infer namespaces in root node from nested context", function() {
+	var text = "<dg:dogs xmlns:dg='http://dognet.com'><dg:dog><dg:name>Roofus</dg:name></dg:dog><dg:dog><dg:name>Barkley</dg:name></dg:dog></dg:dogs>";
+	//var text = "<dogs><dg:dog xmlns:dg='http://dognet.com'>Roofus</dg:dog></dogs>";
+	var rtn = transform(text, "<$xpath for-each='/dg:dogs/dg:dog'>\n\n<$xpath value-of='./dg:name' /></$xpath>");
+	expect(rtn).toBe("<p>Roofus</p><p>Barkley</p>");
+});
+
+it("can infer nested namespace from nested context", function() {
+	var text = "<root><dg:dogs xmlns:dg='http://dognet.com'><dg:dog><dg:name>Roofus</dg:name></dg:dog><dg:dog><dg:name>Barkley</dg:name></dg:dog></dg:dogs></root>";
+	var rtn = transform(text, "<$xpath for-each='/root/*'>\n\n<$xpath for-each='./dg:dog/dg:name' />\n\n</$xpath>");
+	expect(rtn).toBe("<div>Roofus</div><div>Barkley</div>");
+});
+
+it("can handle alternative prefixes for namespaces", function() {
+	var text = "<dogs xmlns:dg='http://dognet.com'><dg:dog>Roofus</dg:dog></dogs>";
+	var rtn = transform(text, "<$xpath xmlns:x='http://dognet.com' value-of='//x:dog' />");
 	expect(rtn).toBe("<p>Roofus</p>");
 });
 
