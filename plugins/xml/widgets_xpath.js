@@ -72,7 +72,7 @@ XPathWidget.prototype.execute = function() {
 					members.push({type: "text", text: value.stringValue});
 				}
 			} catch (e) {
-				members.push(makeError(e, this.valueof));
+				members.push(this.makeError(e, this.valueof));
 			}
 		} else {
 			var node = undefined;
@@ -80,7 +80,7 @@ XPathWidget.prototype.execute = function() {
 				var iterator = doc.evaluate(this.foreach, contextNode, resolver, xmlDom.XPathResult.ANY_TYPE, null );
 				node = iterator.iterateNext();
 			} catch(e) {
-				members.push(makeError(e, this.foreach));
+				members.push(this.makeError(e, this.foreach));
 			}
 			while (node) {
 				members.push(this.makeItemTemplate(node));
@@ -91,7 +91,7 @@ XPathWidget.prototype.execute = function() {
 	this.makeChildWidgets(members);
 };
 
-function makeError(e, xpath) {
+XPathWidget.prototype.makeError = function(e, xpath) {
 	var code, msg;
 	switch (e.name) {
 		case "NamespaceError":
