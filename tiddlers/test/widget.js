@@ -120,16 +120,67 @@ it("can for-each loop with template", function() {
 	expect(output).toBe("-Roofus--Casey-");
 });
 
+it("can nest for-each loops", function() {
+	var test = transform("<dogs><dog><trick name='A'/><trick name='B'/></dog><dog><trick name='C'/></dog></dogs>",
+		"<$xpath for-each='/dogs/dog'>\n\n<$xpath variable='trick' for-each='./trick/@name'>\n<<trick>></$xpath></$xpath>");
+	expect(test).toBe("<p>\nA\nB</p><p>\nC</p>");
+});
+
 it('can get value of', function() {
 	var text = transform("<dogs><dog>Roofus</dog><dog>Skippy</dog></dogs>",
 		"<$xpath value-of='/dogs/dog' />");
 	expect(text).toBe("<p>Roofus</p>");
 });
 
-it("can nest for-each loops", function() {
-	var test = transform("<dogs><dog><trick name='A'/><trick name='B'/></dog><dog><trick name='C'/></dog></dogs>",
-		"<$xpath for-each='/dogs/dog'>\n\n<$xpath variable='trick' for-each='./trick/@name'>\n<<trick>></$xpath></$xpath>");
-	expect(test).toBe("<p>\nA\nB</p><p>\nC</p>");
+it('escapes and does not escape with for-each when appropriate', function() {
+	// Honestly, some of these seem so random to me, but I think it's
+	// best that <$xpath for-each> behave as much like <$list filter>
+	// as possible.
+	var text = "<html><body><p><strong>Title</strong></p><p>body<ul><li>list</li></ul></p></body></html>",
+		output;
+	// Rendering variable from for-each: unescaped, delimiting <p>
+	output = transform(text,
+		"<$xpath variable='b' for-each='/html/body/p'>\n\n<<b>>\n\n</$xpath>");
+	expect(output).toBe("<p><strong>Title</strong></p><p>body<ul><li>list</li></ul></p>");
+
+	// Rendering variable from for-each as inline: unescaped, no delimiting <p>
+	output = transform(text,
+		"<$xpath variable='b' for-each='/html/body/p'><<b>></$xpath>");
+	expect(output).toBe("<p><strong>Title</strong>body<ul><li>list</li></ul></p>");
+
+	// Rendering direct from for-each as block: escaped, delimiting <div>
+	output = transform(text,
+		"<$xpath for-each='/html/body/p' />\n");
+	expect(output).toBe("<div>&lt;strong&gt;Title&lt;/strong&gt;</div><div>body&lt;ul&gt;&lt;li&gt;list&lt;/li&gt;&lt;/ul&gt;</div>");
+
+	// Rendering direct from for-each as inline: escaped, delimiting <span>
+	output = transform(text,
+		"<$xpath for-each='/html/body/p' />");
+	expect(output).toBe("<p><span>&lt;strong&gt;Title&lt;/strong&gt;</span><span>body&lt;ul&gt;&lt;li&gt;list&lt;/li&gt;&lt;/ul&gt;</span></p>");
+});
+
+it('escapes and does not escape with for-each when appropriate', function() {
+	// Value-of behaves like <$set> when possible, or <$view> if the
+	// widget is self-terminating. Always returns escaped strings. With no
+	// nested elements. textContent only.
+	var text = "<html><body><div><h1>Title</h1></div></body></html>",
+		output;
+
+	// Rendering variable as block, raw as possible
+	output = transform(text, "<$xpath value-of='/html/body' variable='title'>\n\n<<title>>\n\n</$xpath>");
+	expect(output).toBe("Title");
+
+	// Rendering variable as inline, wrapped in <p>
+	output = transform(text, "<$xpath value-of='/html/body' variable='title'><<title>></$xpath>");
+	expect(output).toBe("<p>Title</p>");
+
+	// Rendering direct as block: raw as possible
+	output = transform(text, "<$xpath value-of='/html/body' />\n");
+	expect(output).toBe("Title");
+
+	// Rendering direct as inline: wrapped in <p>
+	output = transform(text, "<$xpath value-of='/html/body' />");
+	expect(output).toBe("<p>Title</p>");
 });
 
 it("can infer specified namespaces", function() {

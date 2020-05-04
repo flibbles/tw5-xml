@@ -138,7 +138,7 @@ XPathWidget.prototype.makeItemTemplate = function(node) {
 			templateTree = this.parseTreeNode.children;
 		} else {
 			// Default template is to print out each result
-			templateTree = [{type: "element", tag: this.parseTreeNode.isBlock ? "div" : "span", children: [{type: "text", text: node.textContent}]}];
+			templateTree = [{type: "element", tag: this.parseTreeNode.isBlock ? "div" : "span", children: [{type: "text", text: node.nodeValue || node.innerHTML}]}];
 		}
 	}
 
@@ -191,7 +191,8 @@ Compute the internal state of the widget
 */
 XslNodeWidget.prototype.execute = function() {
 	// Set the current list item title
-	this.setVariable(this.parseTreeNode.variableName,this.parseTreeNode.node.textContent);
+	var node = this.parseTreeNode.node;
+	this.setVariable(this.parseTreeNode.variableName,node.nodeValue || node.innerHTML);
 	this.setVariable(this.parseTreeNode.contextName,this.parseTreeNode.node.localName);
 	this.variables[this.parseTreeNode.contextName].node = this.parseTreeNode.node;
 	// Construct the child widgets
