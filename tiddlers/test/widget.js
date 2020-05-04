@@ -84,6 +84,16 @@ it("can for-each loop without body", function() {
 	expect(output).toBe("<div>hot dog</div><div>small</div>");
 });
 
+it("can for-each loop with template", function() {
+	var xml = "<dogs><dog>Roofus</dog><dog>Casey</dog></dogs>";
+	var wiki = new $tw.Wiki();
+	wiki.addTiddler({title: "each", text: "-<<currentNode>>-"});
+	var output = transform(xml, "<$xpath template='each' for-each='/dogs/dog' />", {wiki: wiki});
+	expect(output).toBe("<p>-Roofus--Casey-</p>");
+	output = transform(xml, "<$xpath template='each' for-each='/dogs/dog' />\n", {wiki: wiki});
+	expect(output).toBe("-Roofus--Casey-");
+});
+
 it('can get value of', function() {
 	var text = transform("<dogs><dog>Roofus</dog><dog>Skippy</dog></dogs>",
 		"<$xpath value-of='/dogs/dog' />");
@@ -189,6 +199,15 @@ it("when tiddler changes", function() {
 it("when underlying xml changes", function() {
 	testChange("<$xpath tiddler='ref' for-each='/dog/@a' />\n",
 		"<dog a='one'/>", "<dog a='two'/>", "<div>one</div>", "<div>two</div>");
+});
+
+it("when template changes", function() {
+	var wiki = new $tw.Wiki();
+	wiki.addTiddlers([
+		{title: "A", text: "no-<<b>>"},
+		{title: "B", text: "yes-<<b>>"}]);
+	testChange("<$xpath variable='b' template={{ref}} for-each='/dog/@b' />\n",
+		"A", "B", "no-right", "yes-right", {wiki:wiki});
 });
 
 it("when children change", function() {

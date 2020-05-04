@@ -32,6 +32,7 @@ XPathWidget.prototype.render = function(parent,nextSibling) {
 XPathWidget.prototype.execute = function() {
 	var xmlDom = require("../xmldom");
 	var DOMParser = xmlDom.DOMParser;
+	this.template = this.getAttribute("template");
 	this.foreach = this.getAttribute("for-each");
 	this.valueof = this.getAttribute("value-of");
 	this.variableName = this.getAttribute("variable", "currentNode");
@@ -129,8 +130,8 @@ Compose the template for a list item
 XPathWidget.prototype.makeItemTemplate = function(node) {
 	var templateTree;
 	// Compose the transclusion of the template
-	if(false) {
-		templateTree = [{type: "transclude", attributes: {tiddler: {type: "string", value: template}}}];
+	if(this.template) {
+		templateTree = [{type: "transclude", attributes: {tiddler: {type: "string", value: this.template}}}];
 	} else {
 		if(this.parseTreeNode.children && this.parseTreeNode.children.length > 0) {
 			templateTree = this.parseTreeNode.children;
@@ -150,7 +151,7 @@ XPathWidget.prototype.variableContext = function() {
 
 XPathWidget.prototype.refresh = function(changedTiddlers) {
 	var changedAttributes = this.computeAttributes();
-	if(changedAttributes["for-each"] || changedAttributes["value-of"] || changedAttributes.variable || changedAttributes.tiddler || changedTiddlers[this.xmlTitle] || namespacesChanged(changedAttributes)) {
+	if(changedAttributes["for-each"] || changedAttributes["value-of"] || changedAttributes.variable || changedAttributes.tiddler || changedAttributes.template || changedTiddlers[this.xmlTitle] || namespacesChanged(changedAttributes)) {
 		this.refreshSelf();
 		return true;
 	} else {
