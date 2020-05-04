@@ -46,6 +46,32 @@ it('deals with illegal xpath gracefully', function() {
 	expect(text).toBe('<p><span class="tc-error">Could not resolve namespaces in XPath expression: /bad:dogs</span></p>');
 });
 
+// TODO: This and the next test should be in a wikimethod testing suite
+it('deals with malformed XML gracefully', function() {
+	function testFail(xml) {
+		var text = transform(xml, "<$xpath for-each='/dogs/*' />\n");
+		expect(text).toBe('<span class="tc-error">Unable to parse underlying XML</span>');
+	}
+	testFail("<dogs><dog>Honey</dog><$dog>Backster</$dog></dogs>");
+	testFail("<   dogs><dog>Honey</dog></dogs>");
+	testFail("<dogs><dog>Honey</dog><dog>Backster</cat></dogs>");
+	testFail("<dogs xmlns='http://anything.com'><dog>Honey</dog><dog>Backster</cat></dogs>");
+	testFail("<dogs xmlns:x='http://anything.com'><x:dog>Honey</x:dog><x:dog>Backster</x:cat></x:dogs>");
+});
+
+// These cases might occur if the target XML document literally contains a
+// <parsererror> element.
+it("doesn't emit false positives for errors", function() {
+	var text = transform("<log><parsererror>Bad stuff</parsererror></log>", "<$xpath for-each='/log/parsererror' />\n");
+	expect(text).toBe("<div>Bad stuff</div>");
+
+	text = transform("<log xmlns:x='http://errorTypes.com'><x:parsererror>other stuff</x:parsererror></log>", "<$xpath for-each='/log/x:parsererror' />\n");
+	expect(text).toBe("<div>other stuff</div>");
+
+	text = transform("<log xmlns='http://errorTypes.com'><parsererror>namespace stuff</parsererror></log>", "<$xpath xmlns:x='http://errorTypes.com' for-each='/x:log/x:parsererror' />\n");
+	expect(text).toBe("<div>namespace stuff</div>");
+});
+
 it("block vs inline", function() {
 	var xml = "<root><elem>A</elem><elem>B</elem><elem>C</elem></root>";
 	var template = "<$xpath for-each='/root/elem'><<currentNode>></$xpath>";
@@ -208,6 +234,11 @@ it("when template changes", function() {
 		{title: "B", text: "yes-<<b>>"}]);
 	testChange("<$xpath variable='b' template={{ref}} for-each='/dog/@b' />\n",
 		"A", "B", "no-right", "yes-right", {wiki:wiki});
+});
+
+it("when underlying template changes", function() {
+	testChange("<$xpath variable='b' template='ref' for-each='/dog/@b' />\n",
+		"no-<<b>>", "yes-<<b>>", "no-right", "yes-right");
 });
 
 it("when children change", function() {

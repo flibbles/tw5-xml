@@ -31,60 +31,60 @@ XPathWidget.prototype.render = function(parent,nextSibling) {
 
 XPathWidget.prototype.execute = function() {
 	var xmlDom = require("../xmldom");
-	var DOMParser = xmlDom.DOMParser;
 	this.template = this.getAttribute("template");
 	this.foreach = this.getAttribute("for-each");
 	this.valueof = this.getAttribute("value-of");
 	this.variableName = this.getAttribute("variable", "currentNode");
 	this.xmlTitle = this.getAttribute("tiddler",this.getVariable("currentTiddler"));
-
 	for (var attribute in this.attributes) {
 		if (attribute.substr(0, 6) === "xmlns:") {
 			this.setVariable(attribute,this.attributes[attribute]);
 		}
 	}
 
-	var tiddler = this.wiki.getTiddler(this.xmlTitle);
 	var members = [];
-	if (tiddler) {
-		var contextVariable = this.variables[this.variableContext()];
-		var contextNode, doc;
-		if (contextVariable) {
-			contextNode = contextVariable.node;
-			doc = contextNode.ownerDocument;
+	var contextVariable = this.variables[this.variableContext()];
+	var contextNode, doc;
+	if (contextVariable) {
+		contextNode = contextVariable.node;
+		doc = contextNode.ownerDocument;
+	} else {
+		var xmlDom = require("../xmldom");
+		doc = xmlDom.getTiddlerDocument(this.wiki, this.xmlTitle);
+		contextNode = doc;
+	}
+	if (contextNode) {
+		if (doc.error) {
+			members.push(this.makeError({name: "DOMParserError"}, this.xmlTitle));
 		} else {
-			var contextNode = contextVariable ? contextVariable.node : doc;
-			var parser = new DOMParser();
-			doc = parser.parseFromString(tiddler.fields.text, "text/xml");
-			contextNode = doc;
-		}
-		var docResolver = doc.createNSResolver(contextNode);
-		var self = this;
-		var resolver = function(nsPrefix) {
-			var variable = self.variables["xmlns:" + nsPrefix];
-			return variable ? variable.value : docResolver.lookupNamespaceURI(nsPrefix);
-		}
-		resolver.lookupNamespaceURI = resolver;
-		if (this.valueof) {
-			try {
-				var value = doc.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE);
-				if (value) {
-					members.push({type: "text", text: value.stringValue});
+			var docResolver = doc.createNSResolver(contextNode);
+			var self = this;
+			var resolver = function(nsPrefix) {
+				var variable = self.variables["xmlns:" + nsPrefix];
+				return variable ? variable.value : docResolver.lookupNamespaceURI(nsPrefix);
+			}
+			resolver.lookupNamespaceURI = resolver;
+			if (this.valueof) {
+				try {
+					var value = doc.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE);
+					if (value) {
+						members.push({type: "text", text: value.stringValue});
+					}
+				} catch (e) {
+					members.push(this.makeError(e, this.valueof));
 				}
-			} catch (e) {
-				members.push(this.makeError(e, this.valueof));
-			}
-		} else {
-			var node = undefined;
-			try {
-				var iterator = doc.evaluate(this.foreach, contextNode, resolver, xmlDom.XPathResult.ANY_TYPE, null );
-				node = iterator.iterateNext();
-			} catch(e) {
-				members.push(this.makeError(e, this.foreach));
-			}
-			while (node) {
-				members.push(this.makeItemTemplate(node));
-				node = iterator.iterateNext();
+			} else {
+				var node = undefined;
+				try {
+					var iterator = doc.evaluate(this.foreach, contextNode, resolver, xmlDom.XPathResult.ANY_TYPE, null );
+					node = iterator.iterateNext();
+				} catch(e) {
+					members.push(this.makeError(e, this.foreach));
+				}
+				while (node) {
+					members.push(this.makeItemTemplate(node));
+					node = iterator.iterateNext();
+				}
 			}
 		}
 	}
@@ -94,6 +94,7 @@ XPathWidget.prototype.execute = function() {
 XPathWidget.prototype.makeError = function(e, xpath) {
 	var code, msg;
 	switch (e.name) {
+		case "DOMParserError": // This is a custom one I made up
 		case "NamespaceError":
 		case "SyntaxError":
 			code = e.name;
