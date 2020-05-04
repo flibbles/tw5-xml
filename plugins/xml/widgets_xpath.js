@@ -34,7 +34,7 @@ XPathWidget.prototype.execute = function() {
 	var DOMParser = xmlDom.DOMParser;
 	this.foreach = this.getAttribute("for-each");
 	this.valueof = this.getAttribute("value-of");
-	this.variableName = this.getAttribute("variable", "xmlNode");
+	this.variableName = this.getAttribute("variable", "currentNode");
 	this.xmlTitle = this.getAttribute("tiddler",this.getVariable("currentTiddler"));
 
 	for (var attribute in this.attributes) {

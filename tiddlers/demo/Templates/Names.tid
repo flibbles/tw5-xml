@@ -4,6 +4,6 @@ title: Templates/Names
 
 <ul>
  <$xpath for-each="//name">
-  <li><<xmlNode>></li>
+  <li><<currentNode>></li>
   </$xpath>
 </ul>
