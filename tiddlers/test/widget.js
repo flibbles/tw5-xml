@@ -146,4 +146,70 @@ it("can nest across different contexts", function() {
 	expect(text).toBe("<p>\nvA1\nvA2</p><p>\nvB</p>");
 });
 
+describe("refreshes", function() {
+
+function testChange(template, Atext, Btext, Aexpected, Bexpected, options) {
+	options = options || {};
+	var wiki = options.wiki || new $tw.Wiki();
+	wiki.addTiddler({title: "ref", text: Atext});
+	wiki.addTiddler({title: "xml", text: options.xml || "<dog a='wrong' b='right' />"});
+	wiki.addTiddler({title: "template", text: template});
+	var parser = wiki.parseText("text/vnd.tiddlywiki", "{{xml||template}}");
+	var widgetNode = wiki.makeWidget(parser);
+	var container = $tw.fakeDocument.createElement("div");
+	widgetNode.render(container, null);
+	expect(container.innerHTML).toBe(Aexpected);
+	wiki.addTiddler({title: "ref", text: Btext});
+	widgetNode.refresh({"ref": {modified: true}});
+	expect(container.innerHTML).toBe(Bexpected);
+};
+
+it("when for-each changes", function() {
+	testChange("<$xpath for-each={{ref}} />\n",
+		"/dog/@a", "/dog/@b", "<div>wrong</div>", "<div>right</div>");
+});
+
+it("when value-of changes", function() {
+	testChange("<$xpath value-of={{ref}} />\n",
+		"/dog/@a", "/dog/@b", "wrong", "right");
+});
+
+it("when variable changes", function() {
+	testChange("<$xpath variable={{ref}} for-each='/dog/@a'><<first>>-<<second>></$xpath>",
+		"first", "second", "<p>wrong-</p>", "<p>-wrong</p>");
+});
+
+it("when tiddler changes", function() {
+	var wiki = new $tw.Wiki();
+	wiki.addTiddler({title: "otherxml", text: "<dog a='other' />"});
+	testChange("<$xpath tiddler={{ref}} for-each='/dog/@a' />\n",
+		"xml", "otherxml", "<div>wrong</div>", "<div>other</div>", {wiki:wiki});
+});
+
+it("when underlying xml changes", function() {
+	testChange("<$xpath tiddler='ref' for-each='/dog/@a' />\n",
+		"<dog a='one'/>", "<dog a='two'/>", "<div>one</div>", "<div>two</div>");
+});
+
+it("when children change", function() {
+	testChange("<$xpath for-each='/dog/@a'>{{ref}}</$xpath>",
+		"one", "two", "<p>one</p>", "<p>two</p>");
+});
+
+it("when a locally-defined namespace def changes", function() {
+	var options = {xml: "<root xmlns:a='http://A.com' xmlns:b='http://B.com'><a:dog>DogA</a:dog><b:dog>DogB</b:dog></root>"};
+	testChange("<$xpath xmlns:x={{ref}} for-each='//x:dog' />\n",
+		"http://A.com", "http://B.com",
+		"<div>DogA</div>", "<div>DogB</div>", options);
+});
+
+it("when an inherited namespace def changes", function() {
+	var options = {xml: "<root xmlns:a='http://A.com' xmlns:b='http://B.com'><a:dog>DogA</a:dog><b:dog>DogB</b:dog></root>"};
+	testChange("<$set name='xmlns:x' value={{ref}}>\n\n<$xpath for-each='//x:dog' />\n\n</$set>",
+		"http://A.com", "http://B.com",
+		"<div>DogA</div>", "<div>DogB</div>", options);
+});
+
+});
+
 });

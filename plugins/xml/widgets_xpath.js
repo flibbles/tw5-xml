@@ -35,8 +35,7 @@ XPathWidget.prototype.execute = function() {
 	this.foreach = this.getAttribute("for-each");
 	this.valueof = this.getAttribute("value-of");
 	this.variableName = this.getAttribute("variable", "xmlNode");
-	//this.xmlTitle = this.getAttribute("tiddler",this.getVariable("currentTiddler"));
-	this.xmlTitle = this.getVariable("currentTiddler");
+	this.xmlTitle = this.getAttribute("tiddler",this.getVariable("currentTiddler"));
 
 	for (var attribute in this.attributes) {
 		if (attribute.substr(0, 6) === "xmlns:") {
@@ -151,12 +150,21 @@ XPathWidget.prototype.variableContext = function() {
 
 XPathWidget.prototype.refresh = function(changedTiddlers) {
 	var changedAttributes = this.computeAttributes();
-	if(changedAttributes.xslt || changedAttributes.tiddler || changedTiddlers[this.tiddler]) {
+	if(changedAttributes["for-each"] || changedAttributes["value-of"] || changedAttributes.variable || changedAttributes.tiddler || changedTiddlers[this.xmlTitle] || namespacesChanged(changedAttributes)) {
 		this.refreshSelf();
 		return true;
 	} else {
 		return this.refreshChildren(changedTiddlers);
 	}
+};
+
+function namespacesChanged(changedAttributes) {
+	for (var attribute in changedAttributes) {
+		if (attribute.substr(0,6) == "xmlns:") {
+			return true;
+		}
+	}
+	return false;
 };
 
 /*
