@@ -276,6 +276,36 @@ it("can nest across different contexts", function() {
 	expect(text).toBe("<p>\nvA1\nvA2</p><p>\nvB</p>");
 });
 
+it('handles all node types', function() {
+	function testType(innerXml, attribute, expectedForeach, expectedValueof) {
+		var output, xml = "<types>"+innerXml+"</types>";
+		output = transform(xml, "<$xpath for-each='"+attribute+"' />\n");
+		expect(output).toBe(expectedForeach);
+		output = transform(xml, "<$xpath value-of='"+attribute+"' />\n");
+		expect(output).toBe(expectedValueof);
+	}
+	testType("<elem attr='love'/>", "/types/elem/@attr",
+		"<div>love</div>", "love");
+	testType("<!--A comment-->", "/types/comment()",
+		"<div>A comment</div>", "A comment");
+	testType("Root node", "/",
+		"<div>&lt;types&gt;Root node&lt;/types&gt;</div>", "Root node");
+	testType("<![CDATA[my content]]>", "/types/text()",
+		"<div>my content</div>", "my content");
+	testType("<?key process?>", "/types/processing-instruction()", "<div>process</div>", "process");
+	testType("<?key process?>", "/types/processing-instruction(\"key\")", "<div>process</div>", "process");
+	testType("&amp;", "/types/text()", "<div>&amp;</div>", "&amp;");
+	// Empty node (to make sure it doesn't crash)
+	testType("", "/types", "<div></div>", "");
+	// Empty text. Won't actually find anything
+	testType("", "/types/text()", "", "");
+});
+
+it('handles DOCTYPE', function() {
+	var output = transform(prolog + '<!DOCTYPE sample [\n<!NOTATION vrml PUBLIC "VMRL 1.0">\n<!ENTITY dotto "Dottoro">\n]>\n<dogs><dog>Woofer</dog></dogs>', "<$xpath value-of='/dogs/dog' />\n");
+	expect(output).toBe("Woofer");
+});
+
 describe("refreshes", function() {
 
 function testChange(template, Atext, Btext, Aexpected, Bexpected, options) {

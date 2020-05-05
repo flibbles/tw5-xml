@@ -41,6 +41,11 @@ if ($tw.browser) {
 				return buffer.join('');
 			}
 		});
+		Object.defineProperty(proto, "outerHTML", {
+			get: function() {
+				return this.toString();
+			}
+		});
 	var docPrototype = Object.getPrototypeOf(doc);
 	docPrototype.evaluate = function(xpathExpression, contextNode, namespaceResolver, resultType, result) {
 		return xpath.evaluate(xpathExpression, contextNode, namespaceResolver, resultType, result);

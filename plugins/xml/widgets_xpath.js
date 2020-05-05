@@ -84,6 +84,9 @@ XPathWidget.prototype.execute = function() {
 						}
 					} else {
 						value = node.nodeValue || node.innerHTML;
+						if (!value && node.documentElement) {
+							value = node.documentElement.outerHTML;
+						}
 					}
 					members.push(this.makeItemTemplate(node, value, true));
 					node = iterator.iterateNext();
