@@ -68,7 +68,7 @@ XPathWidget.prototype.execute = function() {
 				try {
 					var value = doc.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE);
 					if (value) {
-						members.push({type: "text", text: value.stringValue});
+						members.push(this.makeItemTemplate(null, value.stringValue, false));
 					}
 				} catch (e) {
 					members.push(this.makeError(e, this.valueof));
@@ -82,7 +82,7 @@ XPathWidget.prototype.execute = function() {
 					members.push(this.makeError(e, this.foreach));
 				}
 				while (node) {
-					members.push(this.makeItemTemplate(node));
+					members.push(this.makeItemTemplate(node, node.nodeValue || node.innerHTML, true));
 					node = iterator.iterateNext();
 				}
 			}
@@ -128,7 +128,7 @@ XPathWidget.prototype.makeError = function(e, xpath) {
 /*
 Compose the template for a list item
 */
-XPathWidget.prototype.makeItemTemplate = function(node) {
+XPathWidget.prototype.makeItemTemplate = function(node, value, repeats) {
 	var templateTree;
 	// Compose the transclusion of the template
 	if(this.template) {
@@ -138,12 +138,18 @@ XPathWidget.prototype.makeItemTemplate = function(node) {
 			templateTree = this.parseTreeNode.children;
 		} else {
 			// Default template is to print out each result
-			templateTree = [{type: "element", tag: this.parseTreeNode.isBlock ? "div" : "span", children: [{type: "text", text: node.nodeValue || node.innerHTML}]}];
+			templateTree = {type: "text", text: value};
+			if (repeats) {
+				templateTree = [{type: "element", tag: this.parseTreeNode.isBlock ? "div" : "span", children: [templateTree]}];
+			} else {
+				// Just returning the value. That's all.
+				return templateTree;
+			}
 		}
 	}
 
 	// Return the list item
-	return {type: "xslnode", contextName: this.variableContext(), node: node, variableName: this.variableName, children: templateTree};
+	return {type: "xslnode", contextName: this.variableContext(), node: node, variableName: this.variableName, variableValue: value, children: templateTree};
 };
 
 XPathWidget.prototype.variableContext = function() {
@@ -192,9 +198,11 @@ Compute the internal state of the widget
 XslNodeWidget.prototype.execute = function() {
 	// Set the current list item title
 	var node = this.parseTreeNode.node;
-	this.setVariable(this.parseTreeNode.variableName,node.nodeValue || node.innerHTML);
-	this.setVariable(this.parseTreeNode.contextName,this.parseTreeNode.node.localName);
-	this.variables[this.parseTreeNode.contextName].node = this.parseTreeNode.node;
+	this.setVariable(this.parseTreeNode.variableName,this.parseTreeNode.variableValue);
+	if (this.parseTreeNode.node) {
+		this.setVariable(this.parseTreeNode.contextName,this.parseTreeNode.node.localName);
+		this.variables[this.parseTreeNode.contextName].node = this.parseTreeNode.node;
+	}
 	// Construct the child widgets
 	this.makeChildWidgets();
 };

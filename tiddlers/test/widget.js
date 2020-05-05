@@ -159,20 +159,20 @@ it('escapes and does not escape with for-each when appropriate', function() {
 	expect(output).toBe("<p><span>&lt;strong&gt;Title&lt;/strong&gt;</span><span>body&lt;ul&gt;&lt;li&gt;list&lt;/li&gt;&lt;/ul&gt;</span></p>");
 });
 
-it('escapes and does not escape with for-each when appropriate', function() {
+it('escapes and does not escape with value-of when appropriate', function() {
 	// Value-of behaves like <$set> when possible, or <$view> if the
 	// widget is self-terminating. Always returns escaped strings. With no
 	// nested elements. textContent only.
 	var text = "<html><body><div><h1>Title</h1></div></body></html>",
 		output;
 
-	// Rendering variable as block, raw as possible
-	output = transform(text, "<$xpath value-of='/html/body' variable='title'>\n\n<<title>>\n\n</$xpath>");
-	expect(output).toBe("Title");
+	// Rendering variable as block, wrapped in <p>, for some reason
+	output = transform(text, "<$xpath value-of='/html/body' variable='title'>\n\nXX<<title>>XX\n\n</$xpath>");
+	expect(output).toBe("<p>XXTitleXX</p>");
 
 	// Rendering variable as inline, wrapped in <p>
-	output = transform(text, "<$xpath value-of='/html/body' variable='title'><<title>></$xpath>");
-	expect(output).toBe("<p>Title</p>");
+	output = transform(text, "<$xpath value-of='/html/body' variable='title'>XX<<title>>XX</$xpath>");
+	expect(output).toBe("<p>XXTitleXX</p>");
 
 	// Rendering direct as block: raw as possible
 	output = transform(text, "<$xpath value-of='/html/body' />\n");
