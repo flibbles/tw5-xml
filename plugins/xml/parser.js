@@ -13,12 +13,12 @@ The XML parser displays itself as xml.
 "use strict";
 
 var XmlParser = function(type,text,options) {
-	var template = getTemplate(text);
-	if (template) {
+	var templateValue = getTemplate(text);
+	if (templateValue) {
 		this.tree = [{
 			type: "transclude",
 			attributes: {
-				tiddler: {type: "string", value: template}
+				tiddler: templateValue
 			},
 			isBlock: true
 		}];
@@ -40,11 +40,9 @@ function getTemplate(text) {
 	var node = doc.firstChild;
 	while (node) {
 		if (node.target === "tiddlywiki") {
-			// TODO: This needs to be much more robust
-			var regexp = /template\s*=\s*['"]([^'"]*)['"]/
-			var match = node.data.match(regexp)
-			if (match) {
-				return match[1];
+			var attr = $tw.utils.parseAttribute(node.data, 0);
+			if (attr && attr.name === "template") {
+				return attr;
 			}
 		}
 		node = node.nextSibling;
