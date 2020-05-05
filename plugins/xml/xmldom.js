@@ -13,12 +13,11 @@ if ($tw.browser) {
 } else {
 	var parser, xpath;
 	try {
-		throw "";
-		var DOM = require('xmldom');
-		exports.DOMParser = DOM.DOMParser;
-	} catch (e) {
 		var parser = require("$:/plugins/tiddlywiki/xmldom/dom-parser");
 		exports.DOMParser = parser.DOMParser;
+	} catch (e) {
+		var DOM = require('xmldom');
+		exports.DOMParser = DOM.DOMParser;
 	}
 	try {
 		xpath = require('xpath');

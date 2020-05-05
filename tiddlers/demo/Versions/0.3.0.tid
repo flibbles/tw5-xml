@@ -1,0 +1,16 @@
+created: 20200505010243780
+
+Changes
+
+* Changed the default variable name `xmlNode` to `currentNode`. This is more in line with TiddlyWiki lingo. And it'll make more sense if I ever build a jquery widget to go with this xpath widget.
+* Altered what is assigned to the xpath variable. `for-each` assigns innerHTML when appropriate, `value-of` always assigns a string value, or textContent when appropriate. These changes put the widget more in line with how $list and $set work.
+
+Improvements
+
+* Considerably better error handling
+* Namespaces tested
+* IE11 support (I think)
+* $xpath widget refreshes correctly after tiddlywiki changes under all circumstances
+* Template attribute feature added to $xpath 
+* Tiddler attribute feature added to $xpath 
+* `for-each` and `value-of` can be used at the same time, for intuitive effects.

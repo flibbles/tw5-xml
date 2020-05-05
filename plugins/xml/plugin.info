@@ -2,7 +2,7 @@
         "title": "$:/plugins/flibbles/xml",
         "description": "XML - import/export/rendering/transforming",
         "author": "Flibbles",
-        "version": "0.2.0",
+        "version": "0.3.0",
         "core-version": ">=5.1.14",
         "source": "https://github.com/flibbles/tw5-xml",
         "list": "readme",
