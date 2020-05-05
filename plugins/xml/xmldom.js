@@ -9,24 +9,14 @@ the tiddlywiki plugin.
 
 if ($tw.browser) {
 	exports.DOMParser = DOMParser;
-	exports.XPathResult = XPathResult;
 } else {
-	var parser, xpath;
+	var parser;
 	try {
 		var parser = require("$:/plugins/tiddlywiki/xmldom/dom-parser");
 		exports.DOMParser = parser.DOMParser;
 	} catch (e) {
 		var DOM = require('xmldom');
 		exports.DOMParser = DOM.DOMParser;
-	}
-	try {
-		xpath = require('xpath');
-		exports.XPathResult = xpath.XPathResult;
-	} catch (e) {
-		xpath = {
-			evaluate: function() {throw "xpath is required on Node.JS for this operation. Install xpath with 'npm install xpath'"; }
-		};
-		exports.XPathResult = Object.create(null);
 	}
 	var doc = (new exports.DOMParser()).parseFromString("<elem/>");
 		var proto = Object.getPrototypeOf(doc.documentElement);
@@ -46,13 +36,6 @@ if ($tw.browser) {
 				return this.toString();
 			}
 		});
-	var docPrototype = Object.getPrototypeOf(doc);
-	docPrototype.evaluate = function(xpathExpression, contextNode, namespaceResolver, resultType, result) {
-		return xpath.evaluate(xpathExpression, contextNode, namespaceResolver, resultType, result);
-	};
-	docPrototype.createNSResolver = function(node) {
-		return xpath.createNSResolver(node);
-	};
 }
 
 exports.getTiddlerDocument = function(wiki, title) {

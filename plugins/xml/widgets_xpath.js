@@ -30,7 +30,7 @@ XPathWidget.prototype.render = function(parent,nextSibling) {
 };
 
 XPathWidget.prototype.execute = function() {
-	var xmlDom = require("../xmldom");
+	var xpath = require("../xpath");
 	this.template = this.getAttribute("template");
 	this.foreach = this.getAttribute("for-each");
 	this.valueof = this.getAttribute("value-of");
@@ -47,7 +47,7 @@ XPathWidget.prototype.execute = function() {
 	var contextNode, doc;
 	if (contextVariable) {
 		contextNode = contextVariable.node;
-		doc = contextNode.ownerDocument;
+		doc = contextNode.ownerDocument || contextNode;
 	} else {
 		var xmlDom = require("../xmldom");
 		doc = xmlDom.getTiddlerDocument(this.wiki, this.xmlTitle);
@@ -57,7 +57,7 @@ XPathWidget.prototype.execute = function() {
 		if (doc.error) {
 			members.push(this.makeError({name: "DOMParserError"}, this.xmlTitle));
 		} else {
-			var docResolver = doc.createNSResolver(contextNode);
+			var docResolver = xpath.createNSResolver(contextNode);
 			var self = this;
 			var resolver = function(nsPrefix) {
 				var variable = self.variables["xmlns:" + nsPrefix];
@@ -67,7 +67,7 @@ XPathWidget.prototype.execute = function() {
 			if (this.foreach) {
 				var node = undefined;
 				try {
-					var iterator = doc.evaluate(this.foreach, contextNode, resolver, xmlDom.XPathResult.ANY_TYPE, null);
+					var iterator = xpath.evaluate(this.foreach, contextNode, resolver, xpath.XPathResult.ANY_TYPE, null);
 					node = iterator.iterateNext();
 				} catch(e) {
 					members.push(this.makeError(e, this.foreach));
@@ -76,7 +76,7 @@ XPathWidget.prototype.execute = function() {
 					var value;
 					if (this.valueof) {
 						try {
-							var rtn = doc.evaluate(this.valueof, node, resolver, xmlDom.XPathResult.STRING_TYPE, null);
+							var rtn = xpath.evaluate(this.valueof, node, resolver, xpath.XPathResult.STRING_TYPE, null);
 							value = rtn.stringValue;
 						} catch(e) {
 							members.push(this.makeError(e, this.valueof));
@@ -93,7 +93,7 @@ XPathWidget.prototype.execute = function() {
 				}
 			} else {
 				try {
-					var value = doc.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE, null);
+					var value = xpath.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE, null);
 					if (value) {
 						members.push(this.makeItemTemplate(null, value.stringValue, false));
 					}

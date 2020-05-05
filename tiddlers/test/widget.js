@@ -136,6 +136,12 @@ it("can nest for-each loops", function() {
 	expect(test).toBe("<p>\nA\nB</p><p>\nC</p>");
 });
 
+it("can nest for-each on document type", function() {
+	var test = transform("<tricks><trick name='A'/><trick name='B'/></tricks>",
+		"<$xpath for-each='/'>\n\n<$xpath variable='trick' for-each='./tricks/trick/@name'>\n<<trick>></$xpath></$xpath>");
+	expect(test).toBe("<p>\nA\nB</p>");
+});
+
 it('can get value of', function() {
 	var text = transform("<dogs><dog>Roofus</dog><dog>Skippy</dog></dogs>",
 		"<$xpath value-of='/dogs/dog' />");
