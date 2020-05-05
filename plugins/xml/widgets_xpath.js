@@ -67,7 +67,7 @@ XPathWidget.prototype.execute = function() {
 			if (this.foreach) {
 				var node = undefined;
 				try {
-					var iterator = doc.evaluate(this.foreach, contextNode, resolver, xmlDom.XPathResult.ANY_TYPE, null );
+					var iterator = doc.evaluate(this.foreach, contextNode, resolver, xmlDom.XPathResult.ANY_TYPE, null);
 					node = iterator.iterateNext();
 				} catch(e) {
 					members.push(this.makeError(e, this.foreach));
@@ -76,7 +76,7 @@ XPathWidget.prototype.execute = function() {
 					var value;
 					if (this.valueof) {
 						try {
-							var rtn = doc.evaluate(this.valueof, node, resolver, xmlDom.XPathResult.STRING_TYPE);
+							var rtn = doc.evaluate(this.valueof, node, resolver, xmlDom.XPathResult.STRING_TYPE, null);
 							value = rtn.stringValue;
 						} catch(e) {
 							members.push(this.makeError(e, this.valueof));
@@ -93,7 +93,7 @@ XPathWidget.prototype.execute = function() {
 				}
 			} else {
 				try {
-					var value = doc.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE);
+					var value = doc.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE, null);
 					if (value) {
 						members.push(this.makeItemTemplate(null, value.stringValue, false));
 					}
@@ -132,6 +132,7 @@ XPathWidget.prototype.makeError = function(e, xpath) {
 		console.warn(e.code);
 		console.warn(e.name);
 		console.warn(e.message);
+		console.warn(e);
 	}
 	return {type: "element", tag: "span", attributes: {
 			"class": {type: "string", value: "tc-error"}
