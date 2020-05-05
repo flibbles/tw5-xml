@@ -120,6 +120,16 @@ it("can for-each loop with template", function() {
 	expect(output).toBe("-Roofus--Casey-");
 });
 
+it("can value-of with template", function() {
+	var xml = "<dogs><dog>Roofus</dog></dogs>";
+	var wiki = new $tw.Wiki();
+	wiki.addTiddler({title: "each", text: "-<<currentNode>>-"});
+	var output = transform(xml, "<$xpath template='each' value-of='/dogs' />", {wiki: wiki});
+	expect(output).toBe("<p>-Roofus-</p>");
+	output = transform(xml, "<$xpath template='each' value-of='/dogs' />\n", {wiki: wiki});
+	expect(output).toBe("-Roofus-");
+});
+
 it("can nest for-each loops", function() {
 	var test = transform("<dogs><dog><trick name='A'/><trick name='B'/></dog><dog><trick name='C'/></dog></dogs>",
 		"<$xpath for-each='/dogs/dog'>\n\n<$xpath variable='trick' for-each='./trick/@name'>\n<<trick>></$xpath></$xpath>");
@@ -130,6 +140,13 @@ it('can get value of', function() {
 	var text = transform("<dogs><dog>Roofus</dog><dog>Skippy</dog></dogs>",
 		"<$xpath value-of='/dogs/dog' />");
 	expect(text).toBe("<p>Roofus</p>");
+});
+
+it('can both for-each and value-of', function() {
+	// This confirms that for-each sets context. Not value-of
+	var text = transform("<dogs><dog name='Roofus'><trick>Backflip</trick></dog><dog name='Skippy'><trick>Shake</trick><trick>Play dead</trick></dog></dogs>",
+		"<$xpath for-each='/dogs/dog' value-of='./@name'variable='name'>\n\n''<<name>>''\n\n<ul><$xpath for-each='./trick' variable='trick'><li><<trick>></li></$xpath></ul></$xpath>");
+	expect(text).toBe("<p><strong>Roofus</strong></p><p><ul><li>Backflip</li></ul></p><p><strong>Skippy</strong></p><p><ul><li>Shake</li><li>Play dead</li></ul></p>");
 });
 
 it('escapes and does not escape with for-each when appropriate', function() {
@@ -181,6 +198,32 @@ it('escapes and does not escape with value-of when appropriate', function() {
 	// Rendering direct as inline: wrapped in <p>
 	output = transform(text, "<$xpath value-of='/html/body' />");
 	expect(output).toBe("<p>Title</p>");
+});
+
+it('escapes and does not with both attributes when appropriate', function() {
+	// This behaves pretty much like with just for-each, but the value
+	// will be different.
+	var text = "<dogs><dog><name><strong>Roofus</strong></name></dog><dog><name><em>Tricky</em></name></dog></dogs>",
+		output;
+	// Rendering variable block from both: textContent, delimiting <p>
+	output = transform(text,
+		"<$xpath variable='name' for-each='/dogs/dog' value-of='./name'>\n\n-<<name>>-\n\n</$xpath>");
+	expect(output).toBe("<p>-Roofus-</p><p>-Tricky-</p>");
+
+	// Rendering variable inline from both: textContent, surrounding <p>
+	output = transform(text,
+		"<$xpath variable='name' for-each='/dogs/dog' value-of='./name'>-<<name>>-</$xpath>");
+	expect(output).toBe("<p>-Roofus--Tricky-</p>");
+
+	// Rendering direct block from both: textContent, delimiting <div>
+	output = transform(text,
+		"<$xpath for-each='/dogs/dog' value-of='./name' />\n");
+	expect(output).toBe("<div>Roofus</div><div>Tricky</div>");
+
+	// Rendering direct inline from both: textContent, surrounding <span>
+	output = transform(text,
+		"<$xpath for-each='/dogs/dog' value-of='./name' />");
+	expect(output).toBe("<p><span>Roofus</span><span>Tricky</span></p>");
 });
 
 it("can infer specified namespaces", function() {

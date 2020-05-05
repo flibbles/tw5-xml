@@ -64,16 +64,7 @@ XPathWidget.prototype.execute = function() {
 				return variable ? variable.value : docResolver.lookupNamespaceURI(nsPrefix);
 			}
 			resolver.lookupNamespaceURI = resolver;
-			if (this.valueof) {
-				try {
-					var value = doc.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE);
-					if (value) {
-						members.push(this.makeItemTemplate(null, value.stringValue, false));
-					}
-				} catch (e) {
-					members.push(this.makeError(e, this.valueof));
-				}
-			} else {
+			if (this.foreach) {
 				var node = undefined;
 				try {
 					var iterator = doc.evaluate(this.foreach, contextNode, resolver, xmlDom.XPathResult.ANY_TYPE, null );
@@ -82,8 +73,29 @@ XPathWidget.prototype.execute = function() {
 					members.push(this.makeError(e, this.foreach));
 				}
 				while (node) {
-					members.push(this.makeItemTemplate(node, node.nodeValue || node.innerHTML, true));
+					var value;
+					if (this.valueof) {
+						try {
+							var rtn = doc.evaluate(this.valueof, node, resolver, xmlDom.XPathResult.STRING_TYPE);
+							value = rtn.stringValue;
+						} catch(e) {
+							members.push(this.makeError(e, this.valueof));
+							break;
+						}
+					} else {
+						value = node.nodeValue || node.innerHTML;
+					}
+					members.push(this.makeItemTemplate(node, value, true));
 					node = iterator.iterateNext();
+				}
+			} else {
+				try {
+					var value = doc.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE);
+					if (value) {
+						members.push(this.makeItemTemplate(null, value.stringValue, false));
+					}
+				} catch (e) {
+					members.push(this.makeError(e, this.valueof));
 				}
 			}
 		}
