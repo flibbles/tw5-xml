@@ -27,7 +27,7 @@ exports.xpath = function(source,operator,options) {
 				var docResolver = xpath.createNSResolver(doc);
 				var resolver = function(nsPrefix) {
 					var variable = options.widget.getVariable("xmlns:"+nsPrefix);
-					return variable ? variable.value : docResolver.lookupNamespaceURI(nsPrefix);
+					return variable || docResolver.lookupNamespaceURI(nsPrefix);
 				};
 				resolver.lookupNamespaceURI = resolver;
 				try {
@@ -42,7 +42,7 @@ exports.xpath = function(source,operator,options) {
 						node = iterator.iterateNext();
 					}
 				} catch (e) {
-					results.push("ERROR");
+					results.push(xpath.getError(e, query));
 				}
 			}
 		}

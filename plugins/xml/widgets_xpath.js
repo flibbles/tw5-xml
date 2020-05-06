@@ -70,7 +70,8 @@ XPathWidget.prototype.execute = function() {
 					var iterator = xpath.evaluate(this.foreach, contextNode, resolver, xpath.XPathResult.ANY_TYPE, null);
 					node = iterator.iterateNext();
 				} catch(e) {
-					members.push(this.makeError(e, this.foreach));
+					var error = xpath.getError(e, this.foreach);
+					members.push(this.makeErrorTree(error));
 				}
 				while (node) {
 					var value;
@@ -79,7 +80,8 @@ XPathWidget.prototype.execute = function() {
 							var rtn = xpath.evaluate(this.valueof, node, resolver, xpath.XPathResult.STRING_TYPE, null);
 							value = rtn.stringValue;
 						} catch(e) {
-							members.push(this.makeError(e, this.valueof));
+							var error = xpath.getError(e, this.valueof);
+							members.push(this.makeErrorTree(error));
 							break;
 						}
 					} else {
@@ -103,42 +105,13 @@ XPathWidget.prototype.execute = function() {
 						members.push(this.makeItemTemplate(null, value, false));
 					}
 				} catch (e) {
-					members.push(this.makeError(e, this.valueof));
+					var error = xpath.getError(e, this.valueof);
+					members.push(this.makeErrorTree(error));
 				}
 			}
 		}
 	}
 	this.makeChildWidgets(members);
-};
-
-XPathWidget.prototype.makeError = function(e, xpath) {
-	var code, msg;
-	switch (e.name) {
-		case "NamespaceError":
-		case "SyntaxError":
-			code = e.name;
-			break;
-		case "Error":
-			if (e.message.indexOf("Cannot resolve QName") == 0) {
-				code = "NamespaceError";
-			} else if (e.message.indexOf("Invalid expression") == 0) {
-				code = "SyntaxError";
-			}
-			break;
-	}
-	if (code) {
-		msg = $tw.language.getString("flibbles/xml/Error/XPath/" + code,
-			{variables: {xpath: xpath}});
-	} else {
-		// This message will be wildly inconsistent across implementations,
-		// but it's better that we show this than something generic.
-		msg = e.message;
-		console.warn(e.code);
-		console.warn(e.name);
-		console.warn(e.message);
-		console.warn(e);
-	}
-	return this.makeErrorTree(msg);
 };
 
 XPathWidget.prototype.makeErrorTree = function(error) {

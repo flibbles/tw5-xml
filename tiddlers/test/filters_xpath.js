@@ -23,14 +23,17 @@ it("emits helpful output for malformed XML", function() {
 	test("/dogs/dog", ['Unable to parse XML in tiddler "test.xml"'], {text: "<dogs><$dog /></dogs"});
 });
 
-/*
 it("handles explicit namespaces", function() {
 	var wiki = new $tw.Wiki();
-	var widget = wiki.makeWidget(null, {variables: {"xmlns:x": "http://dognet.com"}});
-	var text = "<x:dogs><x:dog>Buddy</x:dog></x:dogs>";
+	var parser = {tree: [{type: "widget"}]};
+	var widget = wiki.makeWidget(parser, {variables: {"xmlns:x": "http://dognet.com"}});
+	widget.render();
+	while (widget.children.length > 0) {
+		widget = widget.children[0];
+	}
+	var text = "<dogs xmlns='http://dognet.com'><dog>Buddy</dog></dogs>";
 	test("/x:dogs/x:dog", ["Buddy"], {text: text, wiki: wiki, widget: widget});
 
 });
-*/
 
 });
