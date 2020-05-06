@@ -54,4 +54,25 @@ it("handles implicit namespaces with widget", function() {
 	test("/d:dogs/d:dog", ["Johnson"], {text: text, wiki: wiki, widget: widget});
 });
 
+it("handles xpath errors gracefully", function() {
+	test("/dogs/dog[", ["Invalid XPath expression: /dogs/dog["]);
+	test("/z:dogs/z:dog", ["Could not resolve namespaces in XPath expression: /z:dogs/z:dog"]);
+});
+
+it("gets textContent, not innerHTML", function() {
+	test("/type", ["love"], {text: "<type><stuff>love</stuff></type>"});
+});
+
+it("handles all node types", function() {
+	test("/type/@attr", ["love"], {text: "<type attr='love' />"});
+	test("/type/comment()", ["my comment"], {text: "<type><!--my comment--></type>"});
+	test("/", ["root"], {text: "<type><stuff>root</stuff></type>"});
+	test("/type/text()", ["my cdata"], {text: "<type><![CDATA[my cdata]]></type>"});
+	test("/type/processing-instruction()", ["my instruction"], {text: "<type><?key my instruction?></type>"});
+	test("/type/text()", ["&"], {text: "<type>&amp;</type>"});
+	// Empty node
+	test("/type", [""], {text: "<type></type>"});
+	test("/type/text()", [], {text: "<type></type>"});
+});
+
 });
