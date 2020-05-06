@@ -1,0 +1,8 @@
+title: $:/config/flibbles/relink/attributes/
+
+# If you're wondering what this is about, check out my other plugin,
+# flibbles/relink, for automatically propogating tiddler renames across
+# your wiki.
+
+$xpath/tiddler: title
+$xpath/template: title
