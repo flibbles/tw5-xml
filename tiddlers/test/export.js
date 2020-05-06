@@ -36,6 +36,13 @@ it("selective", function() {
 	expect(text.indexOf("ignored")).toBe(-1, "exported tiddlers not included in exportFilter");
 });
 
+// No other exporter, when opened directly in TiddlyWiki, prints out literally
+// everything. The JSON exporter assumes nothing, which it should, but the
+// way it does it is actually flawed.
+// My way isn't flawed. I set another value equal to <<exportFilter>>, and then
+// use that. That way, if there's not exportFilter, I get emptystring instead
+// of null.
+// Meahwhile, JSONexporter chokes on titles like this: 'with"""many"""quotes'
 it("doesn't output everything if exportFilter undefined", function() {
 	var options = {variables: {} };
 	var text = exportXml({title: "ignore", text: "ignore"}, options);
