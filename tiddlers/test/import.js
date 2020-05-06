@@ -97,14 +97,18 @@ it("unrelated xml file", function() {
 
 it("malformed xml file", function() {
 	var text = "<dogs>Roofus</wrong",
-		rtn;
-	utils.monkeyPatch(console, "warn", () => null, function() {
-	utils.monkeyPatch(console, "error", () => null, function() {
 		rtn = importXml(text, {title: "myDogs.xml"});
-	});
-	});
 	expect(rtn.length).toBe(1);
 	expect(rtn[0].title).toBe("myDogs.xml");
+	expect(rtn[0].text).toBe(text);
+	expect(rtn[0].type).toBe("text/xml");
+});
+
+it("malformed tiddler document", function() {
+	var text = "<tiddlers><tiddler><title>MyTitle</title><text><div>Stuff</span></text></tiddler></tiddlers>";
+		rtn = importXml(text, {title: "myFile.xml"});
+	expect(rtn.length).toBe(1);
+	expect(rtn[0].title).toBe("myFile.xml");
 	expect(rtn[0].text).toBe(text);
 	expect(rtn[0].type).toBe("text/xml");
 });

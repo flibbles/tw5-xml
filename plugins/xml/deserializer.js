@@ -23,27 +23,34 @@ Deserializes xml files of type:
 "use strict";
 
 exports["text/xml"] = function(text,fields) {
-	var DOMParser = require("./xmldom").DOMParser;
-	var parser = new DOMParser();
-	var doc = parser.parseFromString(text, "text/xml");
+	var xmldom = require("./xmldom");
+	var doc = xmldom.getTextDocument(text);
 	var elem = doc.documentElement;
 	var results = [];
-	if (elem.tagName === "tiddlers") {
-		for (var i = 0; i < elem.childNodes.length; i++) {
-			var incomingFields = elem.childNodes[i];
+	if (doc.error) {
+		// It's malformed. Don't try to parse it.
+		results.push(basicXml(text,fields));
+	} else if (elem.tagName === "tiddlers") {
+		var incomingFields = elem.firstChild;
+		while (incomingFields) {
 			if (incomingFields.tagName === "tiddler") {
 				results.push(deserializeTiddler(incomingFields));
 			}
+			incomingFields = incomingFields.nextSibling;
 		}
 	} else if (elem.tagName === "tiddler") {
 		results.push(deserializeTiddler(elem));
 	} else {
-		var rtn = $tw.utils.extend(Object.create(null), fields);
-		rtn.text = text;
-		rtn.type = "text/xml";
-		results.push(rtn);
+		results.push(basicXml(text,fields));
 	}
 	return results;
+};
+
+function basicXml(text, fields) {
+	var rtn = $tw.utils.extend(Object.create(null), fields);
+	rtn.text = text;
+	rtn.type = "text/xml";
+	return rtn;
 };
 
 function deserializeTiddler(domNode) {

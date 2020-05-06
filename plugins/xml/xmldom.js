@@ -42,7 +42,7 @@ exports.getTiddlerDocument = function(wiki, title) {
 	var tiddler = wiki.getTiddler(title),
 		doc = undefined;
 	if (tiddler) {
-		doc = exports.getTextDocument(wiki, tiddler.fields.text);
+		doc = exports.getTextDocument(tiddler.fields.text);
 		if (doc.error) {
 			// Let's elaborate
 			doc.error = $tw.language.getString("flibbles/xml/Error/DOMParserError",
@@ -52,7 +52,7 @@ exports.getTiddlerDocument = function(wiki, title) {
 	return doc;
 };
 
-exports.getTextDocument = function(wiki, text) {
+exports.getTextDocument = function(text) {
 	var errorDetected = false;
 	function flag() { errorDetected = true; };
 	var parser = new exports.DOMParser({
