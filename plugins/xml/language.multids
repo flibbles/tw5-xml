@@ -1,5 +1,5 @@
 title: $:/language/flibbles/xml/
 
-Error/XPath/DOMParserError: Unable to parse underlying XML
+Error/DOMParserError: Unable to parse XML in tiddler "<$text text=<<currentTiddler>> />"
 Error/XPath/SyntaxError: Invalid XPath expression: <<xpath>>
 Error/XPath/NamespaceError: Could not resolve namespaces in XPath expression: <<xpath>>

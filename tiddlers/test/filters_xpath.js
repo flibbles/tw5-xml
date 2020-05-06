@@ -20,7 +20,7 @@ it("works", function() {
 });
 
 it("emits helpful output for malformed XML", function() {
-	test("/dogs/dog", ["Unable to parse underlying XML"], {text: "<dogs><$dog /></dogs"});
+	test("/dogs/dog", ['Unable to parse XML in tiddler "test.xml"'], {text: "<dogs><$dog /></dogs"});
 });
 
 /*

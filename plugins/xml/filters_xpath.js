@@ -22,7 +22,7 @@ exports.xpath = function(source,operator,options) {
 		var doc = xmlDom.getTiddlerDocument(options.wiki, title);
 		if (doc) {
 			if (doc.error) {
-				results.push($tw.language.getString("flibbles/xml/Error/XPath/DOMParserError"));
+				results.push(doc.error);
 			} else {
 				var docResolver = xpath.createNSResolver(doc);
 				var resolver = function(nsPrefix) {

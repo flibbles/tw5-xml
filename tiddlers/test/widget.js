@@ -50,7 +50,7 @@ it('deals with illegal xpath gracefully', function() {
 it('deals with malformed XML gracefully', function() {
 	function testFail(xml) {
 		var text = transform(xml, "<$xpath for-each='/dogs/*' />\n");
-		expect(text).toBe('<span class="tc-error">Unable to parse underlying XML</span>');
+		expect(text).toBe('<span class="tc-error">Unable to parse XML in tiddler &quot;xml&quot;</span>');
 	}
 	testFail("<dogs><dog>Honey</dog><$dog>Backster</$dog></dogs>");
 	testFail("<   dogs><dog>Honey</dog></dogs>");

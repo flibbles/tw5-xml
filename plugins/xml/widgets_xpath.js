@@ -55,7 +55,7 @@ XPathWidget.prototype.execute = function() {
 	}
 	if (contextNode) {
 		if (doc.error) {
-			members.push(this.makeError({name: "DOMParserError"}, this.xmlTitle));
+			members.push(this.makeErrorTree(doc.error));
 		} else {
 			var docResolver = xpath.createNSResolver(contextNode);
 			var self = this;
@@ -114,7 +114,6 @@ XPathWidget.prototype.execute = function() {
 XPathWidget.prototype.makeError = function(e, xpath) {
 	var code, msg;
 	switch (e.name) {
-		case "DOMParserError": // This is a custom one I made up
 		case "NamespaceError":
 		case "SyntaxError":
 			code = e.name;
@@ -139,10 +138,14 @@ XPathWidget.prototype.makeError = function(e, xpath) {
 		console.warn(e.message);
 		console.warn(e);
 	}
+	return this.makeErrorTree(msg);
+};
+
+XPathWidget.prototype.makeErrorTree = function(error) {
 	return {type: "element", tag: "span", attributes: {
 			"class": {type: "string", value: "tc-error"}
 		}, children: [
-			{type: "text", text: msg}
+			{type: "text", text: error}
 		]};
 };
 
