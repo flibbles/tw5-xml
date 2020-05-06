@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/flibbles/xml/xmlparser.js
+title: $:/plugins/flibbles/xml/parsers/xmlparser.js
 type: application/javascript
 module-type: parser
 
@@ -34,7 +34,7 @@ var XmlParser = function(type,text,options) {
 };
 
 function getTemplate(text) {
-	var DOMParser = require("./xmldom").DOMParser;
+	var DOMParser = require("../xmldom").DOMParser;
 	var parser = new DOMParser();
 	var doc = parser.parseFromString(text, "text/xml");
 	var node = doc.firstChild;
