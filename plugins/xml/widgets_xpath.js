@@ -93,9 +93,14 @@ XPathWidget.prototype.execute = function() {
 				}
 			} else {
 				try {
-					var value = xpath.evaluate(this.valueof, contextNode, resolver, xmlDom.XPathResult.STRING_TYPE, null);
-					if (value) {
-						members.push(this.makeItemTemplate(null, value.stringValue, false));
+					var iterator = xpath.evaluate(this.valueof, contextNode, resolver, xpath.XPathResult.ANY_TYPE, null);
+					node = iterator.iterateNext();
+					if (node) {
+						var value = node.nodeValue || node.textContent;
+						if (!value && node.documentElement) {
+							value = node.documentElement.textContent;
+						}
+						members.push(this.makeItemTemplate(null, value, false));
 					}
 				} catch (e) {
 					members.push(this.makeError(e, this.valueof));
