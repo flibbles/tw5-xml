@@ -19,12 +19,10 @@ To report an issue, please visit <a href={{!!source}}>the github page</a>.
 
 ''NOTE:'' This plugin is a work in progress that's not yet ready for public consumption. Its API is bound to change a lot right now.
 
-<!--
 !! To Install
 
 Drag the following onto your Tiddlywiki project and say "yes" to import.
 
 @@text-align:center;
-<$link to=<<plugin>> class="relink-dragger">Drag n' Drop me!</$link>
+<$link to=<<plugin>> class="button-dragger">Drag n' Drop me!</$link>
 @@
--->

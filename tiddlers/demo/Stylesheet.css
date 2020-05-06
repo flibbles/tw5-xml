@@ -1,3 +1,28 @@
+a.button-dragger {
+	background:linear-gradient(to bottom, #79bbff 5%, #378de5 100%);
+	background-color:#79bbff;
+	border-radius:20px;
+	border:1px solid #337bc4;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:17px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #528ecc;
+}
+
+a.button-dragger:hover {
+	text-decoration: none;
+}
+
+.button-dragger:active {
+	position:relative;
+	top:1px;
+}
+
 .xml-left-text {
         padding: 0px;
 }
