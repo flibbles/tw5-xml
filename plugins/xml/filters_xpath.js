@@ -24,12 +24,16 @@ exports.xpath = function(source,operator,options) {
 			if (doc.error) {
 				results.push(doc.error);
 			} else {
-				var docResolver = xpath.createNSResolver(doc);
-				var resolver = function(nsPrefix) {
-					var variable = options.widget.getVariable("xmlns:"+nsPrefix);
-					return variable || docResolver.lookupNamespaceURI(nsPrefix);
-				};
-				resolver.lookupNamespaceURI = resolver;
+				var resolver, docResolver = xpath.createNSResolver(doc);
+				if (options.widget) {
+					resolver = function(nsPrefix) {
+						var variable = options.widget.getVariable("xmlns:"+nsPrefix);
+						return variable || docResolver.lookupNamespaceURI(nsPrefix);
+					};
+					resolver.lookupNamespaceURI = resolver;
+				} else {
+					resolver = docResolver;
+				}
 				try {
 					var iterator = xpath.evaluate(query, doc, resolver, xpath.XPathResult.ANY_TYPE, null)
 					var node = iterator.iterateNext();

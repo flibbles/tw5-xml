@@ -15,6 +15,16 @@ function test(query, expected, options) {
 	expect(output).toEqual(expected);
 };
 
+function nsWidget(wiki, namespaces) {
+	var parser = {tree: [{type: "widget"}]};
+	var widget = wiki.makeWidget(parser, {variables: namespaces});
+	widget.render();
+	while (widget.children.length > 0) {
+		widget = widget.children[0];
+	}
+	return widget;
+};
+
 it("works", function() {
 	test("/dogs/dog", ["Sparks", "Joel"]);
 });
@@ -25,15 +35,23 @@ it("emits helpful output for malformed XML", function() {
 
 it("handles explicit namespaces", function() {
 	var wiki = new $tw.Wiki();
-	var parser = {tree: [{type: "widget"}]};
-	var widget = wiki.makeWidget(parser, {variables: {"xmlns:x": "http://dognet.com"}});
-	widget.render();
-	while (widget.children.length > 0) {
-		widget = widget.children[0];
-	}
+	var widget = nsWidget(wiki, {"xmlns:x": "http://dognet.com"});
 	var text = "<dogs xmlns='http://dognet.com'><dog>Buddy</dog></dogs>";
 	test("/x:dogs/x:dog", ["Buddy"], {text: text, wiki: wiki, widget: widget});
+});
 
+it("handles implicit namespaces without widget", function() {
+	var text = "<d:dogs xmlns:d='http://dognet.com'><d:dog>Johnson</d:dog></d:dogs>";
+	test("/d:dogs/d:dog", ["Johnson"], {text: text});
+});
+
+it("handles implicit namespaces with widget", function() {
+	// pass it a widget it doesn't use. Because handling with and without a
+	// widget is slightly different.
+	var wiki = new $tw.Wiki();
+	var widget = nsWidget(wiki, {});
+	var text = "<d:dogs xmlns:d='http://dognet.com'><d:dog>Johnson</d:dog></d:dogs>";
+	test("/d:dogs/d:dog", ["Johnson"], {text: text, wiki: wiki, widget: widget});
 });
 
 });
