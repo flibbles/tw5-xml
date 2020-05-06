@@ -4,4 +4,4 @@ tags: $:/tags/Exporter
 title: $:/plugins/flibbles/xml/XmlFile
 
 <?xml version="1.0" encoding="UTF-8"?>
-&lt;tiddlers><$list filter=<<exportFilter>> >&lt;tiddler><$list variable="field" filter="[<currentTiddler>fields[]]">&lt;<$text text=<<field>> />><$view field=<<field>> format="htmlencoded" />&lt;/<$text text=<<field>> />></$list>&lt;/tiddler></$list>&lt;/tiddlers>
+&lt;tiddlers><$set name="_filter" value=<<exportFilter>>><$list filter=<<_filter>> >&lt;tiddler><$list variable="field" filter="[<currentTiddler>fields[]]">&lt;<$text text=<<field>> />><$view field=<<field>> format="htmlencoded" />&lt;/<$text text=<<field>> />></$list>&lt;/tiddler></$list></$set>&lt;/tiddlers>

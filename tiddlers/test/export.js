@@ -14,7 +14,7 @@ function exportXml(fields, options) {
 	var exporter = $tw.wiki.filterTiddlers("[[$:/tags/Exporter]tagging[]extension[.xml]]")[0];
 	wiki.addTiddler($tw.wiki.getTiddler(exporter));
 	wiki.addTiddler(fields);
-	options.variables = { exportFilter: "[["+fields.title+"]]" }
+	options.variables = options.variables || { exportFilter: "[["+fields.title+"]]" }
 	return wiki.renderTiddler("text/plain", exporter, options);
 };
 
@@ -34,6 +34,12 @@ it("selective", function() {
 	var text = exportXml({title: "test", text: "content"}, {wiki: wiki});
 	expect(text).toContain("content");
 	expect(text.indexOf("ignored")).toBe(-1, "exported tiddlers not included in exportFilter");
+});
+
+it("doesn't output everything if exportFilter undefined", function() {
+	var options = {variables: {} };
+	var text = exportXml({title: "ignore", text: "ignore"}, options);
+	expect(text).toBe(prolog + "<tiddlers></tiddlers>");
 });
 
 });
