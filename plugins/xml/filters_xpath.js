@@ -24,16 +24,7 @@ exports.xpath = function(source,operator,options) {
 			if (doc.error) {
 				results.push(doc.error);
 			} else {
-				var resolver, docResolver = xpath.createNSResolver(doc);
-				if (options.widget) {
-					resolver = function(nsPrefix) {
-						var variable = options.widget.getVariable("xmlns:"+nsPrefix);
-						return variable || docResolver.lookupNamespaceURI(nsPrefix);
-					};
-					resolver.lookupNamespaceURI = resolver;
-				} else {
-					resolver = docResolver;
-				}
+				var resolver = xpath.createResolver(doc, options.widget);
 				try {
 					var iterator = xpath.evaluate(query, doc, resolver, xpath.XPathResult.ANY_TYPE, null)
 					var node = iterator.iterateNext();

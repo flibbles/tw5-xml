@@ -67,3 +67,19 @@ exports.getError = function(exception, query) {
 	}
 	return msg;
 };
+
+exports.createResolver = function(contextNode, widget) {
+	var resolver, docResolver = exports.createNSResolver(contextNode);
+	if (widget) {
+		resolver = function(nsPrefix) {
+			var variable = widget.variables["xmlns:" + nsPrefix];
+			return variable ? variable.value : docResolver.lookupNamespaceURI(nsPrefix);
+		};
+		// Some implementations expect an object with this method, not a
+		// function. We must abide.
+		resolver.lookupNamespaceURI = resolver;
+	} else {
+		resolver = docResolver;
+	}
+	return resolver;
+};

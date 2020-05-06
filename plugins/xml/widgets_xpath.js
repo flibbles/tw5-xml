@@ -57,13 +57,7 @@ XPathWidget.prototype.execute = function() {
 		if (doc.error) {
 			members.push(this.makeErrorTree(doc.error));
 		} else {
-			var docResolver = xpath.createNSResolver(contextNode);
-			var self = this;
-			var resolver = function(nsPrefix) {
-				var variable = self.variables["xmlns:" + nsPrefix];
-				return variable ? variable.value : docResolver.lookupNamespaceURI(nsPrefix);
-			}
-			resolver.lookupNamespaceURI = resolver;
+			var resolver = xpath.createResolver(contextNode, this);
 			if (this.foreach) {
 				var node = undefined;
 				try {
