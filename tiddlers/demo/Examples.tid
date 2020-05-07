@@ -1,4 +1,4 @@
-title: Features
+title: Examples
 
 <!-- NOTICE
 
@@ -10,5 +10,5 @@ example to tinker with that example directly.
 
 <$macrocall
 	$name="tabs"
-	tabsList="[tag[Features]]"
+	tabsList="[tag<currentTiddler>]"
 	default="Transform" />
