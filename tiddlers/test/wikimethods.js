@@ -40,4 +40,20 @@ it('describes tiddler when fails getting tiddler doc', function() {
 	expect(doc.error).toBe('Unable to parse XML in tiddler "test"');
 });
 
+function testInstructions(xml) {
+	var doc = xmldom.getTextDocument("<?tiddlywiki template='myFile'?>" + xml);
+	var attributes = xmldom.getProcessingInstructions(doc);
+	expect(attributes.template.type).toBe("string");
+	expect(attributes.template.value).toBe("myFile");
+};
+it('detects processing instruction', function() {
+	testInstructions("<doc/>");
+});
+
+it('gets processing instructions from malformed xml', function() {
+	testInstructions("<doc><$badElem /></doc>");
+	testInstructions("<doc><elem>content</doc>");
+	testInstructions("<doc><elem><name>name</elem><elem><name>2</name></elem></doc>");
+});
+
 });

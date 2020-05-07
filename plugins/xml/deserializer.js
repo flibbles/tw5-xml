@@ -28,15 +28,18 @@ exports["text/xml"] = function(text,fields) {
 	var attributes = xmldom.getProcessingInstructions(doc);
 	if (!attributes.bundle) {
 		return [basicXml(text,fields)];
-	} else if (doc.error) {
-		// It's malformed. Don't try to parse it.
-		var logger = new $tw.utils.Logger("XML deserializer")
-		var error = $tw.language.getString("flibbles/xml/Error/BundleParserError");
-		logger.alert(error);
-		return [];
-	} else {
-		return deserializeTiddlers(doc.documentElement);
+	} else if (!doc.error) {
+		try {
+			return deserializeTiddlers(doc.documentElement);
+		} catch (e) {
+			// proceed to error handling below. Ignore message for now.
+		}
 	}
+	// It's malformed. Don't try to parse it.
+	var logger = new $tw.utils.Logger("XML deserializer")
+	var error = $tw.language.getString("flibbles/xml/Error/BundleParserError");
+	logger.alert(error);
+	return [];
 };
 
 function basicXml(text, fields) {
@@ -53,11 +56,15 @@ function deserializeTiddlers(domNode) {
 		while (incomingFields) {
 			if (incomingFields.tagName === "tiddler") {
 				results.push(deserializeTiddler(incomingFields));
+			} else if (incomingFields.tagName !== undefined) {
+				throw "Expected <tiddler> element. Got <"+incomingFields.tagName+">";
 			}
 			incomingFields = incomingFields.nextSibling;
 		}
 	} else if (domNode.tagName === "tiddler") {
 		results.push(deserializeTiddler(domNode));
+	} else {
+		throw "Root element must be <tiddlers> or <tiddler>";
 	}
 	return results;
 };
@@ -67,7 +74,8 @@ function deserializeTiddler(domNode) {
 	var node = domNode.firstChild;
 	while (node) {
 		if (node.tagName !== undefined) {
-			if (node.childNodes.length != 1 || node.firstChild.nodeType == node.nodeType) {
+			if (node.childNodes.length != 1
+			|| node.firstChild.nodeType !== 3 /* text */) {
 				// This field appears to be written as unescaped XML.
 				// Very well. We'll still take it.
 				fields[node.tagName] = node.innerHTML;

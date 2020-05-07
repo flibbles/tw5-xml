@@ -17,6 +17,15 @@ function importXml(xmlAsText, fields) {
 	return wiki.deserializeTiddlers("text/xml",xmlAsText,tiddlerFields,options);
 };
 
+function testFails(xml) {
+	var errors = [];
+	utils.monkeyPatch($tw.utils.Logger.prototype, "alert", function(msg) {errors.push(msg);}, function() {
+		var rtn = importXml(xml, {title: "myFile.xml"});
+		expect(errors).toEqual(["Unable to parse XML tiddler bundle"]);
+		expect(rtn.length).toBe(0);
+	});
+}
+
 it("many", function() {
 	var rtn = importXml(`<?xml version="1.0" encoding="ISO-8859-1"?>
 <?tiddlywiki bundle?>
@@ -87,6 +96,24 @@ it("empty fields", function() {
 	expect(rtn[0].anything).toBe(undefined);
 });
 
+it("comments allowed", function() {
+	var rtn = importXml(prolog + `<?tiddlywiki bundle?><!--comment--><tiddlers>
+	<!-- 2 -->
+	<tiddler>
+	  <title>MyTitle</title>
+	  <text>content: <!-- allowed --></text>
+	  <!-- Below is tricky. One child. It is a comment. Not elem. not text. -->
+	  <field><!-- extra --></field>
+	</tiddler>
+	<!-- 3 -->
+	</tiddlers>`);
+	expect(rtn.length).toBe(1);
+	expect(Object.keys(rtn[0]).length).toBe(3);
+	expect(rtn[0].title).toBe("MyTitle");
+	expect(rtn[0].text).toBe("content: <!-- allowed -->");
+	expect(rtn[0].field).toBe("<!-- extra -->");
+});
+
 it("unrelated xml file", function() {
 	var text = prolog + "<dogs><dog>Roofus</dog></dogs>";
 	var rtn = importXml(text, {title: "myDogs.xml", other: "value"});
@@ -106,7 +133,7 @@ it("malformed xml file", function() {
 	expect(rtn[0].type).toBe("text/xml");
 });
 
-it("still imports malformed tiddler document", function() {
+it("still imports malformed but generic xml", function() {
 	var text = "<anything><text><div>Stuff</span></text></anything>";
 		rtn = importXml(text, {title: "myFile.xml"});
 	expect(rtn.length).toBe(1);
@@ -116,14 +143,12 @@ it("still imports malformed tiddler document", function() {
 });
 
 it("emits error with malformed tiddlywiki bundle", function() {
-	var text = "<?tiddlywiki bundle?><tiddlers><tiddler><title>MyTitle</title><text><div>Stuff</span></text></tiddler></tiddlers>";
-	var errors = [];
-	utils.monkeyPatch($tw.utils.Logger.prototype, "alert", function(msg) {errors.push(msg);}, function() {
-		var rtn = importXml(text, {title: "myFile.xml"});
-		expect(errors).toEqual(["Unable to parse XML tiddler bundle"]);
-		expect(rtn.length).toBe(0);
-	});
+	testFails("<?tiddlywiki bundle?><tiddlers><tiddler><title>MyTitle</title><text><div>Stuff</span></text></tiddler></tiddlers>");
+});
 
+it("emits error with well-formed bundle that violates specs", function() {
+	testFails("<?tiddlywiki bundle?><tiddlers><title>A</title><text>text</text></tiddlers>");
+	testFails("<?tiddlywiki bundle?><title>A</title>");
 });
 
 it("can include processing instructions", function() {
