@@ -1,0 +1,14 @@
+caption: XPath Operator
+tags: Documentation
+title: xpath Operator
+
+|!purpose |executes an xpath queries on all input tiddlers and outputs all results |
+|!input |a selection of titles |
+|!parameter |an xpath query |
+|!output |each result of each query |
+
+Each input title is queried in turn. The titles need to be valid XML files, but their type doesn't have to be set to XML (it could be html, for instance).
+
+Duplicates are not purged from output. If you want unique output, use the `[unique[]]` filter.
+
+Examples

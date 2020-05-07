@@ -1,0 +1,37 @@
+tags: Documentation
+title: XML Rendering
+
+With //TW5-XML// installed, XML documents will render as code blocks.
+
+! Syntax Highlighting
+
+The XML code blocks will automatically have syntax highlighting if you install the //tiddlywiki/highlight// plugin, which is available through the [[tiddlywiki plugin library|https://tiddlywiki.com/#Plugins]].
+
+! Rendering with template
+
+Optionally, you can have particular XML tiddlers render using a template instead of showing their raw XML. This is done through an XML processing instruction at the document's root level.
+
+```xml
+<?xml version="1.0"?>
+<?tiddlywiki template="myTemplate"?>
+<docElement>
+  ...
+</docElement>
+```
+If you opened this example in Tiddlywiki, you would see the myTemplate tiddler rendered using the XML as the currentTiddler.
+
+This ''template'' attribute behaves like a tiddlywiki attribute, not an XML attribute. This mean's a tricky title like ''this "title" with quote's'' would be written like
+
+```
+<?tiddlywiki template="""this "title" with quote's"""?>
+```
+
+and ''not'' like
+
+```
+<?tiddlywiki template="this &quot;title&quot; with quot&apos;s"?>
+```
+
+Also, as a tiddlywiki attribute, it supports indirect, filtered, and macro attributes.
+
+However, there is ''one'' difference. The string `?>` cannot show up in your attribute in any form, or else your XML processing instruction becomes illegal XML.

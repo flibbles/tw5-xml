@@ -1,0 +1,11 @@
+title: $:/plugins/flibbles/xml/readme
+
+TW5-XML supplies tools for working with XML tiddlers.
+
+!!! Features
+
+* The `<$xpath>` widget and `[xpath[]]` operator allow for parsing XML.
+* XML tiddlers display correctly, and support XML processing instructions to render using a template tiddler.
+* Allows for importing and exporting XML files.
+
+See [[the tw5-xml website|https://flibbles.github.io/tw5-xml/]] for documentation and examples.

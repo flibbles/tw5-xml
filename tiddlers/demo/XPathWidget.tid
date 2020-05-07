@@ -1,0 +1,85 @@
+caption: XPath widget
+tags: Documentation
+title: XPathWidget
+
+! Introduction
+
+The xpath widget allows you to query an XML tiddler using xpath and iterate through the results. it behaves very much like the `<$list>` widget, except that it iterates query results, not filter results.
+
+Also, if you're familiar with XSLT, its ''for-each'' and ''value-of'' attributes behave the same way their corresponding XSLT elements do.
+
+! Content and Attributes
+
+The content of the `<$xpath>` widget is an optional template to render for each result of the xpath query.
+
+The type of the results depends on which xpath attributes are used.
+
+* If the ''for-each'' attribute is used, the widget will run its template for each result of that xpath query. In each iteration, the variable will be set each result's Node Type, and any nested xpath queries will use that node as context.
+* If the ''value-of'' attribute is used, the widget will run its template once on the first (or only) result from the query. The variable will a String type, and the DOM context will not be set.
+
+The template that the xpath widget renders depends on its options.
+
+# If the ''template'' attribute is set, the widget uses that.
+# Else, if the widget has content, that is used as a template.
+# Else, the widget renders the corresponding variable directly.
+
+|!Attribute |!Description |
+|for-each |An XPath query to run against the XML tiddler. Results in a list of nodes. The template renders for each result. The variable will be set to the value or innerHTML of each result. |
+|value-of |An XPath query to run against the XML tiddler. Results in a single string value, which is set to the variable. If the widget has no body, this value is immediately outputted. |
+|variable |The name of a variable in which the results of each query result is stored. Defaults to ''currentNode''. |
+|tiddler |Optional title of the XML tiddler to query (Defaults to current tiddler). |
+|template |The title of a template tiddler to render for each result of the query. When no template is specified, the body of the [[XPathWidget]] serves as the item template. With no body, a simple rendering of the query results is returned. |
+|xmlns://??// |XML namespaces can be explicitly registered, if they're required for the query. They will be if your XML has a default namespace. See below. |
+
+!! DOM context
+
+When iterating through query results from ''for-each'', any nested `<$xpath>` queries will evaluate from the context of the current result.
+
+```
+<$xpath for-each='/children/child'>
+<$xpath value-of='@name' />
+</$xpath>
+```
+This would output the ''name'' attribute of all child elements under children.
+
+''value-of'' queries will depend on the current DOM context, but it never sets the DOM context, even if it's used to render a template or body.
+
+If a nested `<$xpath>` query references a different XML tiddler, its DOM context will be independent of the first. Each XML tiddler has its own context.
+
+The [[xpath Operator]] ignores DOM context entirely.
+
+!! Variable
+
+The variable set by ''for-each'' and ''value-of'' is subtly different.
+
+* ''for-each'' returns a Node type. If the node is an element, that means the variable is set to its innerHTML. It also uses this node as the DOM context for any nested `<$xpath>` widgets.
+* ''value-of'' returns a String type. If the node is an element, that means the variable is set to its textContent. It does not set a DOM context.
+
+If both ''for-each'' and ''value-of'' are used in the same widget, It iterates through ''for-each'' and uses it to set the DOM context as expected. However, it will set the variable to the String type derived from executing ''value-of'' from the context set by ''for-each''. To demonstrate:
+
+```
+<$xpath for-each="/children/child" value-of="@name">
+
+<!-- DOM context is set to '/children/child',
+     and currentNode is set to './@name' of that context. -->
+</$xpath>
+```
+is equivalent to
+
+```
+<$xpath for-each="/children/child">
+
+<$xpath value-of="@name">
+
+<!-- DOM context is set to '/children/child',
+     and currentNode is set to './@name' of that context. -->
+</$xpath></$xpath>
+```
+
+!! Namespace
+
+//TW5-XML// supports namespaces in XML documents in three ways.
+
+# If the namespaces are defined on the documentElement, or at or above the current DOM context, `<$xpath>` will automatically acknowledge them using the same prefix.
+# You can also declare namespaces as attributes in `<$xpath>`. For instance, `<$xpath xmlns:svg="http://www.w3.org/2000/svg">`. ''This is necessary if your XML document uses default namespaces, or has namespace declarations nested within the document.''<br/>These namespace configurations will also be available to any nested xpath queries, widget or otherwise. 
+# Alternatively, you can define namespaces like any other variable using `<$set>`, `<$vars>`, or `/define`. (`<$set name="xmlns:svg" value="http://www.w3.org/2000/svg">`) Your namespaces can even be globally defined using <<tag $:/tags/Macro>>.
