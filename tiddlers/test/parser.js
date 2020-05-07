@@ -17,14 +17,12 @@ it('render xml tiddlers', function() {
 function testInstruction(attrString, template, options) {
 	options = options || {};
 	var wiki = options.wiki || new $tw.Wiki();
-	wiki.addTiddler({title: "test", type: "text/xml", text: '<?xml version="1.0" encoding="UTF-8"?>\n<?tiddlywiki '+attrString+'?>\n<dog name="Roofus" />'});
+	var text = options.text || '<?xml version="1.0" encoding="UTF-8"?>\n<?tiddlywiki '+attrString+'?>\n<dog name="Roofus" />';
+	wiki.addTiddler({title: "test", type: "text/xml", text: text});
 	wiki.addTiddler({title: template, text: '!!A template file\n\n<$xpath value-of="/dog/@name" />'});
 	options.variables = Object.assign({currentTiddler: "test"}, options.variables);
 	var output = wiki.renderTiddler("text/html", "test", options);
-	expect(output).toContain("A template file");
-	expect(output).toContain("Roofus");
-	// This will only show up if its rendering as a block, as expected.
-	expect(output).toContain("</h2>");
+	expect(output).toBe('<h2 class="">A template file</h2><p>Roofus</p>');
 };
 
 it('renders xml with tiddler template declaration', function() {
@@ -71,6 +69,10 @@ it('ignores non template attributes', function() {
 	wiki.addTiddler({title: "test", type: "text/xml", text: text});
 	var output = wiki.renderTiddler("text/vnd.tiddlywiki", "test");
 	expect(output).toBe(text);
+
+	// But it will still find a template attribute if it exists
+	text = "<?tiddlywiki other='arg' X template=file Y?><dog name='Roofus'/>";
+	testInstruction(null, "file", {wiki: wiki, text: text});
 });
 
 });

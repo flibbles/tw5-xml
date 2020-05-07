@@ -79,3 +79,23 @@ exports.getTextDocument = function(text) {
 	}
 	return doc;
 };
+
+/* Gets <?tiddlywiki attributes?> present at document's root.
+ */
+exports.getProcessingInstructions = function(doc) {
+	var attributes = Object.create(null);
+	var node = doc.firstChild;
+	while (node) {
+		if (node.target === "tiddlywiki") {
+			var pos = 0;
+			var attribute = $tw.utils.parseAttribute(node.data, pos);
+			while (attribute) {
+				attributes[attribute.name] = attribute;
+				pos = attribute.end;
+				attribute = $tw.utils.parseAttribute(node.data, pos);
+			}
+		}
+		node = node.nextSibling;
+	}
+	return attributes;
+};

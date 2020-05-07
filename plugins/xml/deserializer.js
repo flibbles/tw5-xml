@@ -25,25 +25,16 @@ Deserializes xml files of type:
 exports["text/xml"] = function(text,fields) {
 	var xmldom = require("./xmldom");
 	var doc = xmldom.getTextDocument(text);
-	var elem = doc.documentElement;
-	var results = [];
-	if (doc.error) {
+	var attributes = xmldom.getProcessingInstructions(doc);
+	if (!attributes.bundle) {
+		return [basicXml(text,fields)];
+	} else if (doc.error) {
 		// It's malformed. Don't try to parse it.
-		results.push(basicXml(text,fields));
-	} else if (elem.tagName === "tiddlers") {
-		var incomingFields = elem.firstChild;
-		while (incomingFields) {
-			if (incomingFields.tagName === "tiddler") {
-				results.push(deserializeTiddler(incomingFields));
-			}
-			incomingFields = incomingFields.nextSibling;
-		}
-	} else if (elem.tagName === "tiddler") {
-		results.push(deserializeTiddler(elem));
+		//results.push(basicXml(text,fields));
+		return [];
 	} else {
-		results.push(basicXml(text,fields));
+		return deserializeTiddlers(doc.documentElement);
 	}
-	return results;
 };
 
 function basicXml(text, fields) {
@@ -51,6 +42,22 @@ function basicXml(text, fields) {
 	rtn.text = text;
 	rtn.type = "text/xml";
 	return rtn;
+};
+
+function deserializeTiddlers(domNode) {
+	var results = [];
+	if (domNode.tagName === "tiddlers") {
+		var incomingFields = domNode.firstChild;
+		while (incomingFields) {
+			if (incomingFields.tagName === "tiddler") {
+				results.push(deserializeTiddler(incomingFields));
+			}
+			incomingFields = incomingFields.nextSibling;
+		}
+	} else if (domNode.tagName === "tiddler") {
+		results.push(deserializeTiddler(domNode));
+	}
+	return results;
 };
 
 function deserializeTiddler(domNode) {

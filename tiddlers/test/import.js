@@ -19,6 +19,7 @@ function importXml(xmlAsText, fields) {
 
 it("many", function() {
 	var rtn = importXml(`<?xml version="1.0" encoding="ISO-8859-1"?>
+<?tiddlywiki bundle?>
 <tiddlers>
  <tiddler>
   <title>T1</title>
@@ -40,6 +41,7 @@ it("many", function() {
 
 it("single tiddler", function() {
 	var rtn = importXml(`<?xml version="1.0" encoding="ISO-8859-1"?>
+<?tiddlywiki bundle?>
 <tiddler>
  <title>Title</title>
  <text>Body</text>
@@ -51,18 +53,18 @@ it("single tiddler", function() {
 });
 
 it("unescaped xml", function() {
-	var rtn = importXml(prolog + `<tiddlers>
+	var rtn = importXml(prolog + `<?tiddlywiki bundle?><tiddlers>
  <tiddler><title>T1</title><text><A>Atext</A></text></tiddler>
 </tiddlers>`);
  expect(rtn[0].text).toBe("<A>Atext</A>");
 
-	rtn = importXml(prolog + `<tiddler>
+	rtn = importXml(prolog + `<?tiddlywiki bundle?><tiddler>
   <title>T1</title><text>text first<p>paragraph</p>Text</text></tiddler>`);
 	expect(rtn[0].text).toBe("text first<p>paragraph</p>Text");
 });
 
 it("escaped xml", function() {
-	var rtn = importXml(prolog + `<tiddlers>
+	var rtn = importXml(prolog + `<?tiddlywiki bundle?><tiddlers>
  <tiddler>
   <title>T1</title>
   <text>&lt;A&gt;Text&lt;/A&gt;</text>
@@ -72,7 +74,7 @@ it("escaped xml", function() {
 });
 
 it("empty fields", function() {
-	var rtn = importXml(prolog + `<tiddlers>
+	var rtn = importXml(prolog + `<?tiddlywiki bundle?><tiddlers>
 	<tiddler>
 		<title>MyTitle</title>
 		<text></text>
@@ -114,7 +116,7 @@ it("malformed tiddler document", function() {
 });
 
 it("can include processing instructions", function() {
-	var text = "<tiddlers><tiddler><title>My Dogs</title><text><?tiddlywiki template='test'?><dog>Roofus</dog></text></tiddler></tiddlers>";
+	var text = "<?tiddlywiki bundle?><tiddlers><tiddler><title>My Dogs</title><text><?tiddlywiki template='test'?><dog>Roofus</dog></text></tiddler></tiddlers>";
 	var rtn = importXml(text);
 	expect(rtn.length).toBe(1);
 	expect(rtn[0].title).toBe("My Dogs");

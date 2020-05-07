@@ -6,7 +6,7 @@ Tests exporting.
 
 describe("Exporter", function() {
 
-const prolog = '<?xml version="1.0" encoding="UTF-8"?>\n';
+const prolog = '<?xml version="1.0" encoding="UTF-8"?>\n<?tiddlywiki bundle?>\n';
 
 function exportXml(fields, options) {
 	options = options || {};

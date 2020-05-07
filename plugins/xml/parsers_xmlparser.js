@@ -13,7 +13,9 @@ The XML parser displays itself as xml.
 "use strict";
 
 var XmlParser = function(type,text,options) {
-	var templateValue = getTemplate(text);
+	var xmldom = require("../xmldom");
+	var doc = xmldom.getTextDocument(text);
+	var templateValue = xmldom.getProcessingInstructions(doc).template;
 	if (templateValue) {
 		this.tree = [{
 			type: "transclude",
@@ -31,23 +33,6 @@ var XmlParser = function(type,text,options) {
 			}
 		}];
 	}
-};
-
-function getTemplate(text) {
-	var DOMParser = require("../xmldom").DOMParser;
-	var parser = new DOMParser();
-	var doc = parser.parseFromString(text, "text/xml");
-	var node = doc.firstChild;
-	while (node) {
-		if (node.target === "tiddlywiki") {
-			var attr = $tw.utils.parseAttribute(node.data, 0);
-			if (attr && attr.name === "template") {
-				return attr;
-			}
-		}
-		node = node.nextSibling;
-	}
-	return undefined;
 };
 
 exports["text/xml"] = XmlParser;
