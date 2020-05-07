@@ -30,7 +30,9 @@ exports["text/xml"] = function(text,fields) {
 		return [basicXml(text,fields)];
 	} else if (doc.error) {
 		// It's malformed. Don't try to parse it.
-		//results.push(basicXml(text,fields));
+		var logger = new $tw.utils.Logger("XML deserializer")
+		var error = $tw.language.getString("flibbles/xml/Error/BundleParserError");
+		logger.alert(error);
 		return [];
 	} else {
 		return deserializeTiddlers(doc.documentElement);

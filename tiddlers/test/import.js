@@ -106,13 +106,24 @@ it("malformed xml file", function() {
 	expect(rtn[0].type).toBe("text/xml");
 });
 
-it("malformed tiddler document", function() {
-	var text = "<tiddlers><tiddler><title>MyTitle</title><text><div>Stuff</span></text></tiddler></tiddlers>";
+it("still imports malformed tiddler document", function() {
+	var text = "<anything><text><div>Stuff</span></text></anything>";
 		rtn = importXml(text, {title: "myFile.xml"});
 	expect(rtn.length).toBe(1);
 	expect(rtn[0].title).toBe("myFile.xml");
 	expect(rtn[0].text).toBe(text);
 	expect(rtn[0].type).toBe("text/xml");
+});
+
+it("emits error with malformed tiddlywiki bundle", function() {
+	var text = "<?tiddlywiki bundle?><tiddlers><tiddler><title>MyTitle</title><text><div>Stuff</span></text></tiddler></tiddlers>";
+	var errors = [];
+	utils.monkeyPatch($tw.utils.Logger.prototype, "alert", function(msg) {errors.push(msg);}, function() {
+		var rtn = importXml(text, {title: "myFile.xml"});
+		expect(errors).toEqual(["Unable to parse XML tiddler bundle"]);
+		expect(rtn.length).toBe(0);
+	});
+
 });
 
 it("can include processing instructions", function() {
