@@ -8,6 +8,8 @@ This plugin provides several tools which allow for working with XML tiddlers.
 
 For a demonstration, and for documentation, see the [tiddlywiki demo site](https://flibbles.github.io/tw5-xml/).
 
+**NOTE:** This plugin is still under construction. It's API is not locked down yet.
+
 ## How to install
 
 Visit the [demo site](https://flibbles.github.io/tw5-xml/). It will have a simple drag-and-drop installation icon.
