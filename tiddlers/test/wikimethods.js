@@ -40,6 +40,19 @@ it('describes tiddler when fails getting tiddler doc', function() {
 	expect(doc.error).toBe('Unable to parse XML in tiddler "test"');
 });
 
+it('caches documents correctly', function() {
+	var wiki = new $tw.Wiki();
+	wiki.addTiddler({title: "test.xml", type: "text/xml", text: "<dogs/>"});
+	var doc1 = xmldom.getTiddlerDocument(wiki, "test.xml");
+	var doc2 = xmldom.getTiddlerDocument(wiki, "test.xml");
+	expect(doc1 == doc2).toBeTruthy();
+	expect(doc1.documentElement.outerHTML).toBe("<dogs/>");
+	wiki.addTiddler({title: "test.xml", type: "text/xml", text: "<cats/>"});
+	var doc3 = xmldom.getTiddlerDocument(wiki, "test.xml");
+	expect(doc3 == doc2).toBeFalsy();
+	expect(doc3.documentElement.outerHTML).toBe("<cats/>");
+});
+
 function testInstructions(xml) {
 	var doc = xmldom.getTextDocument("<?tiddlywiki template='myFile'?>" + xml);
 	var attributes = xmldom.getProcessingInstructions(doc);

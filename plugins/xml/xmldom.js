@@ -39,17 +39,19 @@ if ($tw.browser) {
 }
 
 exports.getTiddlerDocument = function(wiki, title) {
-	var tiddler = wiki.getTiddler(title),
-		doc = undefined;
-	if (tiddler) {
-		doc = exports.getTextDocument(tiddler.fields.text);
-		if (doc.error) {
-			// Let's elaborate
-			doc.error = $tw.language.getString("flibbles/xml/Error/DOMParserError",
-				{variables: {currentTiddler: title}});
+	return wiki.getCacheForTiddler(title, "XMLDOM", function() {
+		var tiddler = wiki.getTiddler(title),
+			doc = undefined;
+		if (tiddler) {
+			doc = exports.getTextDocument(tiddler.fields.text);
+			if (doc.error) {
+				// Let's elaborate
+				doc.error = $tw.language.getString("flibbles/xml/Error/DOMParserError",
+					{variables: {currentTiddler: title}});
+			}
 		}
-	}
-	return doc;
+		return doc;
+	});
 };
 
 exports.getTextDocument = function(text) {
