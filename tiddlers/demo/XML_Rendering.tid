@@ -35,3 +35,5 @@ and ''not'' like
 Also, as a tiddlywiki attribute, it supports indirect, filtered, and macro attributes.
 
 However, there is ''one'' difference. The string `?>` cannot show up in your attribute in any form, or else your XML processing instruction becomes illegal XML.
+
+<<link-to-tab Examples Examples/Rendering "Examples">>

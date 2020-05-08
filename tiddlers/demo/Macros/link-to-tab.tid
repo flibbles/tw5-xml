@@ -1,0 +1,21 @@
+tags: $:/tags/Macro
+title: Macros/link-to-tab
+
+\define link-to-tab(tiddler, tab, caption, subtab)
+<$vars
+	query="/qualifiers/qualifier[@title='$tiddler$']"
+	subquery="/qualifiers/qualifier[@title='$tab$']">
+<$button class="tc-btn-invisible tc-tiddlylink">
+<$action-setfield $tiddler={{{ [[Data/qualifiers.xml]xpath<query>addprefix[$:/state/tab-]] }}} text=<<__tab__>>/>
+<$action-navigate $to=<<__tiddler__>>/>
+<$list filter="[<__subtab__>!match[]]">
+<$action-setfield $tiddler={{{ [[Data/qualifiers.xml]xpath<subquery>addprefix[$:/state/tab-]] }}} text=<<__subtab__>> />
+</$list>
+$caption$
+</$button>
+</$vars>
+\end
+
+''Hey!'': This macro takes advantage of `[xpath[]]` to look up qualifiers from [[this XML file|Data/qualifiers.xml]] Take a look.
+
+`link-to-tab` creates a button which opens a specific tiddler and a tab within that tiddler. It's used on several documentation pages to link to examples within a tab menu.

@@ -10,14 +10,15 @@ title: XML for Tiddlywiki
 
 This is the demo site for ''TW-XML'', a Tiddlywiki5 full-featured toolkit for manipulating and parsing XML.
 
-<ul>
-<$list filter="[tag[Main]]"><li><$link><$transclude field="caption">{{!!title}}</$transclude></$link></li></$list>
-</ul>
-
 To report an issue, please visit <a href={{!!source}}>the github page</a>.
 </$tiddler>
 
-''NOTE:'' This plugin is a work in progress that's not yet ready for public consumption. Its API is bound to change a lot right now.
+See the release notes [[here|Versions]].
+
+!! Documentation
+<ul>
+<$list filter="[tag[Documentation]]"><li><$link><$transclude field="caption">{{!!title}}</$transclude></$link></li></$list>
+</ul>
 
 !! To Install
 

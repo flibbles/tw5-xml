@@ -1,5 +1,7 @@
 created: 20200505010243780
 
+\rules except wikilink
+
 Changes
 
 * Changed the default variable name `xmlNode` to `currentNode`. This is more in line with TiddlyWiki lingo. And it'll make more sense if I ever build a jquery widget to go with this xpath widget.

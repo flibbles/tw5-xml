@@ -11,4 +11,4 @@ example to tinker with that example directly.
 <$macrocall
 	$name="tabs"
 	tabsList="[tag<currentTiddler>]"
-	default="Transform" />
+	default="Examples/Rendering" />

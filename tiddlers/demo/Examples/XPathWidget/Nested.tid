@@ -1,8 +1,8 @@
 caption: nested
 description: `<$xpath>` elements can be nested. Inner `<$xpath>` widgets will start their XPath queries from the node set by the outer widget's context. This allows for nested iteration.
 list-before: 
-tags: Transform
-title: Transform/Nested
+tags: Examples/XPathWidget
+title: Examples/XPathWidget/Nested
 
 !! Dog list
 
