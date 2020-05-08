@@ -6,6 +6,6 @@ title: Examples/Rendering
 
 <<split Examples/Rendering/Simple.xml>>
 
-This XML document as a `<?tiddlywiki?>` processing instruction with a ''template'' attribute. As a result, that template is used to render the xml tiddler instead of showing the raw XML.
+This XML document as a `<?tiddlywiki?>` processing instruction with a ''template'' attribute. As a result, [[that template tiddler|Templates/Names]] is used to render the xml tiddler instead of showing the raw XML.
 
 <<split Examples/Rendering/Process.xml>>
