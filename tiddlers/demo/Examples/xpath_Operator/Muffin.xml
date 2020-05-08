@@ -1,0 +1,6 @@
+<dog>
+  <breed>Shih tzu</breed>
+  <age>7</age>
+  <vet:checkup xmlns:vet="http://vet.com"
+               date="Aug 16th" />
+</dog>

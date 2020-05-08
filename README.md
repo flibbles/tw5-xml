@@ -27,7 +27,7 @@ You will likely need to make the `flibbles` directory. If you've installed it co
 
 Afterward, add the plugin inside your projects' `tiddlywiki.info` file.
 The plugins section will look something like:
-```json
+```
 {
    ...
    "plugins": [

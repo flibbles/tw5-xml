@@ -1,0 +1,6 @@
+<dog>
+  <breed>Doberman</breed>
+  <age>2</age>
+  <vet:checkup xmlns:vet="http://vet.com"
+               date="May 7th" />
+</dog>

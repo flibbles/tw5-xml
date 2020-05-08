@@ -2,10 +2,22 @@ caption: Rendering
 tags: Examples
 title: Examples/Rendering
 
+\define show(xml)
+<$tiddler tiddler=<<__xml__>> >
+
+<$macrocall $name="split" left="""<pre class="xml-text">
+
+<$view />
+
+</pre>""" right="""<$transclude />
+""" />
+</$tiddler>
+\end
+
 //TW-XML// introduces a parser to properly display XML tiddlers. This parser integrates with //tiddlywiki/highlight// to produce the syntax highlighting you see below.
 
-<<split Examples/Rendering/Simple.xml>>
+<<show Examples/Rendering/Simple.xml>>
 
 This XML document as a `<?tiddlywiki?>` processing instruction with a ''template'' attribute. As a result, [[that template tiddler|Templates/Names]] is used to render the xml tiddler instead of showing the raw XML.
 
-<<split Examples/Rendering/Process.xml>>
+<<show Examples/Rendering/Process.xml>>

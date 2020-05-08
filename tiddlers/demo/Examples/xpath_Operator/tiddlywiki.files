@@ -1,0 +1,30 @@
+{
+	"directories": [
+		{
+			"path": ".",
+			"filesRegExp": "^.*\\.xml$",
+			"isTiddlerFile": true,
+			"fields": {
+				"tags": "[[Examples/xpath Operator]]",
+				"title": {
+					"source": "filename"
+				},
+				"type": "text/xml"
+			}
+		},
+		{
+			"path": ".",
+			"filesRegExp": "^.*\\.tid$",
+			"isTiddlerFile": true,
+			"fields": {
+				"caption": {
+					"source": "basename"
+				},
+				"title": {
+					"source": "basename",
+					"prefix": "Examples/xpath Operator/"
+				}
+			}
+		}
+	]
+}

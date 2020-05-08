@@ -27,13 +27,13 @@ a.button-dragger:hover {
         padding: 0px;
 }
 
-.xml-left-text pre {
+pre.xml-text, div.xml-text > pre {
         padding: 6px;
         margin: 0px;
         border: none;
 }
 
-.xml-left-source {
+.xml-left {
         float: left;
         width: 49%;
         border: 1px solid #cccccc;
@@ -44,9 +44,9 @@ a.button-dragger:hover {
 .xml-right {
         float: right;
         width: 49%;
+        border: 1px solid #cccccc;
         margin-left: 0px;
         margin-right: 0px;
-        border: 1px solid #cccccc;
         padding: 0px;
 }
 

@@ -8,8 +8,12 @@ title: Templates/Transform
 
 <$macrocall
 	$name="split"
-	left-code=<<currentXML>>
-	preview="""<$tiddler tiddler=<<currentXML>> >
+	left="""<div class="xml-text">
+
+<$transclude tiddler=<<currentXML>> />
+
+</div>"""
+	right="""<$tiddler tiddler=<<currentXML>> >
 
 <$transclude tiddler=<<currentTab>> />
 

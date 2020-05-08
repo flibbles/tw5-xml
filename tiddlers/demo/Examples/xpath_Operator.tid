@@ -1,0 +1,46 @@
+caption: <$text text="[xpath[]]" />
+tags: Examples
+title: Examples/xpath Operator
+
+\define example(filter, macroName, macroValue)
+<pre class="xml-text"><$list filter="[<__macroName__>!match[]]">\define <$text text=<<__macroName__>> />() <$text text=<<__macroValue__>> />
+</$list><$text text="{{{" /> <strong><$text text=<<__filter__>> /></strong> }}}
+</pre>
+
+<blockquote>
+<ul>
+<$set name=<<__macroName__>> value=<<__macroValue__>> >
+<$list variable="output" filter="[tag<currentTiddler>type[text/xml]subfilter<__filter__>]">
+<li><$text text=<<output>> /></li>
+</$list>
+</$set>
+</ul>
+</blockquote>
+\end
+\define left()
+<$list filter="[tag<currentTiddler>type[text/xml]]">
+
+''<$link />''
+
+<div class="xml-text">
+
+<$transclude />
+
+</div>
+</$list>
+\end
+\define right()
+<<example "[xpath[/dog/breed]]">>
+
+<<example "[xpath<query>]" "query" "/dog[age=3]/breed">>
+
+<<example "[xpath[/dog/vet:checkup/@date]]" "xmlns:vet" "http://vet.com">>
+\end
+
+<$tiddler tiddler=<<currentTab>>>
+
+For brevity, the example filters on the right have only the XML tiddlers on the left as input. In reality, your filters will look more like, `[[MyFile.xml]xpath<...>]`, or `[tag[xmlDoc]xpath[...]]`.
+
+<$macrocall $name=split left=<<left>> right=<<right>> />
+
+</$tiddler>

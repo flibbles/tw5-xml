@@ -1,20 +1,16 @@
 tags: $:/tags/Macro
 title: Macros/split
 
-\define split(left-code, preview:"""<$transclude />""")
-<$tiddler tiddler=<<__left-code__>> >
+\define split(left, right)
+<div class="xml-left">
 
-@@.xml-left-source
-<div class="xml-left-text"><pre><$view/></pre></div>
-@@
+$left$
+</div>
 
 <div class="xml-right">
 
-$preview$
-
+$right$
 </div>
 
 <div class="xml-clear" />
-
-</$tiddler>
 \end
