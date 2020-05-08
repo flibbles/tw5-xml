@@ -1,17 +1,42 @@
-caption: namespaces
-description: <p>`<$xpath>` supports namespaces in three ways.</p><ol><li>If the namespaces are defined on the documentElement, `<$xpath>` will automatically identify them.</li><li>You can also declare namespaces as attributes in `<$xpath>`, As seen in the example</li><li>You can define namespaces like any other variable using `<$set>`, `<$vars>`, or `/define`. Your namespaces can even be globally defined using <<tag $:/tags/Macro>>.</li></ol>
-tags: Examples/XPathWidget
-title: Examples/XPathWidget/Namespaces
+description: //tw5-xml// supports namespaces. These examples show the ways.<ol><li>Namespace/prefix pairs declared in the root element don't need any special action to be used.</li><li>For some namespaces, like those declared mid-document, you may need to declare the namespace prefix yourself. It doesn't have to match what's in the file.</li><li>Namespace declarations persist into their content. You can define them manually using `<$set>`, `<$vars>`, or `\define` if you want.</li></ol>
 
-!! Dogs who've visited the vet
+!! 1. Implicitly declared namespaces
 
-<$xpath xmlns:vet="https://vets.com"
-	for-each="//dog[vet:history]/@name" />
+```
+<$xpath for-each="/d:dogs/d:dog[d:breed='Doberman']/@name" />
+```
 
-!! Checkup dates
+<blockquote>
 
-<$set name="xmlns:vet" value="https://vets.com">
+<$xpath for-each="/d:dogs/d:dog[d:breed='Doberman']/@name" />
 
-<$xpath for-each="//vet:checkup/@date" />
+</blockquote>
+
+!! 2. Explicitly declared namespaces
+
+```
+<$xpath xmlns:v="https://vet-archive.com" for-each="/d:dogs/v:record/v:appointment/@date" />
+```
+
+<blockquote>
+
+<$xpath xmlns:v="https://vet-archive.com" for-each="/d:dogs/v:record/v:appointment/@date" />
+
+</blockquote>
+!! 3. Namespace scope
+
+```
+<$set name="xmlns:vet" value="https://vet-archive.com">
+
+<$xpath for-each="/d:dogs/vet:record/vet:appointment/@name" />
 
 </$set>
+```
+<blockquote>
+
+<$set name="xmlns:vet" value="https://vet-archive.com">
+
+<$xpath for-each="/d:dogs/vet:record/vet:appointment/@name" />
+
+</$set>
+</blockquote>

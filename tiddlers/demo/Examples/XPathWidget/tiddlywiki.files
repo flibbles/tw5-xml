@@ -1,0 +1,31 @@
+{
+	"directories": [
+		{
+			"path": ".",
+			"filesRegExp": "^.*\\.xml$",
+			"isTiddlerFile": true,
+			"fields": {
+				"title": {
+					"source": "filename",
+					"prefix": "Examples/XPathWidget/"
+				},
+				"type": "text/xml"
+			}
+		},
+		{
+			"path": ".",
+			"filesRegExp": "^.*\\.tid$",
+			"isTiddlerFile": true,
+			"fields": {
+				"caption": {
+					"source": "basename"
+				},
+				"tags": "Examples/XPathWidget",
+				"title": {
+					"source": "basename",
+					"prefix": "Examples/XPathWidget/"
+				}
+			}
+		}
+	]
+}

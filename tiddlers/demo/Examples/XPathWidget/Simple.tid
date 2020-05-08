@@ -1,12 +1,18 @@
-caption: simple
 list-before: 
-tags: Examples/XPathWidget
-title: Examples/XPathWidget/Simple
 
-!! Dog list
+```
+<ul>
+ <$xpath for-each="/dogs/dog/@name">
+  <li><<currentNode>></li>
+ </$xpath>
+</ul>
+```
+
+<blockquote>
 
 <ul>
-<$xpath variable="name" for-each="/dogs/dog/@name">
-<li><<name>></li>
-</$xpath>
+ <$xpath for-each="/dogs/dog/@name">
+  <li><<currentNode>></li>
+ </$xpath>
 </ul>
+</blockquote>

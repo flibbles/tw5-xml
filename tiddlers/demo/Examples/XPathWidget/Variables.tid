@@ -1,0 +1,23 @@
+description: ''for-each'' sets variable equal to the Dom Type inside its template, which can be useful for printing chunks of XML. ''value-of'' always returns a String Type, which is stripped of child elements.
+
+!! for-each
+
+<blockquote>
+
+<$xpath for-each="/report/text" variable="text">
+
+<<text>>
+
+</$xpath>
+</blockquote>
+
+!! value-of
+
+<blockquote>
+
+<$xpath value-of="/report/text" variable="text">
+
+<<text>>
+
+</$xpath>
+</blockquote>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<d:dogs xmlns:d="https://dogs.com">
+
+  <d:dog name="Roofus">
+    <d:breed>Afghan Hound</d:breed>
+  </d:dog>
+
+  <d:dog name="Splinter">
+    <d:breed>Doberman</d:breed>
+  </d:dog>
+
+  <d:dog name="Muffins">
+    <d:breed>Pomeranian</d:breed>
+  </d:dog>
+
+  <d:dog name="Killer">
+    <d:breed>Doberman</d:breed>
+  </d:dog>
+
+  <vet:record xmlns:vet="https://vet-archive.com">
+    <vet:appointment date="May 5th" name="Muffins"/>
+    <vet:appointment date="May 7th" name="Splinter"/>
+  </vet:record>
+
+</d:dogs>

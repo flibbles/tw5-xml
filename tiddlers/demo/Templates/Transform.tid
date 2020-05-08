@@ -2,13 +2,17 @@ title: Templates/Transform
 
 !! <$link>{{!!caption}}</$link>
 
+<$transclude tiddler=<<currentTab>> field="description" />
+
+<$vars currentXML={{{[<currentTab>addsuffix[.xml]]}}}>
+
 <$macrocall
 	$name="split"
-	left-code=<<currentTab>>
-	preview="""<$tiddler tiddler="Demo.xml" >
+	left-code=<<currentXML>>
+	preview="""<$tiddler tiddler=<<currentXML>> >
 
 <$transclude tiddler=<<currentTab>> />
 
 </$tiddler>""" />
 
-<$transclude tiddler=<<currentTab>> field="description" />
+</$vars>

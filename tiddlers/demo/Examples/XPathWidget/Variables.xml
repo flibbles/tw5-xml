@@ -1,0 +1,7 @@
+<report>
+ <title>My Report</title>
+ <text>
+  <p>This is the <strong>best</strong> report on dogs.</p>
+  <p><em>No cats though.</em></p>
+ </text>
+</report>

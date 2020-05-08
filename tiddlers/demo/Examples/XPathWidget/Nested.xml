@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dogs xmlns:vet="https://vets.com">
+
+  <dog name="Roofus">
+    <trick>Shake hands</trick>
+    <trick>Speak</trick>
+  </dog>
+
+  <dog name="Splinter">
+    <trick>Fetch</trick>
+  </dog>
+
+  <dog name="Muffins">
+    <trick>Play dead</trick>
+  </dog>
+
+</dogs>
