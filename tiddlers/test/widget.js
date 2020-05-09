@@ -134,6 +134,12 @@ it('can both for-each and value-of', function() {
 	expect(text).toBe("<p><strong>Roofus</strong></p><p><ul><li>Backflip</li></ul></p><p><strong>Skippy</strong></p><p><ul><li>Shake</li><li>Play dead</li></ul></p>");
 });
 
+it('can both for-each and value-of when value-of returns nothing', function() {
+	var text = transform("<dogs><dog name='Roofus' /><dog/></dogs>",
+		"<$xpath for-each='/dogs/dog' value-of='./@name'variable='name'>-<<name>>-</$xpath>");
+	expect(text).toBe("<p>-Roofus---</p>");
+});
+
 it('escapes and does not escape with for-each when appropriate', function() {
 	// Honestly, some of these seem so random to me, but I think it's
 	// best that <$xpath for-each> behave as much like <$list filter>
