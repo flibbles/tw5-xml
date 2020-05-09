@@ -71,8 +71,13 @@ XPathWidget.prototype.execute = function() {
 					var value;
 					if (this.valueof) {
 						try {
-							var rtn = xpath.evaluate(this.valueof, node, resolver, xpath.XPathResult.STRING_TYPE, null);
-							value = rtn.stringValue;
+							var subiterator = xpath.evaluate(this.valueof, node, resolver, xpath.XPathResult.ANY_TYPE, null);
+							var subnode = subiterator.iterateNext();
+							if (subnode) {
+								value = getStringValue(subnode);
+							} else {
+								value = "";
+							}
 						} catch(e) {
 							var error = xpath.getError(e, this.valueof);
 							members.push(this.makeErrorTree(error));
@@ -92,10 +97,7 @@ XPathWidget.prototype.execute = function() {
 					var iterator = xpath.evaluate(this.valueof, contextNode, resolver, xpath.XPathResult.ANY_TYPE, null);
 					node = iterator.iterateNext();
 					if (node) {
-						var value = node.nodeValue || node.textContent;
-						if (!value && node.documentElement) {
-							value = node.documentElement.textContent;
-						}
+						var value = getStringValue(node);
 						members.push(this.makeItemTemplate(null, value, false));
 					}
 				} catch (e) {
@@ -106,6 +108,14 @@ XPathWidget.prototype.execute = function() {
 		}
 	}
 	this.makeChildWidgets(members);
+};
+
+function getStringValue(node) {
+	var value = node.nodeValue || node.textContent;
+	if (!value && node.documentElement) {
+		value = node.documentElement.textContent;
+	}
+	return value
 };
 
 XPathWidget.prototype.makeErrorTree = function(error) {
