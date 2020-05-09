@@ -35,6 +35,8 @@ title: Examples/xpath Operator
 <<example "[xpath<query>]" "query" "/dog[age=3]/breed">>
 
 <<example "[xpath[/dog/vet:checkup/@date]]" "xmlns:vet" "http://vet.com">>
+
+<<example "[xpath:if<test>]" "test" "/dog[breed='Doberman']">>
 \end
 
 <$tiddler tiddler=<<currentTab>>>

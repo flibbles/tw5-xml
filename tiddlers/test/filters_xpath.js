@@ -11,7 +11,8 @@ function test(query, expected, options) {
 	var wiki = options.wiki || new $tw.Wiki();
 	wiki.addTiddler({title: "test.xml", type: "text/xml", text: options.text || "<dogs><dog>Sparks</dog><dog>Joel</dog></dogs>"});
 	var input = options.input || ["test.xml"];
-	var output = wiki.filterTiddlers("[xpath["+query+"]]", options.widget, input);
+	var operator = options.operator || "xpath";
+	var output = wiki.filterTiddlers("["+operator+"["+query+"]]", options.widget, input);
 	expect(output).toEqual(expected);
 };
 
@@ -61,6 +62,33 @@ it("handles xpath errors gracefully", function() {
 
 it("gets textContent, not innerHTML", function() {
 	test("/type", ["love"], {text: "<type><stuff>love</stuff></type>"});
+});
+
+it("has :if suffix support", function() {
+	var wiki = new $tw.Wiki();
+	wiki.addTiddlers([
+		{title: "A", type: "text/xml", text: "<test><love>Amy</love><love>Beth</love></test>"},
+		{title: "B", type: "text/xml", text: "<test><hate>Carl</hate></test>"},
+		{title: "C", type: "text/xml", text: "<test><love>Bob</love></test>"}]);
+	test("/test/love", ["Amy", "Beth", "Bob"],
+		{input: ["A", "B", "C"], wiki: wiki});
+	test("/test/love", ["A", "C"],
+		{input: ["A", "B", "C"], wiki: wiki, operator: "xpath:if"});
+	test("/test/love", ["B"],
+		{input: ["A", "B", "C"], wiki: wiki, operator: "!xpath:if"});
+});
+
+it(":if treats failed documents as false", function() {
+	var wiki = new $tw.Wiki();
+	wiki.addTiddlers([
+		{title: "A", text: "<test />"},
+		{title: "B", text: "something <not xml"},
+		{title: "C", text: "<test />"},
+		{title: "D", text: "<ignore />"}]);
+	test("/test", ["A", "C"],
+		{input: ["A", "B", "C", "D"], wiki: wiki, operator: "xpath:if"});
+	test("/test", ["B", "D"],
+		{input: ["A", "B", "C", "D"], wiki: wiki, operator: "!xpath:if"});
 });
 
 it("handles all node types", function() {

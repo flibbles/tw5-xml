@@ -17,25 +17,39 @@ var xmlDom = require("../xmldom");
 exports.xpath = function(source,operator,options) {
 	var query = operator.operand,
 		results = [],
+		ifQuery = operator.suffix === "if",
+		negate = operator.prefix === "!",
 		xpath = require("../xpath");
 
 	source(function(tiddler,title) {
 		var doc = xmlDom.getTiddlerDocument(options.wiki, title);
 		if (doc) {
 			if (doc.error) {
-				results.push(doc.error);
+				if (ifQuery) {
+					if (negate) {
+						results.push(title);
+					}
+				} else {
+					results.push(doc.error);
+				}
 			} else {
 				var resolver = xpath.createResolver(doc, options.widget);
 				try {
 					var iterator = xpath.evaluate(query, doc, resolver, xpath.XPathResult.ANY_TYPE, null)
 					var node = iterator.iterateNext();
-					while (node) {
-						var value = node.nodeValue || node.textContent;
-						if (!value && node.documentElement) {
-							value = node.documentElement.textContent;
+					if (ifQuery) {
+						if (!node == negate) {
+							results.push(title);
 						}
-						results.push(value);
-						node = iterator.iterateNext();
+					} else {
+						while (node) {
+							var value = node.nodeValue || node.textContent;
+							if (!value && node.documentElement) {
+								value = node.documentElement.textContent;
+							}
+							results.push(value);
+							node = iterator.iterateNext();
+						}
 					}
 				} catch (e) {
 					results.push(xpath.getError(e, query));
