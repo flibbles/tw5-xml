@@ -13,13 +13,13 @@ Filter operator for applying xpath queries to incoming tiddler titles.
 "use strict";
 
 var xmlDom = require("../xmldom");
+var xpath = require("../xpath");
 
 exports.xpath = function(source,operator,options) {
 	var query = operator.operand,
 		results = [],
 		ifQuery = operator.suffix === "if",
-		negate = operator.prefix === "!",
-		xpath = require("../xpath");
+		negate = operator.prefix === "!";
 
 	source(function(tiddler,title) {
 		var doc = xmlDom.getTiddlerDocument(options.wiki, title);
@@ -35,7 +35,7 @@ exports.xpath = function(source,operator,options) {
 			} else {
 				var resolver = xpath.createResolver(doc, options.widget);
 				try {
-					var iterator = xpath.evaluate(query, doc, resolver, xpath.XPathResult.ANY_TYPE, null)
+					var iterator = xpath.evaluate(query, doc, resolver);
 					var node = iterator.iterateNext();
 					if (ifQuery) {
 						if (!node == negate) {

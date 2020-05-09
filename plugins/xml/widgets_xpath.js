@@ -14,6 +14,7 @@ xslt widget
 
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
 var xmlDom = require("../xmldom");
+var xpath = require("../xpath");
 
 var XPathWidget = function(parseTreeNode,options) {
 	this.initialise(parseTreeNode,options);
@@ -31,7 +32,6 @@ XPathWidget.prototype.render = function(parent,nextSibling) {
 };
 
 XPathWidget.prototype.execute = function() {
-	var xpath = require("../xpath");
 	this.template = this.getAttribute("template");
 	this.foreach = this.getAttribute("for-each");
 	this.valueof = this.getAttribute("value-of");
@@ -61,7 +61,7 @@ XPathWidget.prototype.execute = function() {
 			if (this.foreach) {
 				var node = undefined;
 				try {
-					var iterator = xpath.evaluate(this.foreach, contextNode, resolver, xpath.XPathResult.ANY_TYPE, null);
+					var iterator = xpath.evaluate(this.foreach, contextNode, resolver);
 					node = iterator.iterateNext();
 				} catch(e) {
 					var error = xpath.getError(e, this.foreach);
@@ -71,7 +71,7 @@ XPathWidget.prototype.execute = function() {
 					var value;
 					if (this.valueof) {
 						try {
-							var subiterator = xpath.evaluate(this.valueof, node, resolver, xpath.XPathResult.ANY_TYPE, null);
+							var subiterator = xpath.evaluate(this.valueof, node, resolver);
 							var subnode = subiterator.iterateNext();
 							if (subnode) {
 								value = getStringValue(subnode);
@@ -94,7 +94,7 @@ XPathWidget.prototype.execute = function() {
 				}
 			} else {
 				try {
-					var iterator = xpath.evaluate(this.valueof, contextNode, resolver, xpath.XPathResult.ANY_TYPE, null);
+					var iterator = xpath.evaluate(this.valueof, contextNode, resolver);
 					node = iterator.iterateNext();
 					if (node) {
 						var value = getStringValue(node);
@@ -115,7 +115,7 @@ function getStringValue(node) {
 	if (!value && node.documentElement) {
 		value = node.documentElement.textContent;
 	}
-	return value
+	return value;
 };
 
 XPathWidget.prototype.makeErrorTree = function(error) {

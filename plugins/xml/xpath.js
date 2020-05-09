@@ -7,31 +7,10 @@ Makes available XPath, either through a browser's native support, or
 the node.JS library
 \*/
 
-if ($tw.browser) {
-	exports.XPathResult = XPathResult;
-	exports.evaluate = function(xpathExpression, contextNode, namespaceResolver, resultType, result) {
-		var doc = contextNode.ownerDocument || contextNode;
-		return doc.evaluate(xpathExpression, contextNode, namespaceResolver, resultType, result);
-	}
-	exports.createNSResolver = function(node) {
-		var doc = node.ownerDocument || node;
-		return doc.createNSResolver(node);
-	}
-} else {
-	try {
-		var xpath = require('xpath');
-		exports.XPathResult = xpath.XPathResult;
-		exports.evaluate = xpath.evaluate;
-		exports.createNSResolver = xpath.createNSResolver;
-	} catch (e) {
-		function unresolved() {
-			throw "xpath is required on Node.JS for this operation. Install xpath with 'npm install xpath'";
-		};
-		exports.evaluate = unresolved;
-		exports.createNSResolver = unresolved;
-		exports.XPathResult = Object.create(null);
-	}
-}
+exports.evaluate = function(xpathExpression, contextNode, namespaceResolver) {
+	var xpath = getXPath();
+	return xpath.evaluate(xpathExpression, contextNode, namespaceResolver, xpath.XPathResult.ANY_TYPE, null);
+};
 
 /**This attempts to build a consistent error message from an xpath
  * "evaluate" exception. Different implementations act differently. This
@@ -69,7 +48,7 @@ exports.getError = function(exception, query) {
 };
 
 exports.createResolver = function(contextNode, widget) {
-	var resolver, docResolver = exports.createNSResolver(contextNode);
+	var resolver, docResolver = getXPath().createNSResolver(contextNode);
 	if (widget) {
 		resolver = function(nsPrefix) {
 			var variable = widget.variables["xmlns:" + nsPrefix];
@@ -83,3 +62,38 @@ exports.createResolver = function(contextNode, widget) {
 	}
 	return resolver;
 };
+
+var _xpath = undefined;
+
+function getXPath() {
+	if (_xpath === undefined) {
+		_xpath = Object.create(null);
+		if ($tw.browser) {
+			_xpath.XPathResult = XPathResult;
+			_xpath.evaluate = function(xpathExpression, contextNode, namespaceResolver, resultType, result) {
+				var doc = contextNode.ownerDocument || contextNode;
+				return doc.evaluate(xpathExpression, contextNode, namespaceResolver, resultType, result);
+			}
+			_xpath.createNSResolver = function(node) {
+				var doc = node.ownerDocument || node;
+				return doc.createNSResolver(node);
+			}
+		} else {
+			try {
+				var xpath = require('xpath');
+				_xpath.XPathResult = xpath.XPathResult;
+				_xpath.evaluate = xpath.evaluate;
+				_xpath.createNSResolver = xpath.createNSResolver;
+			} catch (e) {
+				function unresolved() {
+					throw "xpath is required on Node.JS for this operation. Install xpath with 'npm install xpath'";
+				};
+				_xpath.evaluate = unresolved;
+				_xpath.createNSResolver = unresolved;
+				_xpath.XPathResult = Object.create(null);
+			}
+		}
+	}
+	return _xpath;
+}
+
