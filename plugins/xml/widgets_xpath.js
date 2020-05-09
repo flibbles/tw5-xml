@@ -13,6 +13,7 @@ xslt widget
 "use strict";
 
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
+var xmlDom = require("../xmldom");
 
 var XPathWidget = function(parseTreeNode,options) {
 	this.initialise(parseTreeNode,options);
@@ -49,7 +50,6 @@ XPathWidget.prototype.execute = function() {
 		contextNode = contextVariable.node;
 		doc = contextNode.ownerDocument || contextNode;
 	} else {
-		var xmlDom = require("../xmldom");
 		doc = xmlDom.getTiddlerDocument(this.wiki, this.xmlTitle);
 		contextNode = doc;
 	}

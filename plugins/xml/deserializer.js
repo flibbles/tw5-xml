@@ -22,8 +22,9 @@ Deserializes xml files of type:
 /*global $tw: false */
 "use strict";
 
+var xmldom = require("./xmldom");
+
 exports["text/xml"] = function(text,fields) {
-	var xmldom = require("./xmldom");
 	var doc = xmldom.getTextDocument(text);
 	var attributes = xmldom.getProcessingInstructions(doc);
 	if (!attributes.bundle) {

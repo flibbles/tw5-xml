@@ -12,8 +12,9 @@ The XML parser displays itself as xml.
 /*global $tw: false */
 "use strict";
 
+var xmldom = require("../xmldom");
+
 var XmlParser = function(type,text,options) {
-	var xmldom = require("../xmldom");
 	var doc = xmldom.getTextDocument(text);
 	var templateValue = xmldom.getProcessingInstructions(doc).template;
 	if (templateValue) {

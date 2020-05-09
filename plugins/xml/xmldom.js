@@ -7,37 +7,6 @@ Makes available the XMLDom, either through a browser's native support, or
 the tiddlywiki plugin.
 \*/
 
-if ($tw.browser) {
-	exports.DOMParser = DOMParser;
-} else {
-	var parser;
-	try {
-		var parser = require("$:/plugins/tiddlywiki/xmldom/dom-parser");
-		exports.DOMParser = parser.DOMParser;
-	} catch (e) {
-		var DOM = require('xmldom');
-		exports.DOMParser = DOM.DOMParser;
-	}
-	var doc = (new exports.DOMParser()).parseFromString("<elem/>");
-		var proto = Object.getPrototypeOf(doc.documentElement);
-		Object.defineProperty(proto, "innerHTML", {
-			get: function() {
-				var child = this.firstChild;
-					buffer = [];
-				while (child) {
-					buffer.push(child.toString());
-					child = child.nextSibling;
-				}
-				return buffer.join('');
-			}
-		});
-		Object.defineProperty(proto, "outerHTML", {
-			get: function() {
-				return this.toString();
-			}
-		});
-}
-
 exports.getTiddlerDocument = function(wiki, title) {
 	return wiki.getCacheForTiddler(title, "XMLDOM", function() {
 		var tiddler = wiki.getTiddler(title),
@@ -57,7 +26,7 @@ exports.getTiddlerDocument = function(wiki, title) {
 exports.getTextDocument = function(text) {
 	var errorDetected = false;
 	function flag() { errorDetected = true; };
-	var parser = new exports.DOMParser({
+	var parser = new (getDOMParser())({
 		errorHandler: {
 			error: flag,
 			warning: flag,
@@ -100,4 +69,42 @@ exports.getProcessingInstructions = function(doc) {
 		node = node.nextSibling;
 	}
 	return attributes;
+};
+
+var _DOMParser = undefined;
+
+function getDOMParser() {
+	if (_DOMParser === undefined) {
+		if ($tw.browser) {
+			_DOMParser = DOMParser;
+		} else {
+			var parser;
+			try {
+				var parser = require("$:/plugins/tiddlywiki/xmldom/dom-parser");
+				_DOMParser = parser.DOMParser;
+			} catch (e) {
+				var DOM = require('xmldom');
+				_DOMParser = DOM.DOMParser;
+			}
+			var doc = (new _DOMParser()).parseFromString("<elem/>");
+			var proto = Object.getPrototypeOf(doc.documentElement);
+			Object.defineProperty(proto, "innerHTML", {
+				get: function() {
+					var child = this.firstChild;
+						buffer = [];
+					while (child) {
+						buffer.push(child.toString());
+						child = child.nextSibling;
+					}
+					return buffer.join('');
+				}
+			});
+			Object.defineProperty(proto, "outerHTML", {
+				get: function() {
+					return this.toString();
+				}
+			});
+		}
+	}
+	return _DOMParser;
 };

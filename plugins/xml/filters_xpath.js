@@ -12,11 +12,12 @@ Filter operator for applying xpath queries to incoming tiddler titles.
 /*global $tw: false */
 "use strict";
 
+var xmlDom = require("../xmldom");
+
 exports.xpath = function(source,operator,options) {
 	var query = operator.operand,
 		results = [],
-		xpath = require("../xpath"),
-		xmlDom = require("../xmldom");
+		xpath = require("../xpath");
 
 	source(function(tiddler,title) {
 		var doc = xmlDom.getTiddlerDocument(options.wiki, title);
