@@ -19,6 +19,10 @@ exports.querySelectorAll = function(cssSelector, contextNode) {
 
 exports.getError = function(exception, cssSelector) {
 	// All we do currently is say that the query is bad. No details.
+	if (exception.name === "TypeError") {
+		// This is an unexpected type of error. Not syntax. Just print it.
+		return exception.message;
+	}
 	return $tw.language.getString("flibbles/xml/Error/CSS/SyntaxError",
 		{variables: {css: cssSelector}});
 };
