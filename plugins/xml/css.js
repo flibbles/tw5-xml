@@ -17,6 +17,12 @@ exports.querySelectorAll = function(cssSelector, contextNode) {
 	return getCSS().querySelectorAll(cssSelector, contextNode);
 };
 
+exports.getError = function(exception, cssSelector) {
+	// All we do currently is say that the query is bad. No details.
+	return $tw.language.getString("flibbles/xml/Error/CSS/SyntaxError",
+		{variables: {css: cssSelector}});
+};
+
 function getCSS() {
 	if (_css === undefined) {
 		_css = Object.create(null);

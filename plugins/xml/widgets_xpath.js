@@ -260,7 +260,7 @@ CSSWidget.prototype.query = function(cssSelector, contextNode) {
 };
 
 CSSWidget.prototype.handleQueryError = function(error, offendingQuery) {
-	return error.toString();
+	return css.getError(error, offendingQuery);
 };
 
 })();

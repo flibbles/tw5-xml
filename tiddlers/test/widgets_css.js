@@ -30,5 +30,13 @@ it("can value-of", function() {
 	expect(transform(xml, "<$css value-of='.dog'>\n\n-<<currentNode>>-\n\n</$css>")).toBe("<p>-Roofus-</p>");
 });
 
+it('deals with illegal queries gracefully', function() {
+	var text = transform("<div class='dogs'/>", "<$css for-each='..dogs' />");
+	expect(text).toBe('<p><span class="tc-error">Invalid CSS Selector: ..dogs</span></p>');
+
+	// uses blocks when appropriate
+	text = transform("<div class='dogs'/>", "<$css for-each='..dogs' />\n");
+	expect(text).toBe('<span class="tc-error">Invalid CSS Selector: ..dogs</span>');
+});
 
 });
