@@ -1,0 +1,25 @@
+title: Node.js
+
+If you plan to use this plugin with Node.js, you're probably fine already, since the server mostly just serves the tiddlywiki to client browsers, which have the needed librarys. ''But'' if you plan to perform any actions on the server that requires tw5-xml in any way, such as rendering tiddlers using tw5-xml components, importing xml files, or other stuff, you'll quickly discover that DOMParsers, XPath, and CSS dependencies are not core features of Node.JS.
+
+No big deal. Just install them, and tw5-xml will integrate with them.
+
+''xmldom''
+
+You definitely need this. You're best off using the tiddlywiki plugin `xmldom` which ships with tiddlywiki. Just add "tiddlywiki/xmldom" to your plugins section in your `tiddlywiki.info` file.
+
+If you can't use this for some reason, `npm install xmldom`.
+
+''XPath''
+
+You only need this to use `[xpath[]]` and `<$xpath>`. Install with `npm install xpath`.
+
+''CSS selectors''
+
+You only need this to use `[css[]]` and `<$css>`. Install with `npm install query-selector`.
+
+!! Global installation
+
+If your tiddlywiki installation of global (it probably is), then those `npm` commands will likely need to be global too. I.E.
+
+`npm install -g (package)`

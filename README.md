@@ -42,6 +42,8 @@ Alternatively, you can also copy the `plugins` directly into your projects'
 root directory. Though this makes the install local only to those specific
 projects.
 
+**Note:** If you're performing Node.js server operations using tw5-xml, you _may_ need to install some dependencies first. [See the documentation for more details.](https://flibbles.github.io/tw5-xml/#Node.js)
+
 ## How to test
 
 Make sure you have `tiddlywiki` available on your PATH. Then from the project root directory, type:
