@@ -29,8 +29,12 @@ function getCSS() {
 			};
 		} else {
 			try {
-				var querySelector = require("query-selector");
-				_css.querySelectorAll = querySelector.default;
+				var querySelectorAll = require("query-selector").default;
+				_css.querySelectorAll = querySelectorAll;
+				_css.querySelector = function(cssSelector, contextNode) {
+					var nodeList = querySelectorAll(cssSelector, contextNode);
+					return nodeList[0];
+				};
 			} catch (e) {
 				function unsupported() {
 					throw "query-selector is required on Node.JS for this operation. Install xpath with 'npm install query-selector'";
