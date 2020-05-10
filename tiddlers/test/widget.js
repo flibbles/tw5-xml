@@ -1,10 +1,10 @@
 /*\
 
-Tests the widget transformer
+Tests the xpath widget
 
 \*/
 
-describe("Transformer", function() {
+describe("XPath widget", function() {
 
 const prolog = '<?xml version="1.0" encoding="UTF-8"?>\n';
 

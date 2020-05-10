@@ -15,6 +15,7 @@ xslt widget
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
 var xmlDom = require("../xmldom");
 var xpath = require("../xpath");
+var css = require("../css");
 
 var DOMWidget = function() {};
 
@@ -210,6 +211,8 @@ DOMNodeWidget.prototype.refresh = function(changedTiddlers) {
 
 exports.domnode = DOMNodeWidget;
 
+///////// XPath Widget /////////
+
 function XPathWidget(parseTreeNode, options) {
 	this.initialise(parseTreeNode,options);
 };
@@ -234,6 +237,30 @@ XPathWidget.prototype.handleQueryError = function(error, offendingQuery) {
 	return xpath.getError(error, offendingQuery);
 };
 
-//return {nodeList: nodeList, index = 0, iterateNext = function() { return this.nodeList[this.index++] }};
+///////// CSS Widget /////////
+
+function CSSWidget(parseTreeNode, options) {
+	this.initialise(parseTreeNode,options);
+};
+
+CSSWidget.prototype = new DOMWidget();
+
+exports.css = CSSWidget;
+
+CSSWidget.prototype.queryAll = function(cssSelector, contextNode) {
+	var nodeList = css.querySelectorAll(cssSelector, contextNode);
+	return {
+		nodeList: nodeList,
+		index: 0,
+		iterateNext: function() { return this.nodeList[this.index++]; }};
+};
+
+CSSWidget.prototype.query = function(cssSelector, contextNode) {
+	return css.querySelector(cssSelector, contextNode);
+};
+
+CSSWidget.prototype.handleQueryError = function(error, offendingQuery) {
+	return error.toString();
+};
 
 })();
