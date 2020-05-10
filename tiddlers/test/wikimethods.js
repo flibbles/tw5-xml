@@ -69,4 +69,33 @@ it('gets processing instructions from malformed xml', function() {
 	testInstructions("<doc><elem><name>name</elem><elem><name>2</name></elem></doc>");
 });
 
+it('supports compareDocumentPosition in all implementations', function() {
+	function compare(A, B, AtoB, BtoA, mask) {
+		mask = mask || 0xFF
+		expect(A.compareDocumentPosition(B) & mask).toBe(AtoB);
+		expect(B.compareDocumentPosition(A) & mask).toBe(BtoA);
+	};
+	function test(AtoB, BtoA, xml) {
+		var doc = xmldom.getTextDocument(xml);
+		var A = doc.getElementById('A');
+		var B = doc.getElementById('B');
+		compare(A, B, AtoB, BtoA);
+	};
+	function testDoc(docToA, AtoDoc, xml) {
+		var doc = xmldom.getTextDocument(xml);
+		var A = doc.getElementById('A');
+		compare(doc, A, docToA, AtoDoc);
+	};
+	test(20, 10, "<root id='A' ><child id='B' /></root>");
+	test(4, 2, "<root><child id='A' /><child id='B' /></root>");
+	test(4, 2, "<root><child><grand id='A'/></child><child id='B' /></root>");
+	test(4, 2, "<root><child id='A' /><child><grand id='B'/></child></root>");
+	testDoc(20, 10, "<root><child id='A' /></root>");
+	var docA = xmldom.getTextDocument("<Astuff a='txt' b='txt'/>");
+	var docB = xmldom.getTextDocument("<Bstuff />");
+	compare(docA, docB, 33, 33, 0x39);
+	compare(docA.documentElement, docB, 33, 33, 0x39);
+	compare(docA.documentElement, docB.documentElement, 33, 33, 0x39);
+});
+
 });

@@ -87,8 +87,9 @@ function getDOMParser() {
 				_DOMParser = DOM.DOMParser;
 			}
 			var doc = (new _DOMParser()).parseFromString("<elem/>");
-			var proto = Object.getPrototypeOf(doc.documentElement);
-			Object.defineProperty(proto, "innerHTML", {
+			var docProto = Object.getPrototypeOf(doc);
+			var nodeProto = Object.getPrototypeOf(doc.documentElement);
+			Object.defineProperty(nodeProto, "innerHTML", {
 				get: function() {
 					var child = this.firstChild;
 						buffer = [];
@@ -99,12 +100,63 @@ function getDOMParser() {
 					return buffer.join('');
 				}
 			});
-			Object.defineProperty(proto, "outerHTML", {
+			Object.defineProperty(nodeProto, "outerHTML", {
 				get: function() {
 					return this.toString();
 				}
 			});
+			if (!doc.documentElement.compareDocumentPosition) {
+				nodeProto.compareDocumentPosition = compareDocumentPosition;
+			}
+			if (!doc.compareDocumentPosition) {
+				docProto.compareDocumentPosition = function(node) {
+					return (node.ownerDocument == this) ? 20 : 33;
+				};
+			}
 		}
 	}
 	return _DOMParser;
+};
+
+// This is a cheap standin compare method used for Node.JS implementations
+// Needed for css, and not xpath. Hopefully I never need this for attributes.
+function compareDocumentPosition(target) {
+	var tree = [];
+	var ptr = this;
+	// Build tree of this's ancestors.
+	while (ptr) {
+		tree.push(ptr);
+		ptr = ptr.parentNode || ptr.ownerElement;
+	}
+	// Find common ancestory
+	ptr = target;
+	var index = -1, prev = null;
+	while (ptr) {
+		if ((index = tree.indexOf(ptr)) >= 0) {
+			break;
+		}
+		prev = ptr;
+		ptr = ptr.parentNode || ptr.ownerElement;
+	}
+	if (index < 0) {
+		// Disconnected
+		return 33;
+	}
+	if (index == 0) {
+		// target is descendant of this
+		return 20;
+	}
+	if (prev == null) {
+		// target is ancestor of this
+		return 10
+	}
+	while (tree.indexOf(prev) < 0) {
+		prev = prev.nextSibling;
+		if (!prev) {
+			// End of the line. B's ancestor in ptr must come after this's
+			return 4;
+		}
+	}
+	// Match. B's ancestor under ptr comes before this
+	return 2;
 };
