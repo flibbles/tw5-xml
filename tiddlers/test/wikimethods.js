@@ -64,8 +64,11 @@ it('caches documents correctly', function() {
 function testInstructions(xml) {
 	var doc = xmldom.getDocumentForText("text/xml", "<?tiddlywiki template='myFile'?>" + xml);
 	var attributes = xmldom.getProcessingInstructions(doc);
-	expect(attributes.template.type).toBe("string");
-	expect(attributes.template.value).toBe("myFile");
+	expect(attributes.template).toBeDefined();
+	if (attributes.template) {
+		expect(attributes.template.type).toBe("string");
+		expect(attributes.template.value).toBe("myFile");
+	}
 };
 
 it('detects processing instruction', function() {
