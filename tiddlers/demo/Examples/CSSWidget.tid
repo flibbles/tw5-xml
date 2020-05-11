@@ -3,6 +3,8 @@ list-after: Examples/XPathWidget
 tags: Examples
 title: Examples/CSSWidget
 
+''This widget is still experimental. It's name is subject to change upon final release.''
+
 Through the `<$css>` widget, you can iterate through and extract data from HTML tiddlers using css selectors. Click a tab to see various templates parsing through HTML documents using a variety of techniques.
 
 <$macrocall
