@@ -11,3 +11,32 @@ Be aware that the Node.js xmldom implementations will automatically add a defaul
 !! Using XPath on Html
 
 You can do this, but be aware that if your HTML tiddler's text doesn't have `<html><body>` etc..., the xmldom will add it automatically after parsing. So `/h1/text()` won't work, but `/html/body/h1/text()` might.
+
+!! Traversing slightly incorrect HTML
+
+If you're trying to run XPath or XSelect on HTML, and you're not getting the results you're expecting, have you considered that your HTML might be //slightly incorrect//?
+
+Take,
+
+```html
+<p>
+  <ul>
+    <li>A</li>
+    <li>B</li>
+  </ul>
+</p>
+```
+
+You'd think the query `<$xpath for-each="//p/ul/li" />` or `<$xselect for-each="p li"/>` would iterate through A and B.
+
+You'd be wrong, because `<ul>` tags aren't allowed inside `<p>` tags in properly formed HTML, so when your browser converted it into a DOM tree, it assumed you must have meant close that `<p>` tag first. So what you've actually got is:
+
+```html
+<p></p>
+<ul>
+  <li>A</li>
+  <li>B</li>
+</ul>
+```
+
+If your queries are giving you trouble, try inspecting your HTML tiddlers using your browsers ''inspect'' feature. Then you can see what your browser //assumes// you meant.

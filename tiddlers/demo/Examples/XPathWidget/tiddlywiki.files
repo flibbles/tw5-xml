@@ -20,6 +20,11 @@
 				"caption": {
 					"source": "basename"
 				},
+				"source": {
+					"prefix": "Examples/XPathWidget/",
+					"source": "basename",
+					"suffix": ".xml"
+				},
 				"tags": "Examples/XPathWidget",
 				"title": {
 					"source": "basename",

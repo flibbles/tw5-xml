@@ -8,4 +8,4 @@ Through the `<$xpath>` widget, you can iterate through and extract data from XML
 	$name="tabs"
 	tabsList="[tag[Examples/XPathWidget]]"
 	default="Examples/XPathWidget/Simple"
-	template="Templates/Transform" />
+	template="Templates/XSelectWidget" />

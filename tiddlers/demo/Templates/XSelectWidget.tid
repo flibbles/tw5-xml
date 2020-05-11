@@ -13,7 +13,7 @@ $(content)$
 
 <$transclude tiddler=<<currentTab>> field="description" />
 
-<$vars currentHTML={{{[<currentTab>addsuffix[.html]]}}}>
+<$vars currentHTML={{{[<currentTab>get[source]]}}}>
 <$set name="content" value={{{[<currentHTML>get[text]]}}} >
 
 <$macrocall

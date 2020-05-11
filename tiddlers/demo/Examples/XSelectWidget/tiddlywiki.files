@@ -20,6 +20,11 @@
 				"caption": {
 					"source": "basename"
 				},
+				"source": {
+					"prefix": "Examples/XSelectWidget/",
+					"source": "basename",
+					"suffix": ".html"
+				},
 				"tags": "Examples/XSelectWidget",
 				"title": {
 					"source": "basename",

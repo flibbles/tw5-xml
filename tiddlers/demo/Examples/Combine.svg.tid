@@ -1,0 +1,9 @@
+title: Examples/Combine.svg
+type: image/svg+xml
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 8 8">
+  <circle id='jim' class="class" cx="2" cy="2" r="1" />
+  <circle id='bob' class="class focus" cx="2" cy="6" r="1" />
+  <circle id='sal' class="class" cx="6" cy="2" r="1" />
+  <circle id='tom' class="class focus" cx="6" cy="6" r="1" />
+</svg>

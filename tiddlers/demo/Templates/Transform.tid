@@ -4,7 +4,7 @@ title: Templates/Transform
 
 <$transclude tiddler=<<currentTab>> field="description" />
 
-<$vars currentXML={{{[<currentTab>addsuffix[.xml]]}}}>
+<$vars currentXML={{{[<currentTab>get[source]]}}}>
 
 <$macrocall
 	$name="split"

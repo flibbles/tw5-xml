@@ -3,9 +3,9 @@ list-before:
 ```
 !! Sections
 <ul>
- <$css for-each="section .my-header">
+ <$xselect for-each="section .my-header">
   <li><<currentNode>></li>
- </$css>
+ </$xselect>
 </ul>
 ```
 
@@ -13,8 +13,8 @@ list-before:
 
 !! Sections
 <ul>
- <$css for-each="section .my-header">
+ <$xselect for-each="section .my-header">
   <li><<currentNode>></li>
- </$css>
+ </$xselect>
 </ul>
 </blockquote>

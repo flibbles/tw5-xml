@@ -50,8 +50,24 @@ it('loads html fine', function() {
 
 	// But loading the same document as an XML will fail.
 	wiki.addTiddler({title: "test.xml",  type: "text/xml", text:html});
-	var doc = xmldom.getTiddlerDocument(wiki, "test.xml);
+	var doc = xmldom.getTiddlerDocument(wiki, "test.xml");
 	expect(doc.error).toBeTruthy();
+});
+
+it('loads xml fine', function() {
+	var wiki = new $tw.Wiki();
+	var html =  "<custom><elem />Content</custom>";
+	wiki.addTiddler({title: "test.xml", type: "text/xml", text: html});
+	var doc = xmldom.getTiddlerDocument(wiki, "test.xml");
+	expect(doc.error).toBeFalsy();
+	expect(doc.documentElement.textContent).toBe("Content");
+
+	// But loading the same document as an HTML also works.
+	// Because HTML is always lenient.
+	wiki.addTiddler({title: "test.html",  type: "text/html", text:html});
+	doc = xmldom.getTiddlerDocument(wiki, "test.html");
+	expect(doc.error).toBeFalsy();
+	expect(doc.documentElement.textContent).toBe("Content");
 });
 
 it('caches documents correctly', function() {
