@@ -42,10 +42,16 @@ it('describes tiddler when fails getting tiddler doc', function() {
 
 it('loads html fine', function() {
 	var wiki = new $tw.Wiki();
-	wiki.addTiddler({title: "test.html", type: "text/html", text: "<p>Content<br>Broken up into lines</p>"});
+	var html =  "<p>Content<br>Broken up into lines</p>";
+	wiki.addTiddler({title: "test.html", type: "text/html", text: html});
 	var doc = xmldom.getTiddlerDocument(wiki, "test.html");
 	expect(doc.error).toBeFalsy();
 	expect(doc.documentElement.textContent).toBe("ContentBroken up into lines");
+
+	// But loading the same document as an XML will fail.
+	wiki.addTiddler({title: "test.xml",  type: "text/xml", text:html});
+	var doc = xmldom.getTiddlerDocument(wiki, "test.xml);
+	expect(doc.error).toBeTruthy();
 });
 
 it('caches documents correctly', function() {
@@ -61,24 +67,17 @@ it('caches documents correctly', function() {
 	expect(doc3.documentElement.outerHTML).toBe("<cats/>");
 });
 
-function testInstructions(xml) {
-	var doc = xmldom.getDocumentForText("text/xml", "<?tiddlywiki template='myFile'?>" + xml);
-	var attributes = xmldom.getProcessingInstructions(doc);
-	expect(attributes.template).toBeDefined();
-	if (attributes.template) {
-		expect(attributes.template.type).toBe("string");
-		expect(attributes.template.value).toBe("myFile");
-	}
-};
-
 it('detects processing instruction', function() {
+	function testInstructions(xml) {
+		var doc = xmldom.getDocumentForText("text/xml", "<?tiddlywiki template='myFile'?>" + xml);
+		var attributes = xmldom.getProcessingInstructions(doc);
+		expect(attributes.template).toBeDefined();
+		if (attributes.template) {
+			expect(attributes.template.type).toBe("string");
+			expect(attributes.template.value).toBe("myFile");
+		}
+	};
 	testInstructions("<doc/>");
-});
-
-it('gets processing instructions from malformed xml', function() {
-	testInstructions("<doc><$badElem /></doc>");
-	testInstructions("<doc><elem>content</doc>");
-	testInstructions("<doc><elem><name>name</elem><elem><name>2</name></elem></doc>");
 });
 
 it('supports compareDocumentPosition in all implementations', function() {
