@@ -4,7 +4,8 @@ title: Examples/XPathWidget
 
 Through the `<$xpath>` widget, you can iterate through and extract data from XML tiddlers using XPath. Click a tab to see various templates parsing the XML document using a variety of techniques.
 
-<$macrocall $name="tabs"
-            tabsList="[tag[Examples/XPathWidget]]"
-            default="Examples/XPathWidget/Simple"
-            template="Templates/Transform" />
+<$macrocall
+	$name="tabs"
+	tabsList="[tag[Examples/XPathWidget]]"
+	default="Examples/XPathWidget/Simple"
+	template="Templates/Transform" />

@@ -1,0 +1,32 @@
+title: Templates/CSSWidget
+
+\define block(content)
+<div class="xml-text">
+
+```html
+$(content)$
+```
+</div>
+\end
+
+!! <$link>{{!!caption}}</$link>
+
+<$transclude tiddler=<<currentTab>> field="description" />
+
+<$vars currentHTML={{{[<currentTab>addsuffix[.html]]}}}>
+<$set name="content" value={{{[<currentHTML>get[text]]}}} >
+
+<$macrocall
+	$name="split"
+	left="""
+<<block>>
+"""
+	right="""<$tiddler tiddler=<<currentHTML>> >
+
+<$transclude tiddler=<<currentTab>> />
+
+</$tiddler>""" />
+
+</$set>
+</$vars>
+
