@@ -11,4 +11,4 @@ Through the `<$xselect>` widget, you can iterate through and extract data from H
 	$name="tabs"
 	tabsList="[tag[Examples/XSelectWidget]]"
 	default="Examples/XSelectWidget/Simple"
-	template="Templates/XSelectWidget" />
+	template="Templates/WidgetExample" />

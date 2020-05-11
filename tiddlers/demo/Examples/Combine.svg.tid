@@ -5,5 +5,5 @@ type: image/svg+xml
   <circle id='jim' class="class" cx="2" cy="2" r="1" />
   <circle id='bob' class="class focus" cx="2" cy="6" r="1" />
   <circle id='sal' class="class" cx="6" cy="2" r="1" />
-  <circle id='tom' class="class focus" cx="6" cy="6" r="1" />
+  <circle id='tom' class="class focus" cx="6" cy="6" r="2" />
 </svg>
