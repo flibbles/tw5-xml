@@ -143,7 +143,28 @@ it("still imports malformed but generic xml", function() {
 });
 
 it("emits error with malformed tiddlywiki bundle", function() {
-	testFails("<?tiddlywiki bundle?><tiddlers><tiddler><title>MyTitle</title><text><div>Stuff</span></text></tiddler></tiddlers>");
+	function testPasses(text) {
+		var rtn = importXml(text, {title: "myFile.xml"});
+		expect(rtn.length).toBe(1);
+		expect(rtn[0].title).toBe("myFile.xml");
+	};
+	var xml = "<tiddlers><tiddler><title>MyTitle</title><text><div>Stuff</span></text></tiddler></tiddlers>";
+	testFails("<?tiddlywiki bundle?>" + xml);
+	// Different tests because FireFox drops the instruction on failure
+	// so it's hard to tell that it's supposed to be a bundle.
+	// We have to commit the cardinal sin of using regexp on XML.
+	testFails("<?tiddlywiki goodies='stuff' bundle?>" + xml);
+	testFails("<?tiddlywiki goodies='stuff' bundle?>" + xml);
+	testFails("<?tiddlywiki goodies? bundle?>" + xml);
+	testFails("<?tiddlywiki goodies='?stu>ff' bundle?>" + xml);
+	testFails("<?tiddlywiki\ngoodies='?stu>ff' bundle otherstuff?>" + xml);
+	testFails("<?tiddlywiki whatever?><?tiddlywiki bundle?>" + xml);
+	testPasses("<?tiddlywikibundle?>" + xml);
+	testPasses("<?tiddlywikistuff bundle?>" + xml);
+	testPasses("<?tiddlywiki stuffbundle?>" + xml);
+	testPasses("<?tiddlywiki bundlex?>" + xml);
+	testPasses("<?tiddlywiki ?bundle?>" + xml);
+	testPasses("<?tiddlywiki info ?><bundle>" + xml + "</bundle>");
 });
 
 it("emits error with well-formed bundle that violates specs", function() {

@@ -27,13 +27,15 @@ var xmldom = require("./xmldom");
 exports["text/xml"] = function(text,fields) {
 	var doc = xmldom.getDocumentForText("text/xml", text);
 	var attributes = xmldom.getProcessingInstructions(doc);
-	if (!attributes.bundle) {
-		return [basicXml(text,fields)];
-	} else if (!doc.error) {
-		try {
-			return deserializeTiddlers(doc.documentElement);
-		} catch (e) {
-			// proceed to error handling below. Ignore message for now.
+	if (!doc.error || !probablyBundle(text)) {
+		if (!attributes.bundle) {
+			return [basicXml(text,fields)];
+		} else if (!doc.error) {
+			try {
+				return deserializeTiddlers(doc.documentElement);
+			} catch (e) {
+				// proceed to error handling below. Ignore message for now.
+			}
 		}
 	}
 	// It's malformed. Don't try to parse it.
@@ -41,6 +43,10 @@ exports["text/xml"] = function(text,fields) {
 	var error = $tw.language.getString("flibbles/xml/Error/BundleParserError");
 	logger.alert(error);
 	return [];
+};
+
+function probablyBundle(text) {
+	return (text.match(/<\?tiddlywiki\s(?:[^\?]|\?[^>])*\bbundle[\s\?]/));
 };
 
 function basicXml(text, fields) {
