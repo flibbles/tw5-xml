@@ -17,4 +17,6 @@ Duplicates are not purged from output. If you want unique output, use the `[uniq
 
 If xpath has an `if` suffix. It behaves differently. Instead of returning the results of the query, it returns those input titles for which the query returns results. This operation can be inverted.
 
+If you're having trouble getting your XPath query to work, check out [[the common pitfalls|Pitfalls]].
+
 <<link-to-tab "Examples" "Examples/xpath Operator" Examples>>

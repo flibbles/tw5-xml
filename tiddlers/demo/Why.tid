@@ -1,0 +1,23 @@
+title: Why?
+
+Why must default namespaces be specified in your XPath queries? It does kinda defeat the purpose, doesn't it?
+
+It's because that's how XPath 1.0 works, and XPath 1.0 is what the browsers use.
+
+But there is a rationale for why it should be that way. Imagine this XML document:
+
+```xml
+<?xml version="1.0" encoding="UTFT-8"?>
+<company xmlns="http://myCompany.com">
+  <name>Gizmos Inc.</name>
+  <employees xmlns="http://hr.com">
+    <employee>
+      <name>Jack Daniel</name>
+    </employee>
+  </employees>
+</company>
+```
+
+There is an embedded subdocument from Human Resources which shares the element `<name>`. It has it's own namespace, but if your queries didn't have to be explicit, then a query like `<$xpath for-each="//name" />` would be ambiguous. It would capture the employee names too.
+
+But if namespaces are explicitly declared in your query, like `<$xpath xmlns:mc="http://myCompany.com" for-each="//mc:name" />` then there is no longer any ambiguity. The fact that there happens to be an embedded subdocument which shares element names no longer breaks anything.

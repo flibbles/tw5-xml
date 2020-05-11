@@ -1,0 +1,9 @@
+title: Pitfalls
+
+!! XPath isn't working
+
+If you have a default namespace on your XML document, you need to explicitly declare a prefix for it to use your xpath query. <<link-to-tab Examples Examples/XPathWidget subtab:"Examples/XPathWidget/Default Namespaces" "See the example the for more details.">>
+
+!! Trouble using XPath on XHTML in Node.JS
+
+Be aware that the Node.js xmldom implementations will automatically add a default xhtml namespace to your document if there isn't a default namespace already. Namely, the documentElement may have `xmlns="http://www.w3.org/1999/xhtml"`. This can be troublesome, especially if you want identical xpath on both browser and server. You can get around this by adding `xmlns=""` to your root element, or you can choose to work in the xhtml namespace to begin with.

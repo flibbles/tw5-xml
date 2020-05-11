@@ -85,7 +85,9 @@ is equivalent to
 //TW5-XML// supports namespaces in XML documents in three ways.
 
 # If the namespaces are defined on the documentElement, or at or above the current DOM context, `<$xpath>` will automatically acknowledge them using the same prefix.
-# You can also declare namespaces as attributes in `<$xpath>`. For instance, `<$xpath xmlns:svg="http://www.w3.org/2000/svg">`. ''This is necessary if your XML document uses default namespaces, or has namespace declarations nested within the document.''<br/>These namespace configurations will also be available to any nested xpath queries, widget or otherwise. 
+# You can also declare namespaces as attributes in `<$xpath>`. For instance, `<$xpath xmlns:svg="http://www.w3.org/2000/svg">`. <<link-to-tab Examples Examples/XPathWidget subtab:"Examples/XPathWidget/Default Namespaces" "This is necessary if your XML document uses default namespaces">>, or has namespace declarations nested within the document.<br/>These namespace configurations will also be available to any nested xpath queries, widget or otherwise. 
 # Alternatively, you can define namespaces like any other variable using `<$set>`, `<$vars>`, or `/define`. (`<$set name="xmlns:svg" value="http://www.w3.org/2000/svg">`) Your namespaces can even be globally defined using <<tag $:/tags/Macro>>.
 
 <<link-to-tab Examples Examples/XPathWidget subtab:Examples/XPathWidget/Namespaces "Example">>
+
+If you're having trouble getting your XPath query to work, check out [[the common pitfalls|Pitfalls]].
