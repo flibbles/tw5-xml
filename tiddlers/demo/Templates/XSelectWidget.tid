@@ -1,4 +1,4 @@
-title: Templates/CSSWidget
+title: Templates/XSelectWidget
 
 \define block(content)
 <div class="xml-text">

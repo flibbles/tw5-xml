@@ -1,0 +1,14 @@
+caption: <$text text="<$xselect>" />
+list-after: Examples/XPathWidget
+tags: Examples
+title: Examples/XSelectWidget
+
+''This widget is still experimental. It's name is subject to change upon final release.''
+
+Through the `<$xselect>` widget, you can iterate through and extract data from HTML tiddlers using CSS selectors. Click a tab to see various templates parsing through HTML documents using a variety of techniques.
+
+<$macrocall
+	$name="tabs"
+	tabsList="[tag[Examples/XSelectWidget]]"
+	default="Examples/XSelectWidget/Simple"
+	template="Templates/XSelectWidget" />

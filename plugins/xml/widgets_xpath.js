@@ -15,7 +15,7 @@ xslt widget
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
 var xmlDom = require("../xmldom");
 var xpath = require("../xpath");
-var css = require("../css");
+var xselect = require("../xselect");
 
 var DOMWidget = function() {};
 
@@ -237,30 +237,30 @@ XPathWidget.prototype.handleQueryError = function(error, offendingQuery) {
 	return xpath.getError(error, offendingQuery);
 };
 
-///////// CSS Widget /////////
+///////// XSelect Widget /////////
 
-function CSSWidget(parseTreeNode, options) {
+function XSelectWidget(parseTreeNode, options) {
 	this.initialise(parseTreeNode,options);
 };
 
-CSSWidget.prototype = new DOMWidget();
+XSelectWidget.prototype = new DOMWidget();
 
-exports.css = CSSWidget;
+exports.xselect = XSelectWidget;
 
-CSSWidget.prototype.queryAll = function(cssSelector, contextNode) {
-	var nodeList = css.querySelectorAll(cssSelector, contextNode);
+XSelectWidget.prototype.queryAll = function(selector, contextNode) {
+	var nodeList = xselect.querySelectorAll(selector, contextNode);
 	return {
 		nodeList: nodeList,
 		index: 0,
 		iterateNext: function() { return this.nodeList[this.index++]; }};
 };
 
-CSSWidget.prototype.query = function(cssSelector, contextNode) {
-	return css.querySelector(cssSelector, contextNode);
+XSelectWidget.prototype.query = function(selector, contextNode) {
+	return xselect.querySelector(selector, contextNode);
 };
 
-CSSWidget.prototype.handleQueryError = function(error, offendingQuery) {
-	return css.getError(error, offendingQuery);
+XSelectWidget.prototype.handleQueryError = function(error, offendingQuery) {
+	return xselect.getError(error, offendingQuery);
 };
 
 })();

@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/flibbles/xml/css.js
+title: $:/plugins/flibbles/xml/xselect.js
 type: application/javascript
 module-type: library
 
@@ -7,14 +7,14 @@ Makes available querySelector, either through a browser's native support, or
 the node.JS library
 \*/
 
-var _css = undefined;
+var _selector = undefined;
 
 exports.querySelector = function(cssSelector, contextNode) {
-	return getCSS().querySelector(cssSelector, contextNode);
+	return getSelector().querySelector(cssSelector, contextNode);
 };
 
 exports.querySelectorAll = function(cssSelector, contextNode) {
-	return getCSS().querySelectorAll(cssSelector, contextNode);
+	return getSelector().querySelectorAll(cssSelector, contextNode);
 };
 
 exports.getError = function(exception, cssSelector) {
@@ -23,25 +23,25 @@ exports.getError = function(exception, cssSelector) {
 		// This is an unexpected type of error. Not syntax. Just print it.
 		return exception.message;
 	}
-	return $tw.language.getString("flibbles/xml/Error/CSS/SyntaxError",
-		{variables: {css: cssSelector}});
+	return $tw.language.getString("flibbles/xml/Error/XSelect/SyntaxError",
+		{variables: {xselect: cssSelector}});
 };
 
-function getCSS() {
-	if (_css === undefined) {
-		_css = Object.create(null);
+function getSelector() {
+	if (_selector === undefined) {
+		_selector = Object.create(null);
 		if ($tw.browser) {
-			_css.querySelector = function(cssSelector, contextNode) {
+			_selector.querySelector = function(cssSelector, contextNode) {
 				return contextNode.querySelector(cssSelector);
 			};
-			_css.querySelectorAll = function(cssSelector, contextNode) {
+			_selector.querySelectorAll = function(cssSelector, contextNode) {
 				return contextNode.querySelectorAll(cssSelector);
 			};
 		} else {
 			try {
 				var querySelectorAll = require("query-selector").default;
-				_css.querySelectorAll = querySelectorAll;
-				_css.querySelector = function(cssSelector, contextNode) {
+				_selector.querySelectorAll = querySelectorAll;
+				_selector.querySelector = function(cssSelector, contextNode) {
 					var nodeList = querySelectorAll(cssSelector, contextNode);
 					return nodeList[0];
 				};
@@ -49,10 +49,10 @@ function getCSS() {
 				function unsupported() {
 					throw "query-selector is required on Node.JS for this operation. Install xpath with 'npm install query-selector'";
 				};
-				_css.querySelector = unsupported;
-				_css.querySelectorAll = unsupported;
+				_selector.querySelector = unsupported;
+				_selector.querySelectorAll = unsupported;
 			}
 		}
 	}
-	return _css;
+	return _selector;
 };
