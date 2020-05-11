@@ -25,7 +25,7 @@ Deserializes xml files of type:
 var xmldom = require("./xmldom");
 
 exports["text/xml"] = function(text,fields) {
-	var doc = xmldom.getTextDocument(text);
+	var doc = xmldom.getDocumentForText("text/xml", text);
 	var attributes = xmldom.getProcessingInstructions(doc);
 	if (!attributes.bundle) {
 		return [basicXml(text,fields)];

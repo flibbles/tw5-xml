@@ -9,7 +9,7 @@ describe("Wikimethods", function() {
 var xmldom = require("$:/plugins/flibbles/xml/xmldom.js");
 
 function test(fails, xml) {
-	var doc = xmldom.getTextDocument(xml);
+	var doc = xmldom.getDocumentForText("text/xml", xml);
 	if (fails) {
 		expect(doc.error).toBeTruthy();
 	} else {
@@ -40,6 +40,14 @@ it('describes tiddler when fails getting tiddler doc', function() {
 	expect(doc.error).toBe('Unable to parse XML in tiddler "test"');
 });
 
+it('loads html fine', function() {
+	var wiki = new $tw.Wiki();
+	wiki.addTiddler({title: "test.html", type: "text/html", text: "<p>Content<br>Broken up into lines</p>"});
+	var doc = xmldom.getTiddlerDocument(wiki, "test.html");
+	expect(doc.error).toBeFalsy();
+	expect(doc.documentElement.textContent).toBe("ContentBroken up into lines");
+});
+
 it('caches documents correctly', function() {
 	var wiki = new $tw.Wiki();
 	wiki.addTiddler({title: "test.xml", type: "text/xml", text: "<dogs/>"});
@@ -54,11 +62,12 @@ it('caches documents correctly', function() {
 });
 
 function testInstructions(xml) {
-	var doc = xmldom.getTextDocument("<?tiddlywiki template='myFile'?>" + xml);
+	var doc = xmldom.getDocumentForText("text/xml", "<?tiddlywiki template='myFile'?>" + xml);
 	var attributes = xmldom.getProcessingInstructions(doc);
 	expect(attributes.template.type).toBe("string");
 	expect(attributes.template.value).toBe("myFile");
 };
+
 it('detects processing instruction', function() {
 	testInstructions("<doc/>");
 });
@@ -76,13 +85,13 @@ it('supports compareDocumentPosition in all implementations', function() {
 		expect(B.compareDocumentPosition(A) & mask).toBe(BtoA);
 	};
 	function test(AtoB, BtoA, xml) {
-		var doc = xmldom.getTextDocument(xml);
+		var doc = xmldom.getDocumentForText("text/xml", xml);
 		var A = doc.getElementById('A');
 		var B = doc.getElementById('B');
 		compare(A, B, AtoB, BtoA);
 	};
 	function testDoc(docToA, AtoDoc, xml) {
-		var doc = xmldom.getTextDocument(xml);
+		var doc = xmldom.getDocumentForText("text/xml", xml);
 		var A = doc.getElementById('A');
 		compare(doc, A, docToA, AtoDoc);
 	};
@@ -91,8 +100,8 @@ it('supports compareDocumentPosition in all implementations', function() {
 	test(4, 2, "<root><child><grand id='A'/></child><child id='B' /></root>");
 	test(4, 2, "<root><child id='A' /><child><grand id='B'/></child></root>");
 	testDoc(20, 10, "<root><child id='A' /></root>");
-	var docA = xmldom.getTextDocument("<Astuff a='txt' b='txt'/>");
-	var docB = xmldom.getTextDocument("<Bstuff />");
+	var docA = xmldom.getDocumentForText("text/xml", "<A a='txt' b='txt'/>");
+	var docB = xmldom.getDocumentForText("text/xml", "<B />");
 	compare(docA, docB, 33, 33, 0x39);
 	compare(docA.documentElement, docB, 33, 33, 0x39);
 	compare(docA.documentElement, docB.documentElement, 33, 33, 0x39);

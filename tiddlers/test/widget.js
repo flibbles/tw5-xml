@@ -303,7 +303,7 @@ function testChange(template, Atext, Btext, Aexpected, Bexpected, options) {
 	options = options || {};
 	var wiki = options.wiki || new $tw.Wiki();
 	wiki.addTiddler({title: "ref", text: Atext});
-	wiki.addTiddler({title: "xml", text: options.xml || "<dog a='wrong' b='right' />"});
+	wiki.addTiddler({title: "xml", type: "text/xml", text: options.xml || "<dog a='wrong' b='right' />"});
 	wiki.addTiddler({title: "template", text: template});
 	var parser = wiki.parseText("text/vnd.tiddlywiki", "{{xml||template}}");
 	var widgetNode = wiki.makeWidget(parser);
@@ -332,14 +332,14 @@ it("when variable changes", function() {
 
 it("when tiddler changes", function() {
 	var wiki = new $tw.Wiki();
-	wiki.addTiddler({title: "otherxml", text: "<dog a='other' />"});
+	wiki.addTiddler({title: "otherxml", type: "text/xml", text: "<dog a='other' />"});
 	testChange("<$xpath tiddler={{ref}} for-each='/dog/@a' />\n",
 		"xml", "otherxml", "<div>wrong</div>", "<div>other</div>", {wiki:wiki});
 });
 
 it("when underlying xml changes", function() {
-	testChange("<$xpath tiddler='ref' for-each='/dog/@a' />\n",
-		"<dog a='one'/>", "<dog a='two'/>", "<div>one</div>", "<div>two</div>");
+	testChange("<$xpath tiddler='ref' for-each='//div/@id' />\n",
+		"<div xmlns='' id='one'>", "<div xmlns='' id='two'/>", "<div>one</div>", "<div>two</div>");
 });
 
 it("when template changes", function() {

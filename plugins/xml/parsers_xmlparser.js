@@ -15,7 +15,7 @@ The XML parser displays itself as xml.
 var xmldom = require("../xmldom");
 
 var XmlParser = function(type,text,options) {
-	var doc = xmldom.getTextDocument(text);
+	var doc = xmldom.getDocumentForText("text/xml", text);
 	var templateValue = xmldom.getProcessingInstructions(doc).template;
 	if (templateValue) {
 		this.tree = [{

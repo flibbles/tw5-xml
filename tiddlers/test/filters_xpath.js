@@ -81,14 +81,15 @@ it("has :if suffix support", function() {
 it(":if treats failed documents as false", function() {
 	var wiki = new $tw.Wiki();
 	wiki.addTiddlers([
-		{title: "A", text: "<test />"},
-		{title: "B", text: "something <not xml"},
-		{title: "C", text: "<test />"},
-		{title: "D", text: "<ignore />"}]);
+		{title: "A", type: "text/xml", text: "<test />"},
+		{title: "B", text: "not even pretending"},
+		{title: "C", type: "text/xml", text: "<test />"},
+		{title: "D", type: "text/xml", text: "<ignore />"},
+		{title: "E", type: "text/xml", text: "this is bad <xml"}]);
 	test("/test", ["A", "C"],
-		{input: ["A", "B", "C", "D"], wiki: wiki, operator: "xpath:if"});
-	test("/test", ["B", "D"],
-		{input: ["A", "B", "C", "D"], wiki: wiki, operator: "!xpath:if"});
+		{input: ["A", "B", "C", "D", "E"], wiki: wiki, operator: "xpath:if"});
+	test("/test", ["B", "D", "E"],
+		{input: ["A", "B", "C", "D", "E"], wiki: wiki, operator: "!xpath:if"});
 });
 
 it("handles all node types", function() {

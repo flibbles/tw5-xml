@@ -12,7 +12,7 @@ exports.getTiddlerDocument = function(wiki, title) {
 		var tiddler = wiki.getTiddler(title),
 			doc = undefined;
 		if (tiddler) {
-			doc = exports.getTextDocument(tiddler.fields.text);
+			doc = exports.getDocumentForText(tiddler.fields.type, tiddler.fields.text);
 			if (doc.error) {
 				// Let's elaborate
 				doc.error = $tw.language.getString("flibbles/xml/Error/DOMParserError",
@@ -23,7 +23,7 @@ exports.getTiddlerDocument = function(wiki, title) {
 	});
 };
 
-exports.getTextDocument = function(text) {
+exports.getDocumentForText = function(type, text) {
 	var errorDetected = false;
 	function flag() { errorDetected = true; };
 	var parser = new (getDOMParser())({
@@ -33,7 +33,7 @@ exports.getTextDocument = function(text) {
 			fatalError: flag
 		}
 	});
-	var doc = parser.parseFromString(text, "text/xml");
+	var doc = parser.parseFromString(text, type || "text/html");
 	if (errorDetected) {
 		doc.error = true;
 	} else {
