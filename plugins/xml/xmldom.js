@@ -7,14 +7,6 @@ Makes available the XMLDom, either through a browser's native support, or
 the tiddlywiki plugin.
 \*/
 
-var supportedTypes = {
-	"text/html": "text/html",
-	"text/xml": "text/xml",
-	"application/xml": "application/xml",
-	"application/xhtml+xml": "application/xhtml+xml",
-	"image/svg+xml": "image/svg+xml"
-};
-
 exports.getDocumentForText = function(type, text) {
 	var errorDetected = false;
 	function flag() { errorDetected = true; };
@@ -25,10 +17,10 @@ exports.getDocumentForText = function(type, text) {
 			fatalError: flag
 		}
 	});
-	if (!supportedTypes[type]) {
+	if (!$tw.config.xml.supportedDocumentTypes[type]) {
 		return {error: true, unsupported: true};
 	}
-	var doc = parser.parseFromString(text, supportedTypes[type] || "text/html");
+	var doc = parser.parseFromString(text, $tw.config.xml.supportedDocumentTypes[type] || "text/html");
 	if (errorDetected) {
 		doc.error = true;
 	} else {
