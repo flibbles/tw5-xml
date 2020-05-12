@@ -47,6 +47,12 @@ it("has :if suffix support", function() {
 		{input: ["A", "B", "C"], wiki: wiki, operator: "!xselect:if"});
 });
 
+// This used to fail on Node.js because it would create half-baked Documents
+// if there weren't any elements. Any attempt to access by #ID would error.
+it("can attempt to parse text-only html", function() {
+	test("#test", [], {text: "Text only", operator: "xselect:if"});
+});
+
 it(":if treats failed documents as false", function() {
 	var wiki = new $tw.Wiki();
 	wiki.addTiddlers([

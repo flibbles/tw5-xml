@@ -52,12 +52,6 @@ function filterInput(source,operator,options,queryMethod,errorMethod) {
 						}
 					}
 				} catch (e) {
-					if (e.message.indexOf("Cannot read property") >= 0) {
-						console.log(e);
-						console.log(doc);
-						console.log(doc.documentElement);
-						console.log(title);
-					}
 					results.push(errorMethod(e, query));
 				}
 			}

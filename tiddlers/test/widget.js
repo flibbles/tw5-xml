@@ -302,7 +302,8 @@ describe("refreshes", function() {
 function testChange(template, Atext, Btext, Aexpected, Bexpected, options) {
 	options = options || {};
 	var wiki = options.wiki || new $tw.Wiki();
-	wiki.addTiddler({title: "ref", text: Atext});
+	var refType = options.refType || "text/vnd.tiddlywiki";
+	wiki.addTiddler({title: "ref", text: Atext, type: refType});
 	wiki.addTiddler({title: "xml", type: "text/xml", text: options.xml || "<dog a='wrong' b='right' />"});
 	wiki.addTiddler({title: "template", text: template});
 	var parser = wiki.parseText("text/vnd.tiddlywiki", "{{xml||template}}");
@@ -310,7 +311,7 @@ function testChange(template, Atext, Btext, Aexpected, Bexpected, options) {
 	var container = $tw.fakeDocument.createElement("div");
 	widgetNode.render(container, null);
 	expect(container.innerHTML).toBe(Aexpected);
-	wiki.addTiddler({title: "ref", text: Btext});
+	wiki.addTiddler({title: "ref", text: Btext, type: refType});
 	widgetNode.refresh({"ref": {modified: true}});
 	expect(container.innerHTML).toBe(Bexpected);
 };
@@ -339,7 +340,7 @@ it("when tiddler changes", function() {
 
 it("when underlying xml changes", function() {
 	testChange("<$xpath tiddler='ref' for-each='//div/@id' />\n",
-		"<div xmlns='' id='one'>", "<div xmlns='' id='two'/>", "<div>one</div>", "<div>two</div>");
+		"<div xmlns='' id='one'>", "<div xmlns='' id='two'/>", "<div>one</div>", "<div>two</div>", {refType: "text/html"});
 });
 
 it("when template changes", function() {

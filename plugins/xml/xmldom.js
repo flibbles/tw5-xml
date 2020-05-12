@@ -15,12 +15,23 @@ exports.getTiddlerDocument = function(wiki, title) {
 			doc = exports.getDocumentForText(tiddler.fields.type, tiddler.fields.text);
 			if (doc.error) {
 				// Let's elaborate
-				doc.error = $tw.language.getString("flibbles/xml/Error/DOMParserError",
+				var errorKey
+				if (supportedTypes[tiddler.fields.type]) {
+					errorKey = "flibbles/xml/Error/DOMParserError";
+				} else {
+					errorKey = "flibbles/xml/Error/NotDOMError";
+				}
+				doc.error = $tw.language.getString(errorKey,
 					{variables: {currentTiddler: title}});
 			}
 		}
 		return doc;
 	});
+};
+
+var supportedTypes = {
+	"text/html": true,
+	"text/xml": true
 };
 
 exports.getDocumentForText = function(type, text) {
@@ -34,7 +45,7 @@ exports.getDocumentForText = function(type, text) {
 		}
 	});
 	var doc = parser.parseFromString(text, type || "text/html");
-	if (errorDetected) {
+	if (errorDetected || !supportedTypes[type]) {
 		doc.error = true;
 	} else {
 		var errors = doc.getElementsByTagName("parsererror");
@@ -46,6 +57,11 @@ exports.getDocumentForText = function(type, text) {
 			if (text.indexOf("<parsererror") < 0) {
 				doc.error = true;
 			}
+		}
+		if (!doc.documentElement && text.indexOf("<html>") < 0) {
+			// This is one of those weird halfbaked documents that Node.js
+			// sometimes returns if it's text only. Just wrap it ourselves.
+			doc = this.getDocumentForText(type, "<html><body>"+text+"</html></body>");
 		}
 	}
 	return doc;
