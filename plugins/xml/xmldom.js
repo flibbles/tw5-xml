@@ -30,8 +30,11 @@ exports.getTiddlerDocument = function(wiki, title) {
 };
 
 var supportedTypes = {
-	"text/html": true,
-	"text/xml": true
+	"text/html": "text/html",
+	"text/xml": "text/xml",
+	"application/xml": "application/xml",
+	"application/xhtml+xml": "application/xhtml+xml",
+	"image/svg+xml": "image/svg+xml"
 };
 
 exports.getDocumentForText = function(type, text) {
@@ -44,8 +47,11 @@ exports.getDocumentForText = function(type, text) {
 			fatalError: flag
 		}
 	});
-	var doc = parser.parseFromString(text, type || "text/html");
-	if (errorDetected || !supportedTypes[type]) {
+	if (!supportedTypes[type]) {
+		return {error: true};
+	}
+	var doc = parser.parseFromString(text, supportedTypes[type] || "text/html");
+	if (errorDetected) {
 		doc.error = true;
 	} else {
 		var errors = doc.getElementsByTagName("parsererror");
