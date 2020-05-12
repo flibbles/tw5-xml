@@ -1,0 +1,80 @@
+caption: XSelect Widget
+tags: Documentation
+title: XSelectWidget
+
+! Introduction
+
+The xselect widget allows you to query an HTML (or XML) tiddler using CSS selectors. You can extract values or iterate through the results.
+
+! Content and Attributes
+
+The content of the `<$xselect>` widget is an optional template to render for each result of the selector query.
+
+The type of the results depends on which xselect attributes are used.
+
+* If the ''for-each'' attribute is used, the widget will run its template for each result of that selector query. In each iteration, the variable will be set each result's Node Type, and any nested queries will use that node as context.
+* If the ''value-of'' attribute is used, the widget will run its template once on the first (or only) result from the query. The variable will a String type, and the DOM context will not be set.
+
+The template that the xselect widget renders depends on its options.
+
+# If the ''template'' attribute is set, the widget uses that.
+# Else, if the widget has content, that is used as a template.
+# Else, the widget renders the corresponding variable directly.
+
+|!Attribute |!Description |
+|for-each |A Selector query to run against the HTML or XML tiddler. Results in a list of nodes. The template renders for each result. The variable will be set to the value or innerHTML of each result. |
+|value-of |An Selector query to run against the HTML or XML tiddler. Results in a single string value, which is set to the variable. If the widget has no body, this value is immediately outputted. |
+|variable |The name of a variable in which the results of each query result is stored. Defaults to ''currentNode''. |
+|tiddler |Optional title of the HTML or XML tiddler to query (Defaults to current tiddler). |
+|template |The title of a template tiddler to render for each result of the query. When no template is specified, the body of the [[XSelectWidget]] serves as the item template. With no body, a simple rendering of the query results is returned. |
+
+!! DOM context
+
+When iterating through query results from ''for-each'', any nested `<$xpath>` queries will evaluate from the context of the current result.
+
+```
+<$xselect for-each='.article-body > section'>
+<$xpath value-of='.title' />
+</$xpath>
+```
+This would output the contents of the first ''.title'' element of each section of the document.
+
+''value-of'' queries will depend on the current DOM context, but it never sets the DOM context, even if it's used to render a template or body.
+
+If a nested `<$xselect>` query references a different XML tiddler, its DOM context will be independent of the first. Each XML tiddler has its own context.
+
+The [[xselect Operator]] ignores DOM context entirely.
+
+<<link-to-tab Examples Examples/XSelectWidget subtab:Examples/XSelectWidget/Nested "Example">>
+
+!! Variable
+
+The variable set by ''for-each'' and ''value-of'' is subtly different.
+
+* ''for-each'' returns a Node type. If the node is an element, that means the variable is set to its innerHTML. It also uses this node as the DOM context for any nested `<$xpath>` widgets.
+* ''value-of'' returns a String type. If the node is an element, that means the variable is set to its textContent. It does not set a DOM context.
+
+If both ''for-each'' and ''value-of'' are used in the same widget, It iterates through ''for-each'' and uses it to set the DOM context as expected. However, it will set the variable to the String type derived from executing ''value-of'' from the context set by ''for-each''. To demonstrate:
+
+```
+<$xselect for-each="body div.article" value-of="h1.header">
+
+<!-- DOM context is set to 'div.article',
+     and currentNode is set to 'h1.header' inside that context. -->
+</$xselect>
+```
+is equivalent to
+
+```
+<$xselect for-each="body div.article">
+
+<$xselect value-of="h1.header">
+
+<!-- DOM context is set to 'div.article',
+     and currentNode is set to 'h1.header' inside that context. -->
+</$xselect></$xselect>
+```
+
+<<link-to-tab Examples Examples/XSelectWidget subtab:Examples/XSelectWidget/Variables "Example">>
+
+If you're having trouble getting your XSelect query to work, check out [[the common pitfalls|Pitfalls]].

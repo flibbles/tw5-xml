@@ -1,0 +1,35 @@
+description: ''for-each'' sets variable equal to the Dom Type inside its template, which can be useful for printing chunks of HTML. ''value-of'' always returns a String Type, which is stripped of child elements.
+
+```
+<$xselect for-each="#report" variable="text">
+
+<<text>>
+
+</$xselect>
+```
+
+<blockquote>
+
+<$xselect for-each="#report" variable="text">
+
+<<text>>
+
+</$xselect>
+</blockquote>
+
+```
+<$xselect value-of="#report" variable="text">
+
+<<text>>
+
+</$xselect>
+```
+
+<blockquote>
+
+<$xselect value-of="#report" variable="text">
+
+<<text>>
+
+</$xselect>
+</blockquote>
