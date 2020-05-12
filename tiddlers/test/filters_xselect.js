@@ -33,6 +33,10 @@ it("gets textContent, not innerHTML", function() {
 	test("body", ["SparksJoel"]);
 });
 
+it("can receive non-existent tiddlers as input", function() {
+	test("body", [], {input: ["dont exist", "also nothing"]});
+});
+
 it("has :if suffix support", function() {
 	var wiki = new $tw.Wiki();
 	wiki.addTiddlers([

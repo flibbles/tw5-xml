@@ -2,14 +2,14 @@ caption: XPath Operator
 tags: Documentation
 title: xpath Operator
 
-|!purpose |executes an xpath queries on input tiddlers |
+|!purpose |executes an XPath query on input tiddlers |
 |!input |a selection of titles |
 |!suffix |S = optionally, the keyword `if` |
 |!parameter |F = an xpath query |
-|!output |''without suffix''<br>&raquo;each result of each query<br>''suffix `if`''<br>&raquo;those input tiddlers for which the query produced one or more results |
-|!`!` output |''suffix `if`''<br>&raquo;those input tiddlers for which the query produced no results, or are not legal XML documents |
+|!output |''without suffix''<br>&raquo;each result of the query on each tiddler<br>''suffix `if`''<br>&raquo;those input tiddlers for which the query produced one or more results |
+|!`!` output |''suffix `if`''<br>&raquo;those input tiddlers for which the query produced no results, or are not legal DOM documents |
 
-Each input title is queried in turn. The titles need to be valid XML files, but their type doesn't have to be set to XML (it could be html, for instance).
+Each input title is queried in turn. The titles need to be valid DOM files, and their type set to a DOM type ('text/xml', 'text/html', ...).
 
 Duplicates are not purged from output. If you want unique output, use the `[unique[]]` filter.
 

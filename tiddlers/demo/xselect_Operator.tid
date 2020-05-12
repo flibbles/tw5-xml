@@ -1,0 +1,22 @@
+caption: XSelect Operator
+tags: Documentation
+title: xselect Operator
+
+|!purpose |executes a CSS selector query on input tiddlers |
+|!input |a selection of titles |
+|!suffix |S = optionally, the keyword `if` |
+|!parameter |F = a CSS selector |
+|!output |''without suffix''<br>&raquo;each result of the selector on each tiddler<br>''suffix `if`''<br>&raquo;those input tiddlers for which the selector produced one or more results |
+|!`!` output |''suffix `if`''<br>&raquo;those input tiddlers for which the selector produced no results, or are not legal DOM documents |
+
+Each input title is queried in turn. The titles need to be valid DOM files, and their type set to a DOM type ('text/xml', 'text/html', ...).
+
+Duplicates are not purged from output. If you want unique output, use the `[unique[]]` filter.
+
+!!! The `if` suffix
+
+If xpath has an `if` suffix. It behaves differently. Instead of returning the results of the selector, it returns those input titles for which the selector returns results. This operation can be inverted.
+
+If you're having trouble getting your CSS selectors to work, check out [[the common pitfalls|Pitfalls]].
+
+<<link-to-tab "Examples" "Examples/xselect Operator" Examples>>
