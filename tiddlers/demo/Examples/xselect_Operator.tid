@@ -1,0 +1,53 @@
+caption: <$text text="[xselect[]]" />
+tags: Examples
+title: Examples/xselect Operator
+
+\define block(content)
+<div class="xml-text">
+
+```html
+$content$
+```
+</div>
+\end
+\define example(filter, macroName, macroValue)
+<pre class="xml-text"><$list filter="[<__macroName__>!match[]]">\define <$text text=<<__macroName__>> />() <$text text=<<__macroValue__>> />
+</$list><$text text="{{{" /> <strong><$text text=<<__filter__>> /></strong> }}}
+</pre>
+
+<blockquote>
+<ul>
+<$set name=<<__macroName__>> value=<<__macroValue__>> >
+<$list variable="output" filter="[tag<currentTiddler>subfilter<__filter__>]">
+<li><$text text=<<output>> /></li>
+</$list>
+</$set>
+</ul>
+</blockquote>
+\end
+\define left()
+<$list filter="[tag<currentTiddler>]">
+
+''<$link />''
+
+<$macrocall $name=block content={{!!text}} />
+
+</$list>
+\end
+\define right()
+<<example "[xselect[h1#breed]]">>
+
+<<example "[xselect[#age .number]nsort[]]">>
+
+<<example "[xselect<getKnown>]" "getKnown" '#tricks + ul > li[data-status="learned"]'>>
+
+<<example "[xselect:if[#tricks]]">>
+\end
+
+<$tiddler tiddler=<<currentTab>>>
+
+For brevity, the example filters on the right have only the HTML tiddlers on the left as input. In reality, your filters will look more like, `[[MyFile.html]xselect<...>]`, or `[tag[sitepage]xselect[...]]`.
+
+<$macrocall $name=split left=<<left>> right=<<right>> />
+
+</$tiddler>

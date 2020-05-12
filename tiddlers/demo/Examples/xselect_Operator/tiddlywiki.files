@@ -2,14 +2,14 @@
 	"directories": [
 		{
 			"path": ".",
-			"filesRegExp": "^.*\\.xml$",
+			"filesRegExp": "^.*\\.html$",
 			"isTiddlerFile": true,
 			"fields": {
-				"tags": "[[Examples/xpath Operator]]",
+				"tags": "[[Examples/xselect Operator]]",
 				"title": {
 					"source": "filename"
 				},
-				"type": "text/xml"
+				"type": "text/html"
 			}
 		}
 	]
