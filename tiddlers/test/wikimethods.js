@@ -95,19 +95,6 @@ it('caches documents correctly', function() {
 	expect(doc3.documentElement.outerHTML).toBe("<cats/>");
 });
 
-it('detects processing instruction', function() {
-	function testInstructions(xml) {
-		var doc = xmldom.getDocumentForText("text/xml", "<?tiddlywiki template='myFile'?>" + xml);
-		var attributes = xmldom.getProcessingInstructions(doc);
-		expect(attributes.template).toBeDefined();
-		if (attributes.template) {
-			expect(attributes.template.type).toBe("string");
-			expect(attributes.template.value).toBe("myFile");
-		}
-	};
-	testInstructions("<doc/>");
-});
-
 it('supports compareDocumentPosition in all implementations', function() {
 	function compare(A, B, AtoB, BtoA, mask) {
 		mask = mask || 0xFF
