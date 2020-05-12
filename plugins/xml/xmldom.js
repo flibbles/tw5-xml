@@ -7,28 +7,6 @@ Makes available the XMLDom, either through a browser's native support, or
 the tiddlywiki plugin.
 \*/
 
-exports.getTiddlerDocument = function(wiki, title) {
-	return wiki.getCacheForTiddler(title, "XMLDOM", function() {
-		var tiddler = wiki.getTiddler(title),
-			doc = undefined;
-		if (tiddler) {
-			doc = exports.getDocumentForText(tiddler.fields.type, tiddler.fields.text);
-			if (doc.error) {
-				// Let's elaborate
-				var errorKey
-				if (supportedTypes[tiddler.fields.type]) {
-					errorKey = "flibbles/xml/Error/DOMParserError";
-				} else {
-					errorKey = "flibbles/xml/Error/NotDOMError";
-				}
-				doc.error = $tw.language.getString(errorKey,
-					{variables: {currentTiddler: title}});
-			}
-		}
-		return doc;
-	});
-};
-
 var supportedTypes = {
 	"text/html": "text/html",
 	"text/xml": "text/xml",
@@ -48,7 +26,7 @@ exports.getDocumentForText = function(type, text) {
 		}
 	});
 	if (!supportedTypes[type]) {
-		return {error: true};
+		return {error: true, unsupported: true};
 	}
 	var doc = parser.parseFromString(text, supportedTypes[type] || "text/html");
 	if (errorDetected) {

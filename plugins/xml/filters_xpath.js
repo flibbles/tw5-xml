@@ -12,7 +12,6 @@ Filter operator for applying xpath queries to incoming tiddler titles.
 /*global $tw: false */
 "use strict";
 
-var xmlDom = require("../xmldom");
 var xpath = require("../xpath");
 var xselect = require("../xselect");
 
@@ -23,7 +22,7 @@ function filterInput(source,operator,options,queryMethod,errorMethod) {
 		negate = operator.prefix === "!";
 
 	source(function(tiddler,title) {
-		var doc = xmlDom.getTiddlerDocument(options.wiki, title);
+		var doc = options.wiki.getTiddlerDocument(title);
 		if (doc) {
 			if (doc.error) {
 				if (ifQuery) {

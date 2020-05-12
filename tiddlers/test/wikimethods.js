@@ -6,10 +6,10 @@ Tests the wikimethods
 
 describe("Wikimethods", function() {
 
-var xmldom = require("$:/plugins/flibbles/xml/xmldom.js");
-
 function test(fails, xml) {
-	var doc = xmldom.getDocumentForText("text/xml", xml);
+	var wiki = new $tw.Wiki();
+	wiki.addTiddler({title: "test", type: "text/xml", text: xml});
+	var doc = wiki.getTiddlerDocument("test");
 	if (fails) {
 		expect(doc.error).toBeTruthy();
 	} else {
@@ -36,7 +36,7 @@ it("doesn't emit false positives for errors", function() {
 it('describes tiddler when fails getting tiddler doc', function() {
 	var wiki = new $tw.Wiki();
 	wiki.addTiddler({title: "test", type: "text/xml", text: "<$dogs/>"});
-	var doc = xmldom.getTiddlerDocument(wiki, "test");
+	var doc = wiki.getTiddlerDocument("test");
 	expect(doc.error).toBe('Unable to parse XML in tiddler "test"');
 });
 
@@ -44,13 +44,13 @@ it('loads html fine', function() {
 	var wiki = new $tw.Wiki();
 	var html =  "<p>Content<br>Broken up into lines</p>";
 	wiki.addTiddler({title: "test.html", type: "text/html", text: html});
-	var doc = xmldom.getTiddlerDocument(wiki, "test.html");
+	var doc = wiki.getTiddlerDocument("test.html");
 	expect(doc.error).toBeFalsy();
 	expect(doc.documentElement.textContent).toBe("ContentBroken up into lines");
 
 	// But loading the same document as an XML will fail.
 	wiki.addTiddler({title: "test.xml",  type: "text/xml", text:html});
-	var doc = xmldom.getTiddlerDocument(wiki, "test.xml");
+	var doc = wiki.getTiddlerDocument("test.xml");
 	expect(doc.error).toBeTruthy();
 });
 
@@ -58,14 +58,14 @@ it('loads xml fine', function() {
 	var wiki = new $tw.Wiki();
 	var html =  "<custom><elem />Content</custom>";
 	wiki.addTiddler({title: "test.xml", type: "text/xml", text: html});
-	var doc = xmldom.getTiddlerDocument(wiki, "test.xml");
+	var doc = wiki.getTiddlerDocument("test.xml");
 	expect(doc.error).toBeFalsy();
 	expect(doc.documentElement.textContent).toBe("Content");
 
 	// But loading the same document as an HTML also works.
 	// Because HTML is always lenient.
 	wiki.addTiddler({title: "test.html",  type: "text/html", text:html});
-	doc = xmldom.getTiddlerDocument(wiki, "test.html");
+	doc = wiki.getTiddlerDocument("test.html");
 	expect(doc.error).toBeFalsy();
 	expect(doc.documentElement.textContent).toBe("Content");
 });
@@ -74,41 +74,46 @@ it('emits proper error if non DOM tiddler loaded', function() {
 	var wiki = new $tw.Wiki();
 	var expected = 'The tiddler "test" does not have a supported DOM type.';
 	wiki.addTiddler({title: "test", text: "anything"});
-	var doc = xmldom.getTiddlerDocument(wiki, "test");
+	var doc = wiki.getTiddlerDocument("test");
 	expect(doc.error).toBe(expected);
 
 	wiki.addTiddler({title: "test", text: "anything", type: "text/plain"});
-	doc = xmldom.getTiddlerDocument(wiki, "test");
+	doc = wiki.getTiddlerDocument("test");
 	expect(doc.error).toBe(expected);
 });
 
 it('caches documents correctly', function() {
 	var wiki = new $tw.Wiki();
 	wiki.addTiddler({title: "test.xml", type: "text/xml", text: "<dogs/>"});
-	var doc1 = xmldom.getTiddlerDocument(wiki, "test.xml");
-	var doc2 = xmldom.getTiddlerDocument(wiki, "test.xml");
+	var doc1 = wiki.getTiddlerDocument("test.xml");
+	var doc2 = wiki.getTiddlerDocument("test.xml");
 	expect(doc1 == doc2).toBeTruthy();
 	expect(doc1.documentElement.outerHTML).toBe("<dogs/>");
 	wiki.addTiddler({title: "test.xml", type: "text/xml", text: "<cats/>"});
-	var doc3 = xmldom.getTiddlerDocument(wiki, "test.xml");
+	var doc3 = wiki.getTiddlerDocument("test.xml");
 	expect(doc3 == doc2).toBeFalsy();
 	expect(doc3.documentElement.outerHTML).toBe("<cats/>");
 });
 
 it('supports compareDocumentPosition in all implementations', function() {
+	function getDoc(xml) {
+		var wiki = new $tw.Wiki();
+		wiki.addTiddler({title: "doc", type: "text/xml", text: xml});
+		return wiki.getTiddlerDocument("doc");
+	};
 	function compare(A, B, AtoB, BtoA, mask) {
 		mask = mask || 0xFF
 		expect(A.compareDocumentPosition(B) & mask).toBe(AtoB);
 		expect(B.compareDocumentPosition(A) & mask).toBe(BtoA);
 	};
 	function test(AtoB, BtoA, xml) {
-		var doc = xmldom.getDocumentForText("text/xml", xml);
+		var doc = getDoc(xml);
 		var A = doc.getElementById('A');
 		var B = doc.getElementById('B');
 		compare(A, B, AtoB, BtoA);
 	};
 	function testDoc(docToA, AtoDoc, xml) {
-		var doc = xmldom.getDocumentForText("text/xml", xml);
+		var doc = getDoc(xml);
 		var A = doc.getElementById('A');
 		compare(doc, A, docToA, AtoDoc);
 	};
@@ -117,8 +122,8 @@ it('supports compareDocumentPosition in all implementations', function() {
 	test(4, 2, "<root><child><grand id='A'/></child><child id='B' /></root>");
 	test(4, 2, "<root><child id='A' /><child><grand id='B'/></child></root>");
 	testDoc(20, 10, "<root><child id='A' /></root>");
-	var docA = xmldom.getDocumentForText("text/xml", "<A a='txt' b='txt'/>");
-	var docB = xmldom.getDocumentForText("text/xml", "<B />");
+	var docA = getDoc("<A a='txt' b='txt'/>");
+	var docB = getDoc("<B />");
 	compare(docA, docB, 33, 33, 0x39);
 	compare(docA.documentElement, docB, 33, 33, 0x39);
 	compare(docA.documentElement, docB.documentElement, 33, 33, 0x39);

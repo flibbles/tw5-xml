@@ -13,7 +13,6 @@ xslt widget
 "use strict";
 
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
-var xmlDom = require("../xmldom");
 var xpath = require("../xpath");
 var xselect = require("../xselect");
 
@@ -47,7 +46,7 @@ DOMWidget.prototype.execute = function() {
 		contextNode = contextVariable.node;
 		doc = contextNode.ownerDocument || contextNode;
 	} else {
-		doc = xmlDom.getTiddlerDocument(this.wiki, this.xmlTitle);
+		doc = this.wiki.getTiddlerDocument(this.xmlTitle);
 		contextNode = doc;
 	}
 	if (contextNode) {
