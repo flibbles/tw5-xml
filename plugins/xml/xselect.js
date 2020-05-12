@@ -14,7 +14,17 @@ exports.querySelector = function(cssSelector, contextNode) {
 };
 
 exports.querySelectorAll = function(cssSelector, contextNode) {
-	return getSelector().querySelectorAll(cssSelector, contextNode);
+	var nodeList = getSelector().querySelectorAll(cssSelector, contextNode);
+	return new QueryIterator(nodeList);
+};
+
+function QueryIterator(nodeList) {
+	this.nodeList = nodeList;
+	this.index = 0;
+};
+
+QueryIterator.prototype.iterateNext = function() {
+	return this.nodeList[this.index++];
 };
 
 exports.getError = function(exception, cssSelector) {

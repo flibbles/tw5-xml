@@ -69,14 +69,7 @@ exports.xpath = function(source,operator,options) {
 };
 
 exports.xselect = function(source,operator,options) {
-	function query(selector, contextNode) {
-		var nodeList = xselect.querySelectorAll(selector, contextNode);
-		return {
-			nodeList: nodeList,
-			index: 0,
-			iterateNext: function() { return this.nodeList[this.index++]; }};
-	};
-	return filterInput(source, operator, options, query, xselect.getError);
+	return filterInput(source, operator, options, xselect.querySelectorAll, xselect.getError);
 };
 
 })();

@@ -248,11 +248,7 @@ XSelectWidget.prototype = new DOMWidget();
 exports.xselect = XSelectWidget;
 
 XSelectWidget.prototype.queryAll = function(selector, contextNode) {
-	var nodeList = xselect.querySelectorAll(selector, contextNode);
-	return {
-		nodeList: nodeList,
-		index: 0,
-		iterateNext: function() { return this.nodeList[this.index++]; }};
+	return xselect.querySelectorAll(selector, contextNode);
 };
 
 XSelectWidget.prototype.query = function(selector, contextNode) {
