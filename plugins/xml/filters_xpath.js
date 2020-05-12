@@ -52,7 +52,10 @@ function filterInput(source,operator,options,queryMethod,errorMethod) {
 						}
 					}
 				} catch (e) {
-					results.push(errorMethod(e, query));
+					var msg = errorMethod(e, query, title);
+					if (results.indexOf(msg) < 0) {
+						results.push(msg);
+					}
 				}
 			}
 		}

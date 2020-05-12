@@ -43,7 +43,7 @@ it('deals with illegal xpath gracefully', function() {
 
 	// namespace error
 	text = transform("<dogs/>", "<$xpath value-of='/bad:dogs' />");
-	expect(text).toBe('<p><span class="tc-error">Could not resolve namespaces in XPath expression: /bad:dogs</span></p>');
+	expect(text).toBe('<p><span class="tc-error">Could not resolve namespaces in XPath expression &quot;/bad:dogs&quot; for tiddler &quot;xml&quot;</span></p>');
 });
 
 it('deals with malformed XML gracefully', function() {

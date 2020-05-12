@@ -234,7 +234,7 @@ XPathWidget.prototype.query = function(xpathQuery, contextNode) {
 };
 
 XPathWidget.prototype.handleQueryError = function(error, offendingQuery) {
-	return xpath.getError(error, offendingQuery);
+	return xpath.getError(error, offendingQuery, this.xmlTitle);
 };
 
 ///////// XSelect Widget /////////

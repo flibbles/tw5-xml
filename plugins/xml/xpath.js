@@ -17,7 +17,7 @@ exports.evaluate = function(xpathExpression, contextNode, namespaceResolver) {
  * Tries to reconcile them all into an error message in a tiddler language
  * string.
  */
-exports.getError = function(exception, query) {
+exports.getError = function(exception, query, title) {
 	var code, msg;
 	switch (exception.name) {
 		case "NamespaceError":
@@ -34,7 +34,7 @@ exports.getError = function(exception, query) {
 	}
 	if (code) {
 		msg = $tw.language.getString("flibbles/xml/Error/XPath/" + code,
-			{variables: {xpath: query}});
+			{variables: {xpath: query, currentTiddler: title}});
 	} else {
 		// This message will be wildly inconsistent across implementations,
 		// but it's better that we show this than something generic.

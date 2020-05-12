@@ -56,8 +56,16 @@ it("handles implicit namespaces with widget", function() {
 });
 
 it("handles xpath errors gracefully", function() {
-	test("/dogs/dog[", ["Invalid XPath expression: /dogs/dog["]);
-	test("/z:dogs/z:dog", ["Could not resolve namespaces in XPath expression: /z:dogs/z:dog"]);
+	var wiki = new $tw.Wiki();
+	wiki.addTiddler({title: "other.xml", type: "text/xml", text: "<dogs/>"});
+	wiki.addTiddler({title: "namespace.xml", type: "text/xml", text: "<z:dogs xmlns:z='http://dog.com'><z:dog>Bunny</z:dog></z:dogs>"});
+	var options = {input: ["other.xml", "test.xml", "namespace.xml"], wiki: wiki};
+	// There should only be one XPath expression error
+	test("/dogs/dog[", ["Invalid XPath expression: /dogs/dog["], options);
+
+	// But namespace violations should be applied to all input
+	var msg = 'Could not resolve namespaces in XPath expression "/z:dogs/z:dog" for tiddler ';
+	test("/z:dogs/z:dog", [msg+'"other.xml"', msg+'"test.xml"', "Bunny"], options);
 });
 
 it("gets textContent, not innerHTML", function() {
