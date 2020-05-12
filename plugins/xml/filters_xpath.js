@@ -14,8 +14,9 @@ Filter operator for applying xpath queries to incoming tiddler titles.
 
 var xmlDom = require("../xmldom");
 var xpath = require("../xpath");
+var xselect = require("../xselect");
 
-exports.xpath = function(source,operator,options) {
+function filterInput(source,operator,options,queryMethod,errorMethod) {
 	var query = operator.operand,
 		results = [],
 		ifQuery = operator.suffix === "if",
@@ -33,9 +34,8 @@ exports.xpath = function(source,operator,options) {
 					results.push(doc.error);
 				}
 			} else {
-				var resolver = xpath.createResolver(doc, options.widget);
 				try {
-					var iterator = xpath.evaluate(query, doc, resolver);
+					var iterator = queryMethod(query, doc);
 					var node = iterator.iterateNext();
 					if (ifQuery) {
 						if (!node == negate) {
@@ -52,12 +52,37 @@ exports.xpath = function(source,operator,options) {
 						}
 					}
 				} catch (e) {
-					results.push(xpath.getError(e, query));
+					if (e.message.indexOf("Cannot read property") >= 0) {
+						console.log(e);
+						console.log(doc);
+						console.log(doc.documentElement);
+						console.log(title);
+					}
+					results.push(errorMethod(e, query));
 				}
 			}
 		}
 	});
 	return results;
+};
+
+exports.xpath = function(source,operator,options) {
+	return filterInput(source,operator,options, function(xpathQuery, contextNode) {
+		var resolver = xpath.createResolver(contextNode, options.widget);
+		var iterator = xpath.evaluate(xpathQuery, contextNode, resolver);
+		return iterator;
+	}, xpath.getError);
+};
+
+exports.xselect = function(source,operator,options) {
+	function query(selector, contextNode) {
+		var nodeList = xselect.querySelectorAll(selector, contextNode);
+		return {
+			nodeList: nodeList,
+			index: 0,
+			iterateNext: function() { return this.nodeList[this.index++]; }};
+	};
+	return filterInput(source, operator, options, query, xselect.getError);
 };
 
 })();
