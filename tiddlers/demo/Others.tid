@@ -1,0 +1,13 @@
+title: Other plugins by Flibbles
+
+!! ''[[Relink|https://flibbles.github.io/tw5-relink/]]''
+
+Updates all references to your tiddlers when you rename them. //All// references:
+
+* tiddler fields
+* widget attributes
+* filter operands
+* macro parameters
+* links and all other wikitext
+
+Highly customizable, but also works as-is from the moment you install it.

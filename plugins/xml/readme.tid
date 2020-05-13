@@ -4,7 +4,8 @@ TW5-XML supplies tools for working with XML tiddlers.
 
 !!! Features
 
-* The `<$xpath>` widget and `[xpath[]]` operator allow for parsing XML.
+* Query XML and HTML with XPath using the `xpath` widget and operator.
+* Query XML and HTML with CSS selectors using the `xselect` widget and operator.
 * XML tiddlers display correctly, and support XML processing instructions to render using a template tiddler.
 * Allows for importing and exporting XML files.
 

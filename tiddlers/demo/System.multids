@@ -1,6 +1,7 @@
 title: $:/
 
-DefaultTiddlers: [[XML for Tiddlywiki]] Examples
+DefaultTiddlers: [[XML for Tiddlywiki]] Examples [[Other plugins by Flibbles]]
+palette: $:/palettes/Blue
 SiteTitle: TiddlyXML
 SiteSubtitle: XML features for Tiddlywiki 
 
