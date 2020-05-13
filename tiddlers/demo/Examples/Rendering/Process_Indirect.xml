@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?tiddlywiki template={{!!template}} ?>
+<directory>
+  <contact>
+    <name>Billy</name>
+    <job>Golf ball collector</job>
+  </contact>
+  <contact>
+    <name>Daisy</name>
+    <job>Unemployed</job>
+  </contact>
+</directory>

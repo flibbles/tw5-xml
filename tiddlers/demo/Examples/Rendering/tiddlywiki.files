@@ -5,6 +5,7 @@
 			"filesRegExp": "^.*\\.xml$",
 			"isTiddlerFile": true,
 			"fields": {
+				"template": "Templates/Names",
 				"title": {
 					"source": "filename",
 					"prefix": "Examples/Rendering/"

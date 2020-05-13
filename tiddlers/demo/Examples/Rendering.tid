@@ -18,6 +18,10 @@ title: Examples/Rendering
 
 <<show Examples/Rendering/Simple.xml>>
 
-This XML document as a `<?tiddlywiki?>` processing instruction with a ''template'' attribute. As a result, [[that template tiddler|Templates/Names]] is used to render the xml tiddler instead of showing the raw XML.
+This XML document has a `<?tiddlywiki?>` processing instruction with a ''template'' attribute. As a result, [[that template tiddler|Templates/Names]] is used to render the xml tiddler instead of showing the raw XML.
 
 <<show Examples/Rendering/Process.xml>>
+
+The ''template'' attribute behaves exactly like a tiddlywiki attribute, so it supports indirect, filtered, and macro values.
+
+<<show Examples/Rendering/Process_Indirect.xml>>
