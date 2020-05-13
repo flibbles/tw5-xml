@@ -5,7 +5,7 @@ description: `<$xselect>` elements can be nested. Inner `<$xselect>` widgets wil
 
 !!! <$xselect value-of="h1.my-header" />
 
-<$xselect variable="paragraph" for-each="p, ul">
+<$xselect variable="paragraph" for-each="div">
 
 <p><<paragraph>></p>
 
@@ -19,9 +19,9 @@ description: `<$xselect>` elements can be nested. Inner `<$xselect>` widgets wil
 
 !!! <$xselect value-of="h1.my-header" />
 
-<$xselect variable="paragraph" for-each="p, ul">
+<$xselect variable="paragraph" for-each="div">
 
-<p><<paragraph>></p>
+<<paragraph>>
 
 </$xselect>
 </$xselect>
