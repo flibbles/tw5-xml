@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/flibbles/xml/filters/xpath.js
+title: $:/plugins/flibbles/xml/filters.js
 type: application/javascript
 module-type: filteroperator
 
@@ -12,8 +12,8 @@ Filter operator for applying xpath queries to incoming tiddler titles.
 /*global $tw: false */
 "use strict";
 
-var xpath = require("../xpath");
-var xselect = require("../xselect");
+var xpath = require("./xpath");
+var xselect = require("./xselect");
 
 function filterInput(source,operator,options,queryMethod,errorMethod) {
 	var query = operator.operand,
