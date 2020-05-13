@@ -24,34 +24,38 @@ function filterInput(source,operator,options,queryMethod,errorMethod) {
 
 	source(function(tiddler,title) {
 		var doc = options.wiki.getTiddlerDocument(title);
-		if (doc) {
-			if (doc.error) {
+		if (!doc) {
+			if (ifQuery && negate) {
+				results.push(title);
+			}
+		} else if (doc.error) {
+			if (ifQuery) {
+				if (negate) {
+					results.push(title);
+				}
+			} else {
+				if (doc) {
+					results.push(doc.error);
+				}
+			}
+		} else {
+			try {
+				var iterator = queryMethod(query, doc);
+				var node = iterator.iterateNext();
 				if (ifQuery) {
-					if (negate) {
+					if (!node == negate) {
 						results.push(title);
 					}
 				} else {
-					results.push(doc.error);
+					while (node) {
+						results.push(xmldom.getStringValue(node));
+						node = iterator.iterateNext();
+					}
 				}
-			} else {
-				try {
-					var iterator = queryMethod(query, doc);
-					var node = iterator.iterateNext();
-					if (ifQuery) {
-						if (!node == negate) {
-							results.push(title);
-						}
-					} else {
-						while (node) {
-							results.push(xmldom.getStringValue(node));
-							node = iterator.iterateNext();
-						}
-					}
-				} catch (e) {
-					var msg = errorMethod(e, query, title);
-					if (results.indexOf(msg) < 0) {
-						results.push(msg);
-					}
+			} catch (e) {
+				var msg = errorMethod(e, query, title);
+				if (results.indexOf(msg) < 0) {
+					results.push(msg);
 				}
 			}
 		}

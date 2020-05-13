@@ -10,10 +10,11 @@ const prolog = '<?xml version="1.0" encoding="UTF-8"?>\n';
 
 function transform(xml, template, options) {
 	options = options || {};
+	var render = options.render || "{{xml||tmplt}}";
 	var wiki = options.wiki || new $tw.Wiki();
 	wiki.addTiddler({title: "xml", type: "text/xml", text: xml})
 	wiki.addTiddler({title: "tmplt", text: template});
-	return wiki.renderText("text/html", "text/vnd.tiddlywki", "{{xml||tmplt}}");
+	return wiki.renderText("text/html", "text/vnd.tiddlywiki", render);
 };
 
 it("works with or without prolog", function() {
@@ -49,6 +50,17 @@ it('deals with illegal xpath gracefully', function() {
 it('deals with malformed XML gracefully', function() {
 	var text = transform("<$dogs>B</$dogs>", "<$xpath for-each='/' />\n");
 	expect(text).toBe('<span class="tc-error">Unable to parse XML in tiddler &quot;xml&quot;</span>');
+});
+
+it('deals with missing or illegal-type currentTiddler gracefully', function() {
+	var template = "<$xpath for-each='//*' />";
+	var text = transform("", template, {render: "={{none||tmplt}}="});
+	expect(text).toBe("<p>==</p>");
+	// Make sure it deals with wrong-type targets too
+	var wiki = new $tw.Wiki();
+	wiki.addTiddler({title: "notxml", text: "This is just some content"});
+	text = transform("", template, {wiki: wiki, render: "={{notxml||tmplt}}="});
+	expect(text).toBe("<p>==</p>");
 });
 
 it("block vs inline", function() {

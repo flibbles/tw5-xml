@@ -75,11 +75,11 @@ it('emits proper error if non DOM tiddler loaded', function() {
 	var expected = 'The tiddler "test" does not have a supported DOM type.';
 	wiki.addTiddler({title: "test", text: "anything"});
 	var doc = wiki.getTiddlerDocument("test");
-	expect(doc.error).toBe(expected);
+	expect(doc).toBeUndefined();
 
 	wiki.addTiddler({title: "test", text: "anything", type: "text/plain"});
 	doc = wiki.getTiddlerDocument("test");
-	expect(doc.error).toBe(expected);
+	expect(doc).toBeUndefined();
 });
 
 it('caches documents correctly', function() {

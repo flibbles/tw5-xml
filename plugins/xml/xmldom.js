@@ -8,6 +8,10 @@ the tiddlywiki plugin.
 \*/
 
 exports.getDocumentForText = function(type, text) {
+	var supportedType = $tw.config.xml.supportedDocumentTypes[type];
+	if (!supportedType) {
+		return undefined;
+	}
 	var errorDetected = false;
 	function flag() { errorDetected = true; };
 	var parser = new (getDOMParser())({
@@ -17,10 +21,7 @@ exports.getDocumentForText = function(type, text) {
 			fatalError: flag
 		}
 	});
-	if (!$tw.config.xml.supportedDocumentTypes[type]) {
-		return {error: true, unsupported: true};
-	}
-	var doc = parser.parseFromString(text, $tw.config.xml.supportedDocumentTypes[type] || "text/html");
+	var doc = parser.parseFromString(text, supportedType);
 	if (errorDetected) {
 		doc.error = true;
 	} else {
