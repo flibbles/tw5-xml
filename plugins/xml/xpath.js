@@ -20,6 +20,8 @@ exports.evaluate = function(xpathExpression, contextNode, namespaceResolver) {
 exports.getError = function(exception, query, title) {
 	var code, msg;
 	switch (exception.name) {
+		case "UnsupportedBrowserError": // I made this one up
+		case "MissingDependenciesError": // I made this one up
 		case "NamespaceError":
 		case "SyntaxError":
 			code = exception.name;
@@ -69,14 +71,23 @@ function getXPath() {
 	if (_xpath === undefined) {
 		_xpath = Object.create(null);
 		if ($tw.browser) {
-			_xpath.XPathResult = XPathResult;
-			_xpath.evaluate = function(xpathExpression, contextNode, namespaceResolver, resultType, result) {
-				var doc = contextNode.ownerDocument || contextNode;
-				return doc.evaluate(xpathExpression, contextNode, namespaceResolver, resultType, result);
-			}
-			_xpath.createNSResolver = function(node) {
-				var doc = node.ownerDocument || node;
-				return doc.createNSResolver(node);
+			if (!window.XPathResult) {
+				function unsupported() {
+					throw {name: "UnsupportedBrowserError"};
+				};
+				_xpath.XPathResult = Object.create(null);
+				_xpath.evaluate = unsupported;
+				_xpath.createNSResolver = unsupported;
+			} else {
+				_xpath.XPathResult = XPathResult;
+				_xpath.evaluate = function(xpathExpression, contextNode, namespaceResolver, resultType, result) {
+					var doc = contextNode.ownerDocument || contextNode;
+					return doc.evaluate(xpathExpression, contextNode, namespaceResolver, resultType, result);
+				}
+				_xpath.createNSResolver = function(node) {
+					var doc = node.ownerDocument || node;
+					return doc.createNSResolver(node);
+				}
 			}
 		} else {
 			try {
@@ -86,7 +97,7 @@ function getXPath() {
 				_xpath.createNSResolver = xpath.createNSResolver;
 			} catch (e) {
 				function unresolved() {
-					throw "xpath is required on Node.JS for this operation. Install xpath with 'npm install xpath'";
+					throw {name: "MissingDependenciesError"};
 				};
 				_xpath.evaluate = unresolved;
 				_xpath.createNSResolver = unresolved;
@@ -95,5 +106,4 @@ function getXPath() {
 		}
 	}
 	return _xpath;
-}
-
+};

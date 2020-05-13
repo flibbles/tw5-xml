@@ -243,9 +243,18 @@ it("inherits namespace settings", function() {
 
 it("can infer namespaces in root node from nested context", function() {
 	var text = "<dg:dogs xmlns:dg='http://dognet.com'><dg:dog><dg:name>Roofus</dg:name></dg:dog><dg:dog><dg:name>Barkley</dg:name></dg:dog></dg:dogs>";
-	//var text = "<dogs><dg:dog xmlns:dg='http://dognet.com'>Roofus</dg:dog></dogs>";
 	var rtn = transform(text, "<$xpath for-each='/dg:dogs/dg:dog'>\n\n<$xpath value-of='./dg:name' /></$xpath>");
 	expect(rtn).toBe("<p>Roofus</p><p>Barkley</p>");
+});
+
+it("uses innermost definitions for namespaces", function() {
+	var text = "<y:dogs xmlns:y='http://dognet.com'><y:dog><y:name>Rex</y:name></y:dog><cats xmlns:y='http://catnet.com'><y:cat><y:name>Kitty</y:name></y:cat></cats></y:dogs>";
+	// First, we can use outer dognet
+	var rtn = transform(text, "<$xpath for-each='//y:name'/>\n");
+	expect(rtn).toBe("<div>Rex</div>");
+	// Now for the tricky one
+	rtn = transform(text, "<$xpath for-each='/y:dogs/cats'>\n\n<$xpath for-each='//y:name' />\n\n</$xpath>");
+	expect(rtn).toBe("<div>Kitty</div>");
 });
 
 it("can infer nested namespace from nested context", function() {

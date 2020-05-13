@@ -1,0 +1,44 @@
+title: Internet Explorer
+
+Sadly, Internet Explorer is not support XPath, so neither can this plugin on IE. Edge has it, though, are you able to use Edge?
+
+<$list filter="[all[current]match[Internet Explorer]]">
+
+//There are extra developer notes embedded in this tiddler//
+</$list>
+
+<!--
+
+I took the time to write a full-on implementation for createNSResolver for IE
+before I realized the problem was far more systemic. It works perfectly, and
+I thought it'd be a shame to throw it out, since it's still theoretically
+possible for to get IE to support XPath. It's just hellish to do.
+
+```javascript
+// This is a homebrew implementation for those browsers that don't implement
+// their own NSResolver
+function NSResolver(contextNode) {
+	this.bindings = Object.create(null);
+	while (contextNode) {
+		var attrs = (contextNode.documentElement || contextNode).attributes;
+		for (var i = 0; i < attrs.length; i++) {
+			if (attrs[i].prefix === "xmlns") {
+				var name = attrs[i].nodeName;
+				var key = name.substring(name.indexOf(':') + 1);
+				if (!$tw.utils.hop(this.bindings, key)) {
+					this.bindings[key] = attrs[i].nodeValue;
+				}
+			}
+		}
+		contextNode = contextNode.parentElement;
+	}
+};
+
+NSResolver.prototype.lookupNamespaceURI = function(nsPrefix) {
+	if ($tw.utils.hop(this.bindings, nsPrefix)) {
+		return this.bindings[nsPrefix];
+	}
+	return null;
+};
+```
+-->

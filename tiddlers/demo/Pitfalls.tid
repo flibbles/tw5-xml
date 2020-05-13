@@ -40,3 +40,7 @@ You'd be wrong, because `<ul>` tags aren't allowed inside `<p>` tags in properly
 ```
 
 If your queries are giving you trouble, try inspecting your HTML tiddlers using your browsers ''inspect'' feature. Then you can see what your browser //assumes// you meant.
+
+!! XPath on Internet Explorer
+
+{{||Internet Explorer}}
