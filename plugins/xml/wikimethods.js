@@ -13,21 +13,23 @@ var xmldom = require("./xmldom");
  * Do not edit the returned documents.
  * They would be deep frozen if that wasn't so expensive.
  */
-
-exports.getTiddlerDocument = function(title) {
-	var self = this;
-	return this.getCacheForTiddler(title, "XMLDOM", function() {
-		var tiddler = self.getTiddler(title),
-			doc = undefined;
-		if (tiddler) {
-			doc = xmldom.getDocumentForText(tiddler.fields.type, tiddler.fields.text);
+exports.getTiddlerDocument = function(titleOrTiddler) {
+	var tiddler = titleOrTiddler;
+	if(!(tiddler instanceof $tw.Tiddler)) {
+		tiddler = this.getTiddler(tiddler);
+	}
+	if (tiddler) {
+		return this.getCacheForTiddler(tiddler.fields.title, "XMLDOM", function() {
+			var doc = xmldom.getDocumentForText(tiddler.fields.type, tiddler.fields.text);
 			if (doc && doc.error) {
 				// Let's elaborate
 				var errorKey = "flibbles/xml/Error/DOMParserError";
 				doc.error = $tw.language.getString(errorKey,
-					{variables: {currentTiddler: title}});
+					{variables: {currentTiddler: tiddler.fields.title}});
 			}
-		}
-		return doc;
-	});
+			return doc;
+		});
+	} else {
+		return undefined;
+	}
 };

@@ -23,7 +23,7 @@ function filterInput(source,operator,options,queryMethod,errorMethod) {
 		negate = operator.prefix === "!";
 
 	source(function(tiddler,title) {
-		var doc = options.wiki.getTiddlerDocument(title);
+		var doc = options.wiki.getTiddlerDocument(tiddler);
 		if (!doc) {
 			if (ifQuery && negate) {
 				results.push(title);

@@ -70,6 +70,16 @@ it('loads xml fine', function() {
 	expect(doc.documentElement.textContent).toBe("Content");
 });
 
+it('takes tiddler or title as argument', function() {
+	var wiki = new $tw.Wiki();
+	wiki.addTiddler({title: "test", type: "text/xml", text: "<gotten/>"});
+	var doc = wiki.getTiddlerDocument("test");
+	expect(doc.documentElement.tagName).toBe("gotten");
+	var tiddler = wiki.getTiddler("test");
+	doc = wiki.getTiddlerDocument(tiddler);
+	expect(doc.documentElement.tagName).toBe("gotten");
+});
+
 it('emits proper error if non DOM tiddler loaded', function() {
 	var wiki = new $tw.Wiki();
 	var expected = 'The tiddler "test" does not have a supported DOM type.';
