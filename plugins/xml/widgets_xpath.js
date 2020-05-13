@@ -13,6 +13,7 @@ xslt widget
 "use strict";
 
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
+var xmldom = require("../xmldom");
 var xpath = require("../xpath");
 var xselect = require("../xselect");
 
@@ -68,7 +69,7 @@ DOMWidget.prototype.execute = function() {
 						try {
 							var subnode = this.query(this.valueof, node);
 							if (subnode) {
-								value = getStringValue(subnode);
+								value = xmldom.getStringValue(subnode);
 							} else {
 								value = "";
 							}
@@ -90,7 +91,7 @@ DOMWidget.prototype.execute = function() {
 				try {
 					node = this.query(this.valueof, contextNode);
 					if (node) {
-						var value = getStringValue(node);
+						var value = xmldom.getStringValue(node);
 						members.push(this.makeItemTemplate(null, value, false));
 					}
 				} catch (e) {
@@ -102,14 +103,6 @@ DOMWidget.prototype.execute = function() {
 	}
 	this.makeChildWidgets(members);
 };
-
-function getStringValue(node) {
-	var value = node.nodeValue || node.textContent;
-	if (!value && node.documentElement) {
-		value = node.documentElement.textContent;
-	}
-	return value;
-}
 
 DOMWidget.prototype.makeErrorTree = function(error) {
 	return {type: "element", tag: "span", attributes: {

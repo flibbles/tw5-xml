@@ -63,6 +63,14 @@ exports.getProcessingInstructions = function(doc) {
 	return attributes;
 };
 
+exports.getStringValue = function(node) {
+	var value = node.nodeValue || node.textContent;
+	if (!value && node.documentElement) {
+		value = node.documentElement.textContent;
+	}
+	return value;
+};
+
 var _DOMParser = undefined;
 
 function getDOMParser() {

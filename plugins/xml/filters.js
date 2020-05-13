@@ -12,6 +12,7 @@ Filter operator for applying xpath queries to incoming tiddler titles.
 /*global $tw: false */
 "use strict";
 
+var xmldom = require("./xmldom");
 var xpath = require("./xpath");
 var xselect = require("./xselect");
 
@@ -42,11 +43,7 @@ function filterInput(source,operator,options,queryMethod,errorMethod) {
 						}
 					} else {
 						while (node) {
-							var value = node.nodeValue || node.textContent;
-							if (!value && node.documentElement) {
-								value = node.documentElement.textContent;
-							}
-							results.push(value);
+							results.push(xmldom.getStringValue(node));
 							node = iterator.iterateNext();
 						}
 					}
