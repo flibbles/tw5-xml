@@ -14,7 +14,7 @@ title: Examples/Rendering
 </$tiddler>
 \end
 
-//TW-XML// introduces a parser to properly display XML tiddlers. This parser integrates with //tiddlywiki/highlight// to produce the syntax highlighting you see below.
+''tw5-xml'' introduces a parser to properly display XML tiddlers. This parser integrates with //tiddlywiki/highlight// to produce the syntax highlighting you see below.
 
 <<show Examples/Rendering/Simple.xml>>
 

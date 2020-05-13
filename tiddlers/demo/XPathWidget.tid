@@ -82,7 +82,7 @@ is equivalent to
 
 !! Namespace
 
-//TW5-XML// supports namespaces in XML documents in three ways.
+''tw5-xml'' supports namespaces in XML documents in three ways.
 
 # If the namespaces are defined on the documentElement, or at or above the current DOM context, `<$xpath>` will automatically acknowledge them using the same prefix.
 # You can also declare namespaces as attributes in `<$xpath>`. For instance, `<$xpath xmlns:svg="http://www.w3.org/2000/svg">`. <<link-to-tab Examples Examples/XPathWidget subtab:"Examples/XPathWidget/Default Namespaces" "This is necessary if your XML document uses default namespaces">>, or has namespace declarations nested within the document.<br/>These namespace configurations will also be available to any nested xpath queries, widget or otherwise. 

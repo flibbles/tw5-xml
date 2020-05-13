@@ -1,7 +1,7 @@
 tags: Documentation
 title: XML Rendering
 
-With //TW5-XML// installed, XML documents will render as code blocks.
+With ''tw5-xml'' installed, XML documents will render as code blocks.
 
 ! Syntax Highlighting
 

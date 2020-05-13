@@ -1,0 +1,10 @@
+created: 20200513131642542
+
+* Introduced the `<$xselect>` widget, the new sister widget to xpath. It works the same, except it uses CSS selectors instead of XPath.
+** This comes with an `[xselect[]]` sister widget too
+* Trying to process tiddlers without proper DOM types (text/xml, text/html, ...) results in undefined.
+** What defines a DOM type is in $tw.config, making it //configurable//.
+* Confirmed support for Microsoft Edge (but not Internet Explorer).
+* Confirmed support for SVG documents.
+* Created wikimethod `getTiddlerDocument` which behaves like wikimethods should.
+* Completed documentation

@@ -1,4 +1,4 @@
-description: //tw5-xml// supports namespaces. These examples show the ways.<ol><li>Namespace/prefix pairs declared in the root element don't need any special action to be used.</li><li>For some namespaces, like those declared mid-document, you may need to declare the namespace prefix yourself. It doesn't have to match what's in the file.</li><li>Namespace declarations persist into their content. You can define them manually using `<$set>`, `<$vars>`, or `\define` if you want.</li></ol>
+description: ''tw5-xml'' supports namespaces. These examples show the ways.<ol><li>Namespace/prefix pairs declared in the root element don't need any special action to be used.</li><li>For some namespaces, like those declared mid-document, you may need to declare the namespace prefix yourself. It doesn't have to match what's in the file.</li><li>Namespace declarations persist into their content. You can define them manually using `<$set>`, `<$vars>`, or `\define` if you want.</li></ol>
 
 !! 1. Implicitly declared namespaces
 
