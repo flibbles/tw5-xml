@@ -8,7 +8,7 @@ title: XML for Tiddlywiki
 |!Build date |<$view field="created" format="date" template="MMM DDth, YYYY" /> |
 |!TW5 compatibility |{{!!core-version}} |
 
-This is the demo site for ''TW-XML'', a Tiddlywiki5 full-featured toolkit for manipulating and parsing XML.
+This is the demo site for ''TW-XML'', a Tiddlywiki5 full-featured toolkit for manipulating and parsing XML, HTML, and SVG.
 
 To report an issue, please visit <a href={{!!source}}>the github page</a>.
 </$tiddler>

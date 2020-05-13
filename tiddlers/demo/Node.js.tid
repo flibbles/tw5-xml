@@ -1,6 +1,6 @@
 title: Node.js
 
-If you plan to use this plugin with Node.js, you're probably fine already, since the server mostly just serves the tiddlywiki to client browsers, which have the needed librarys. ''But'' if you plan to perform any actions on the server that requires tw5-xml in any way, such as rendering tiddlers using tw5-xml components, importing xml files, or other stuff, you'll quickly discover that DOMParsers, XPath, and QuerySelect dependencies are not core features of Node.JS.
+If you plan to use this plugin with Node.js, you're probably fine already, since the server mostly just serves the tiddlywiki to client browsers, which have the needed libraries. ''But'' if you plan to perform any actions on the server that requires tw5-xml in any way, such as rendering tiddlers using tw5-xml components, importing xml files, or other stuff, you'll quickly discover that DOMParsers, XPath, and ~QuerySelect dependencies are not core features of Node.JS.
 
 No big deal. Just install them, and tw5-xml will integrate with them.
 

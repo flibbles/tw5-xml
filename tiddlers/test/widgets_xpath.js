@@ -12,7 +12,8 @@ function transform(xml, template, options) {
 	options = options || {};
 	var render = options.render || "{{xml||tmplt}}";
 	var wiki = options.wiki || new $tw.Wiki();
-	wiki.addTiddler({title: "xml", type: "text/xml", text: xml})
+	var type = options.type || "text/xml";
+	wiki.addTiddler({title: "xml", type: type, text: xml})
 	wiki.addTiddler({title: "tmplt", text: template});
 	return wiki.renderText("text/html", "text/vnd.tiddlywiki", render);
 };
@@ -316,6 +317,15 @@ it('handles all node types', function() {
 it('handles DOCTYPE', function() {
 	var output = transform(prolog + '<!DOCTYPE sample [\n<!NOTATION vrml PUBLIC "VMRL 1.0">\n<!ENTITY dotto "Dottoro">\n]>\n<dogs><dog>Woofer</dog></dogs>', "<$xpath value-of='/dogs/dog' />\n");
 	expect(output).toBe("Woofer");
+});
+
+it('handles SVG', function() {
+	var svg = prolog + '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100"><circle cx="50" cy="50" r="40" stroke="black" fill="red" /><desc>This is a circle</desc></svg>';
+	var options = {type: "image/svg+xml"};
+	var output = transform(svg, '<$xpath xmlns:svg="http://www.w3.org/2000/svg" value-of="svg:svg/svg:circle/@fill" />\n', options);
+	expect(output).toBe("red");
+	var output = transform(svg, '<$xselect value-of="svg > desc" />\n', options);
+	expect(output).toBe("This is a circle");
 });
 
 describe("refreshes", function() {

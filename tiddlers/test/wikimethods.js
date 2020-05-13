@@ -70,6 +70,14 @@ it('loads xml fine', function() {
 	expect(doc.documentElement.textContent).toBe("Content");
 });
 
+it("loads SVG, even when it's wrong", function() {
+	var wiki = new $tw.Wiki();
+	var svg = "<document>Not actually SVG at all</document>";
+	wiki.addTiddler({title: "test.svg", type: "image/svg+xml", text: svg});
+	var doc = wiki.getTiddlerDocument("test.svg");
+	expect(doc.error).toBeFalsy();
+});
+
 it('takes tiddler or title as argument', function() {
 	var wiki = new $tw.Wiki();
 	wiki.addTiddler({title: "test", type: "text/xml", text: "<gotten/>"});
