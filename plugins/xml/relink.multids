@@ -6,3 +6,5 @@ title: $:/config/flibbles/relink/attributes/
 
 $xpath/tiddler: title
 $xpath/template: title
+$xselect/tiddler: title
+$xselect/template: title
