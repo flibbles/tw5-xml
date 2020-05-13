@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/flibbles/xml/widgets/xpath.js
+title: $:/plugins/flibbles/xml/widgets.js
 type: application/javascript
 module-type: widget
 
@@ -13,9 +13,9 @@ xslt widget
 "use strict";
 
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
-var xmldom = require("../xmldom");
-var xpath = require("../xpath");
-var xselect = require("../xselect");
+var xmldom = require("./xmldom");
+var xpath = require("./xpath");
+var xselect = require("./xselect");
 
 var DOMWidget = function() {};
 
