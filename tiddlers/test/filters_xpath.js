@@ -61,7 +61,7 @@ it("handles xpath errors gracefully", function() {
 	wiki.addTiddler({title: "namespace.xml", type: "text/xml", text: "<z:dogs xmlns:z='http://dog.com'><z:dog>Bunny</z:dog></z:dogs>"});
 	var options = {input: ["other.xml", "test.xml", "namespace.xml"], wiki: wiki};
 	// There should only be one XPath expression error
-	test("/dogs/dog[", ["Invalid XPath expression: /dogs/dog["], options);
+	test("/dogs/$@#$", ["Invalid XPath expression: /dogs/$@#$"], options);
 
 	// But namespace violations should be applied to all input
 	var msg = 'Could not resolve namespaces in XPath expression "/z:dogs/z:dog" for tiddler ';

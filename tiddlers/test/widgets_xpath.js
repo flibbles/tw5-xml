@@ -35,12 +35,12 @@ it('starts at root element', function() {
 });
 
 it('deals with illegal xpath gracefully', function() {
-	var text = transform("<dogs/>", "<$xpath for-each='/dogs/' />");
-	expect(text).toBe('<p><span class="tc-error">Invalid XPath expression: /dogs/</span></p>');
+	var text = transform("<dogs/>", "<$xpath for-each='/dogs/$@#$' />");
+	expect(text).toBe('<p><span class="tc-error">Invalid XPath expression: /dogs/$@#$</span></p>');
 
 	// uses blocks when appropriate
-	text = transform("<dogs/>", "<$xpath for-each='/dogs/' />\n");
-	expect(text).toBe('<span class="tc-error">Invalid XPath expression: /dogs/</span>');
+	text = transform("<dogs/>", "<$xpath for-each='/dogs/$@#$' />\n");
+	expect(text).toBe('<span class="tc-error">Invalid XPath expression: /dogs/$@#$</span>');
 
 	// namespace error
 	text = transform("<dogs/>", "<$xpath value-of='/bad:dogs' />");
