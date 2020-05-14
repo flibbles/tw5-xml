@@ -275,13 +275,13 @@ Error message and password prompt
 
 <li>Versions/0.1.1</li>
 
-<li>Versions/0.2.0</li>
+<li>Versions/0.1.2</li>
 
-<li>Versions/0.3.0</li>
-
-<li>Versions/0.4.0</li>
+<li>Versions/0.1.3</li>
 
 <li>Versions/1.0.0</li>
+
+<li>Versions/1.0.1</li>
 
 <li>Why?</li>
 
@@ -9632,7 +9632,7 @@ Error message and password prompt
 <div title="$:/palette">
 <pre>$:/palettes/Blue</pre>
 </div>
-<div author="Flibbles" core-version="&gt;=5.1.14" created="20200513131642542" dependents="" description="TW5-XML toolkit" list="readme" plugin-type="plugin" source="https://github.com/flibbles/tw5-xml" title="$:/plugins/flibbles/xml" type="application/json" version="1.0.0">
+<div author="Flibbles" core-version="&gt;=5.1.14" created="20200514132154294" dependents="" description="TW5-XML toolkit" list="readme" plugin-type="plugin" source="https://github.com/flibbles/tw5-xml" title="$:/plugins/flibbles/xml" type="application/json" version="1.0.1">
 <pre>{
     &quot;tiddlers&quot;: {
         &quot;$:/plugins/flibbles/xml/config.js&quot;: {
@@ -9734,7 +9734,7 @@ Error message and password prompt
         },
         &quot;$:/plugins/flibbles/xml/xmldom.js&quot;: {
             &quot;title&quot;: &quot;$:/plugins/flibbles/xml/xmldom.js&quot;,
-            &quot;text&quot;: &quot;/*\\\ntitle: $:/plugins/flibbles/xml/xmldom.js\ntype: application/javascript\nmodule-type: library\n\nMakes available the XMLDom, either through a browser's native support, or\nthe tiddlywiki plugin.\n\\*/\n\nexports.getDocumentForText = function(type, text) {\n\tvar supportedType = $tw.config.xml.supportedDocumentTypes[type];\n\tif (!supportedType) {\n\t\treturn undefined;\n\t}\n\tvar errorDetected = false;\n\tfunction flag() { errorDetected = true; };\n\tvar parser = new (getDOMParser())({\n\t\terrorHandler: {\n\t\t\terror: flag,\n\t\t\twarning: flag,\n\t\t\tfatalError: flag\n\t\t}\n\t});\n\tvar doc = parser.parseFromString(text, supportedType);\n\tif (errorDetected) {\n\t\tdoc.error = true;\n\t} else {\n\t\tvar errors = doc.getElementsByTagName(\&quot;parsererror\&quot;);\n\t\tif (errors.length &gt; 0) {\n\t\t\t// If the xml doc already contained parsererror\n\t\t\t// elements, then we have no reliable way to\n\t\t\t// detect parse errors on the browser, so just\n\t\t\t// greenlight and hope for the best.\n\t\t\tif (text.indexOf(\&quot;&lt;parsererror\&quot;) &lt; 0) {\n\t\t\t\tdoc.error = true;\n\t\t\t}\n\t\t}\n\t\tif (!doc.documentElement &amp;&amp; text.indexOf(\&quot;&lt;html&gt;\&quot;) &lt; 0) {\n\t\t\t// This is one of those weird halfbaked documents that Node.js\n\t\t\t// sometimes returns if it's text only. Just wrap it ourselves.\n\t\t\tdoc = this.getDocumentForText(type, \&quot;&lt;html&gt;&lt;body&gt;\&quot;+text+\&quot;&lt;/html&gt;&lt;/body&gt;\&quot;);\n\t\t}\n\t}\n\treturn doc;\n};\n\n/* Gets &lt;?tiddlywiki attributes?&gt; present at document's root.\n */\nexports.getProcessingInstructions = function(doc) {\n\tvar attributes = Object.create(null);\n\tvar node = doc.firstChild;\n\twhile (node) {\n\t\tif (node.target === \&quot;tiddlywiki\&quot;) {\n\t\t\tvar pos = 0;\n\t\t\tvar attribute = $tw.utils.parseAttribute(node.data, pos);\n\t\t\twhile (attribute) {\n\t\t\t\tattributes[attribute.name] = attribute;\n\t\t\t\tpos = attribute.end;\n\t\t\t\tattribute = $tw.utils.parseAttribute(node.data, pos);\n\t\t\t}\n\t\t}\n\t\tnode = node.nextSibling;\n\t}\n\treturn attributes;\n};\n\nexports.getStringValue = function(node) {\n\tvar value = node.nodeValue || node.textContent;\n\tif (!value &amp;&amp; node.documentElement) {\n\t\tvalue = node.documentElement.textContent;\n\t}\n\treturn value;\n};\n\nvar _DOMParser = undefined;\n\nfunction getDOMParser() {\n\tif (_DOMParser === undefined) {\n\t\tif ($tw.browser) {\n\t\t\t_DOMParser = DOMParser;\n\t\t} else {\n\t\t\tvar parser;\n\t\t\ttry {\n\t\t\t\tvar parser = require(\&quot;$:/plugins/tiddlywiki/xmldom/dom-parser\&quot;);\n\t\t\t\t_DOMParser = parser.DOMParser;\n\t\t\t} catch (e) {\n\t\t\t\tvar DOM = require('xmldom');\n\t\t\t\t_DOMParser = DOM.DOMParser;\n\t\t\t}\n\t\t\tvar doc = (new _DOMParser()).parseFromString(\&quot;&lt;elem/&gt;\&quot;);\n\t\t\tvar docProto = Object.getPrototypeOf(doc);\n\t\t\tvar nodeProto = Object.getPrototypeOf(doc.documentElement);\n\t\t\tObject.defineProperty(nodeProto, \&quot;innerHTML\&quot;, {\n\t\t\t\tget: function() {\n\t\t\t\t\tvar child = this.firstChild;\n\t\t\t\t\t\tbuffer = [];\n\t\t\t\t\twhile (child) {\n\t\t\t\t\t\tbuffer.push(child.toString());\n\t\t\t\t\t\tchild = child.nextSibling;\n\t\t\t\t\t}\n\t\t\t\t\treturn buffer.join('');\n\t\t\t\t}\n\t\t\t});\n\t\t\tObject.defineProperty(nodeProto, \&quot;outerHTML\&quot;, {\n\t\t\t\tget: function() {\n\t\t\t\t\treturn this.toString();\n\t\t\t\t}\n\t\t\t});\n\t\t\tif (!doc.documentElement.compareDocumentPosition) {\n\t\t\t\tnodeProto.compareDocumentPosition = compareDocumentPosition;\n\t\t\t}\n\t\t\tif (!doc.compareDocumentPosition) {\n\t\t\t\tdocProto.compareDocumentPosition = function(node) {\n\t\t\t\t\treturn (node.ownerDocument == this) ? 20 : 33;\n\t\t\t\t};\n\t\t\t}\n\t\t}\n\t}\n\treturn _DOMParser;\n};\n\n// This is a cheap standin compare method used for Node.JS implementations\n// Needed for css, and not xpath. Hopefully I never need this for attributes.\nfunction compareDocumentPosition(target) {\n\tvar tree = [];\n\tvar ptr = this;\n\t// Build tree of this's ancestors.\n\twhile (ptr) {\n\t\ttree.push(ptr);\n\t\tptr = ptr.parentNode || ptr.ownerElement;\n\t}\n\t// Find common ancestory\n\tptr = target;\n\tvar index = -1, prev = null;\n\twhile (ptr) {\n\t\tif ((index = tree.indexOf(ptr)) &gt;= 0) {\n\t\t\tbreak;\n\t\t}\n\t\tprev = ptr;\n\t\tptr = ptr.parentNode || ptr.ownerElement;\n\t}\n\tif (index &lt; 0) {\n\t\t// Disconnected\n\t\treturn 33;\n\t}\n\tif (index == 0) {\n\t\t// target is descendant of this\n\t\treturn 20;\n\t}\n\tif (prev == null) {\n\t\t// target is ancestor of this\n\t\treturn 10\n\t}\n\twhile (tree.indexOf(prev) &lt; 0) {\n\t\tprev = prev.nextSibling;\n\t\tif (!prev) {\n\t\t\t// End of the line. B's ancestor in ptr must come after this's\n\t\t\treturn 4;\n\t\t}\n\t}\n\t// Match. B's ancestor under ptr comes before this\n\treturn 2;\n};\n&quot;,
+            &quot;text&quot;: &quot;/*\\\ntitle: $:/plugins/flibbles/xml/xmldom.js\ntype: application/javascript\nmodule-type: library\n\nMakes available the XMLDom, either through a browser's native support, or\nthe tiddlywiki plugin.\n\\*/\n\nexports.getDocumentForText = function(type, text) {\n\tvar supportedType = $tw.config.xml.supportedDocumentTypes[type];\n\tif (!supportedType) {\n\t\treturn undefined;\n\t}\n\treturn getParseFromString()(text, supportedType);\n};\n\n/* Gets &lt;?tiddlywiki attributes?&gt; present at document's root.\n */\nexports.getProcessingInstructions = function(doc) {\n\tvar attributes = Object.create(null);\n\tvar node = doc.firstChild;\n\twhile (node) {\n\t\tif (node.target === \&quot;tiddlywiki\&quot;) {\n\t\t\tvar pos = 0;\n\t\t\tvar attribute = $tw.utils.parseAttribute(node.data, pos);\n\t\t\twhile (attribute) {\n\t\t\t\tattributes[attribute.name] = attribute;\n\t\t\t\tpos = attribute.end;\n\t\t\t\tattribute = $tw.utils.parseAttribute(node.data, pos);\n\t\t\t}\n\t\t}\n\t\tnode = node.nextSibling;\n\t}\n\treturn attributes;\n};\n\nexports.getStringValue = function(node) {\n\tvar value = node.nodeValue || node.textContent;\n\tif (!value &amp;&amp; node.documentElement) {\n\t\tvalue = node.documentElement.textContent;\n\t}\n\treturn value;\n};\n\nvar _DOMParser = undefined;\nvar _parseFromString = undefined;\n\nfunction getParseFromString() {\n\tif (_parseFromString === undefined) {\n\t\tif ($tw.browser) {\n\t\t\t_DOMParser = DOMParser;\n\t\t\t_parseFromString = parseFromStringInBrowser;\n\t\t} else {\n\t\t\tvar DOM;\n\t\t\ttry {\n\t\t\t\tDOM = require('xmldom');\n\t\t\t} catch (e) {\n\t\t\t\tDOM = require(\&quot;$:/plugins/tiddlywiki/xmldom/dom-parser\&quot;);\n\t\t\t}\n\t\t\t_DOMParser = DOM.DOMParser;\n\t\t\t_parseFromString = parseFromStringInNodeJS;\n\t\t\tvar doc = _parseFromString(\&quot;&lt;elem/&gt;\&quot;);\n\t\t\tvar docProto = Object.getPrototypeOf(doc);\n\t\t\tvar nodeProto = Object.getPrototypeOf(doc.documentElement);\n\t\t\tObject.defineProperty(nodeProto, \&quot;innerHTML\&quot;, { get: innerHTML });\n\t\t\tObject.defineProperty(nodeProto, \&quot;outerHTML\&quot;, { get: outerHTML });\n\t\t\tif (!doc.documentElement.compareDocumentPosition) {\n\t\t\t\tnodeProto.compareDocumentPosition = compareDocumentPosition;\n\t\t\t}\n\t\t\tif (!doc.compareDocumentPosition) {\n\t\t\t\tdocProto.compareDocumentPosition = function(node) {\n\t\t\t\t\treturn (node.ownerDocument == this) ? 20 : 33;\n\t\t\t\t};\n\t\t\t}\n\t\t}\n\t}\n\treturn _parseFromString;\n};\n\nfunction parseFromStringInBrowser(text, type) {\n\tvar parser = new _DOMParser();\n\tvar doc = parser.parseFromString(text, type);\n\tvar errors = doc.getElementsByTagName(\&quot;parsererror\&quot;);\n\tif (errors.length &gt; 0) {\n\t\t// If the xml doc already contained parsererror\n\t\t// elements, then we have no reliable way to\n\t\t// detect parse errors on the browser, so just\n\t\t// greenlight and hope for the best.\n\t\tif (text.indexOf(\&quot;&lt;parsererror\&quot;) &lt; 0) {\n\t\t\tdoc.error = true;\n\t\t}\n\t}\n\treturn doc;\n};\n\nfunction parseFromStringInNodeJS(text, type) {\n\tvar errorDetected = false;\n\tfunction flag() { errorDetected = true; };\n\tvar parser = new _DOMParser({\n\t\terrorHandler: {\n\t\t\terror: flag,\n\t\t\twarning: flag,\n\t\t\tfatalError: flag\n\t\t}\n\t});\n\tvar doc = parser.parseFromString(text, type);\n\tif (errorDetected) {\n\t\tdoc.error = true;\n\t}\n\tif (!doc.documentElement &amp;&amp; text.indexOf(\&quot;&lt;html&gt;\&quot;) &lt; 0) {\n\t\t// This is one of those weird halfbaked documents that Node.js\n\t\t// sometimes returns if it's text only. Just wrap it ourselves.\n\t\tdoc = parseFromStringInNodeJS(type, \&quot;&lt;html&gt;&lt;body&gt;\&quot;+text+\&quot;&lt;/html&gt;&lt;/body&gt;\&quot;);\n\t}\n\treturn doc;\n};\n\n/////// Substitute methods ///////\n\nfunction innerHTML() {\n\tvar child = this.firstChild;\n\t\tbuffer = [];\n\twhile (child) {\n\t\tbuffer.push(child.toString());\n\t\tchild = child.nextSibling;\n\t}\n\treturn buffer.join('');\n};\n\nfunction outerHTML() {\n\treturn this.toString();\n};\n\n// This is a cheap standin compare method used for Node.JS implementations\n// Needed for css, and not xpath. Hopefully I never need this for attributes.\nfunction compareDocumentPosition(target) {\n\tvar tree = [];\n\tvar ptr = this;\n\t// Build tree of this's ancestors.\n\twhile (ptr) {\n\t\ttree.push(ptr);\n\t\tptr = ptr.parentNode || ptr.ownerElement;\n\t}\n\t// Find common ancestory\n\tptr = target;\n\tvar index = -1, prev = null;\n\twhile (ptr) {\n\t\tif ((index = tree.indexOf(ptr)) &gt;= 0) {\n\t\t\tbreak;\n\t\t}\n\t\tprev = ptr;\n\t\tptr = ptr.parentNode || ptr.ownerElement;\n\t}\n\tif (index &lt; 0) {\n\t\t// Disconnected\n\t\treturn 33;\n\t}\n\tif (index == 0) {\n\t\t// target is descendant of this\n\t\treturn 20;\n\t}\n\tif (prev == null) {\n\t\t// target is ancestor of this\n\t\treturn 10\n\t}\n\twhile (tree.indexOf(prev) &lt; 0) {\n\t\tprev = prev.nextSibling;\n\t\tif (!prev) {\n\t\t\t// End of the line. B's ancestor in ptr must come after this's\n\t\t\treturn 4;\n\t\t}\n\t}\n\t// Match. B's ancestor under ptr comes before this\n\treturn 2;\n};\n&quot;,
             &quot;type&quot;: &quot;application/javascript&quot;,
             &quot;module-type&quot;: &quot;library&quot;
         },
@@ -10989,21 +10989,18 @@ $(content)$
             class=&quot;tc-vertical&quot; /&gt;
 </pre>
 </div>
-<div created="20200501000331667" title="Versions/0.1.0">
+<div created="20200501005833080" title="Versions/0.1.0">
 <pre>* Added outline of basic features. `&lt;$xsl&gt;` widget, importing/exporting, and rendering.
+* Fixed issue where Firefox would fail with nested XPath
 </pre>
 </div>
-<div created="20200501005833080" title="Versions/0.1.1">
-<pre>* Fixed issue where Firefox would fail with nested XPath
-</pre>
-</div>
-<div created="20200502211737368" title="Versions/0.2.0">
+<div created="20200502211737368" title="Versions/0.1.1">
 <pre>* Changed `&lt;$xsl&gt;` to `&lt;$xpath&gt;`
 * Added preliminary namespace support. Subject to change.
 * Slightly better error handling
 </pre>
 </div>
-<div created="20200505010243780" title="Versions/0.3.0">
+<div created="20200505010243780" title="Versions/0.1.2">
 <pre>\rules except wikilink
 
 Changes
@@ -11022,7 +11019,7 @@ Improvements
 * `for-each` and `value-of` can be used at the same time, for intuitive effects.
 </pre>
 </div>
-<div created="20200511042735043" title="Versions/0.4.0">
+<div created="20200511042735043" title="Versions/0.1.3">
 <pre>* Added `&lt;$css&gt;` widget, though I'm not sure if I'm going to keep that name.
 * Heavy testing on all aspect.
 * Demo site mostly filled out.
@@ -11037,6 +11034,10 @@ Improvements
 * Confirmed support for SVG documents.
 * Created wikimethod `getTiddlerDocument` which behaves like wikimethods should.
 * Completed documentation
+</pre>
+</div>
+<div created="20200514132154294" title="Versions/1.0.1">
+<pre>* Fixed issue on some older browsers where this error stopped everything: &quot;Argument 1 of DOMParser.constructor does not implement interface Principal.&quot;
 </pre>
 </div>
 <div title="Why?">

@@ -1,0 +1,3 @@
+created: 20200514132154294
+
+* Fixed issue on some older browsers where this error stopped everything: "Argument 1 of DOMParser.constructor does not implement interface Principal."
