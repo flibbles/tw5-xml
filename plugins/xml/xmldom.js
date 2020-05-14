@@ -12,36 +12,7 @@ exports.getDocumentForText = function(type, text) {
 	if (!supportedType) {
 		return undefined;
 	}
-	var errorDetected = false;
-	function flag() { errorDetected = true; };
-	var parser = new (getDOMParser())({
-		errorHandler: {
-			error: flag,
-			warning: flag,
-			fatalError: flag
-		}
-	});
-	var doc = parser.parseFromString(text, supportedType);
-	if (errorDetected) {
-		doc.error = true;
-	} else {
-		var errors = doc.getElementsByTagName("parsererror");
-		if (errors.length > 0) {
-			// If the xml doc already contained parsererror
-			// elements, then we have no reliable way to
-			// detect parse errors on the browser, so just
-			// greenlight and hope for the best.
-			if (text.indexOf("<parsererror") < 0) {
-				doc.error = true;
-			}
-		}
-		if (!doc.documentElement && text.indexOf("<html>") < 0) {
-			// This is one of those weird halfbaked documents that Node.js
-			// sometimes returns if it's text only. Just wrap it ourselves.
-			doc = this.getDocumentForText(type, "<html><body>"+text+"</html></body>");
-		}
-	}
-	return doc;
+	return getParseFromString()(text, supportedType);
 };
 
 /* Gets <?tiddlywiki attributes?> present at document's root.
@@ -73,39 +44,27 @@ exports.getStringValue = function(node) {
 };
 
 var _DOMParser = undefined;
+var _parseFromString = undefined;
 
-function getDOMParser() {
-	if (_DOMParser === undefined) {
+function getParseFromString() {
+	if (_parseFromString === undefined) {
 		if ($tw.browser) {
 			_DOMParser = DOMParser;
+			_parseFromString = parseFromStringInBrowser;
 		} else {
-			var parser;
+			var DOM;
 			try {
-				var parser = require("$:/plugins/tiddlywiki/xmldom/dom-parser");
-				_DOMParser = parser.DOMParser;
+				DOM = require('xmldom');
 			} catch (e) {
-				var DOM = require('xmldom');
-				_DOMParser = DOM.DOMParser;
+				DOM = require("$:/plugins/tiddlywiki/xmldom/dom-parser");
 			}
-			var doc = (new _DOMParser()).parseFromString("<elem/>");
+			_DOMParser = DOM.DOMParser;
+			_parseFromString = parseFromStringInNodeJS;
+			var doc = _parseFromString("<elem/>");
 			var docProto = Object.getPrototypeOf(doc);
 			var nodeProto = Object.getPrototypeOf(doc.documentElement);
-			Object.defineProperty(nodeProto, "innerHTML", {
-				get: function() {
-					var child = this.firstChild;
-						buffer = [];
-					while (child) {
-						buffer.push(child.toString());
-						child = child.nextSibling;
-					}
-					return buffer.join('');
-				}
-			});
-			Object.defineProperty(nodeProto, "outerHTML", {
-				get: function() {
-					return this.toString();
-				}
-			});
+			Object.defineProperty(nodeProto, "innerHTML", { get: innerHTML });
+			Object.defineProperty(nodeProto, "outerHTML", { get: outerHTML });
 			if (!doc.documentElement.compareDocumentPosition) {
 				nodeProto.compareDocumentPosition = compareDocumentPosition;
 			}
@@ -116,7 +75,61 @@ function getDOMParser() {
 			}
 		}
 	}
-	return _DOMParser;
+	return _parseFromString;
+};
+
+function parseFromStringInBrowser(text, type) {
+	var parser = new _DOMParser();
+	var doc = parser.parseFromString(text, type);
+	var errors = doc.getElementsByTagName("parsererror");
+	if (errors.length > 0) {
+		// If the xml doc already contained parsererror
+		// elements, then we have no reliable way to
+		// detect parse errors on the browser, so just
+		// greenlight and hope for the best.
+		if (text.indexOf("<parsererror") < 0) {
+			doc.error = true;
+		}
+	}
+	return doc;
+};
+
+function parseFromStringInNodeJS(text, type) {
+	var errorDetected = false;
+	function flag() { errorDetected = true; };
+	var parser = new _DOMParser({
+		errorHandler: {
+			error: flag,
+			warning: flag,
+			fatalError: flag
+		}
+	});
+	var doc = parser.parseFromString(text, type);
+	if (errorDetected) {
+		doc.error = true;
+	}
+	if (!doc.documentElement && text.indexOf("<html>") < 0) {
+		// This is one of those weird halfbaked documents that Node.js
+		// sometimes returns if it's text only. Just wrap it ourselves.
+		doc = parseFromStringInNodeJS(type, "<html><body>"+text+"</html></body>");
+	}
+	return doc;
+};
+
+/////// Substitute methods ///////
+
+function innerHTML() {
+	var child = this.firstChild;
+		buffer = [];
+	while (child) {
+		buffer.push(child.toString());
+		child = child.nextSibling;
+	}
+	return buffer.join('');
+};
+
+function outerHTML() {
+	return this.toString();
 };
 
 // This is a cheap standin compare method used for Node.JS implementations
