@@ -1,3 +1,5 @@
-created: 20200501005833080
+created: 20200502211737368
 
-* Fixed issue where Firefox would fail with nested XPath
+* Changed `<$xsl>` to `<$xpath>`
+* Added preliminary namespace support. Subject to change.
+* Slightly better error handling
