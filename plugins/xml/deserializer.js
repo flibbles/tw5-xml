@@ -81,13 +81,19 @@ function deserializeTiddler(domNode) {
 	var node = domNode.firstChild;
 	while (node) {
 		if (node.tagName !== undefined) {
-			if (node.childNodes.length != 1
-			|| node.firstChild.nodeType !== 3 /* text */) {
+			if (node.childNodes.length == 1) {
+				if (node.firstChild.nodeType == 3 /* text */) {
+					fields[node.tagName] = node.firstChild.data;
+				} else if (node.firstChild.nodeType == 4 /* CDATA */) {
+					fields[node.tagName] = node.textContent;
+				} else {
+					// Comment? It's a comment, right?
+					fields[node.tagName] = node.innerHTML;
+				}
+			} else {
 				// This field appears to be written as unescaped XML.
 				// Very well. We'll still take it.
 				fields[node.tagName] = node.innerHTML;
-			} else {
-				fields[node.tagName] = node.textContent;
 			}
 		}
 		node = node.nextSibling;

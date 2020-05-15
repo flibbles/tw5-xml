@@ -114,6 +114,20 @@ it("comments allowed", function() {
 	expect(rtn[0].field).toBe("<!-- extra -->");
 });
 
+it("CDATA allowed", function() {
+	var rtn = importXml(prolog + `<?tiddlywiki bundle?><tiddlers>
+	<tiddler>
+		<title>MyTitle</title>
+		<text><![CDATA[This is<br>Whatever I want]]></text>
+		<field>  <![CDATA[wrapper included]]></field>
+	</tiddler></tiddlers>`);
+	expect(rtn.length).toBe(1);
+	expect(Object.keys(rtn[0]).length).toBe(3);
+	expect(rtn[0].title).toBe("MyTitle");
+	expect(rtn[0].text).toBe("This is<br>Whatever I want");
+	expect(rtn[0].field).toBe("  <![CDATA[wrapper included]]>");
+});
+
 it("unrelated xml file", function() {
 	var text = prolog + "<dogs><dog>Roofus</dog></dogs>";
 	var rtn = importXml(text, {title: "myDogs.xml", other: "value"});
