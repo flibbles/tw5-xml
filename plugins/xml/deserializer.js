@@ -39,8 +39,10 @@ exports["text/xml"] = function(text,fields) {
 		}
 	}
 	// It's malformed. Don't try to parse it.
-	var logger = new $tw.utils.Logger("XML deserializer")
-	var error = $tw.language.getString("flibbles/xml/Error/BundleParserError");
+	var logger = new $tw.utils.Logger("XML deserializer"),
+		error = $tw.language.getString(
+			"flibbles/xml/Error/BundleParserError",
+			{variables: { file: fields.title } });
 	logger.alert(error);
 	return [];
 };

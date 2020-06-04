@@ -1,6 +1,6 @@
 title: $:/language/flibbles/xml/
 
-Error/BundleParserError: Unable to parse XML tiddler bundle
+Error/BundleParserError: Unable to parse XML tiddler bundle in file: <$text text=<<file>> />
 Error/DOMParserError: Unable to parse XML in tiddler "<$text text=<<currentTiddler>> />"
 Error/XSelect/SyntaxError: Invalid Selector: <<xselect>>
 Error/XPath/NamespaceError: Could not resolve namespaces in XPath expression "<<xpath>>" for tiddler "<$text text=<<currentTiddler>> />"

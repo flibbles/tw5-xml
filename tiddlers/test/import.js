@@ -21,7 +21,7 @@ function testFails(xml) {
 	var errors = [];
 	utils.monkeyPatch($tw.utils.Logger.prototype, "alert", function(msg) {errors.push(msg);}, function() {
 		var rtn = importXml(xml, {title: "myFile.xml"});
-		expect(errors).toEqual(["Unable to parse XML tiddler bundle"]);
+		expect(errors).toEqual(["Unable to parse XML tiddler bundle in file: myFile.xml"]);
 		expect(rtn.length).toBe(0);
 	});
 }
