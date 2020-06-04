@@ -194,4 +194,14 @@ it("can include processing instructions", function() {
 	expect(rtn[0].text).toBe("<?tiddlywiki template='test'?><dog>Roofus</dog>");
 });
 
+it("can load bundles given just the file extension", function() {
+	var wiki = new $tw.Wiki();
+		tiddlerFields = {title: "import.xml"};
+		text = "<?tiddlywiki bundle?><tiddlers><tiddler><title>A</title><text>text</text></tiddler></tiddlers>";
+		rtn = wiki.deserializeTiddlers(".xml",text,tiddlerFields);
+	expect(rtn.length).toBe(1);
+	expect(rtn[0].title).toBe("A");
+	expect(rtn[0].text).toBe("text");
+});
+
 });
