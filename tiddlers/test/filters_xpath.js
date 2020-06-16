@@ -66,6 +66,10 @@ it("handles xpath errors gracefully", function() {
 	// But namespace violations should be applied to all input
 	var msg = 'Could not resolve namespaces in XPath expression "/z:dogs/z:dog" for tiddler ';
 	test("/z:dogs/z:dog", [msg+'"other.xml"', msg+'"test.xml"', "Bunny"], options);
+
+	// doesn't render queries in errors as though it were wikitext
+	var query = "/dog<$text text='5'/>/breed";
+	test(query, ["Invalid XPath expression: " + query])
 });
 
 it("gets textContent, not innerHTML", function() {

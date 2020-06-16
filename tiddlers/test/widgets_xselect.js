@@ -48,6 +48,10 @@ it('deals with illegal queries gracefully', function() {
 	// uses blocks when appropriate
 	text = transform("<div class='dogs'/>", "<$xselect for-each='..dogs' />\n");
 	expect(text).toBe('<span class="tc-error">Invalid Selector: ..dogs</span>');
+
+	// Doesn't process query like wikitext
+	text = transform("<div class='dogs'/>", '<$xselect for-each="""..dogs<$text text="5"/>""" />\n');
+	expect(text).toBe('<span class="tc-error">Invalid Selector: ..dogs&lt;$text text=&quot;5&quot;/&gt;</span>');
 });
 
 it('works with xhtml', function() {

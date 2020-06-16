@@ -2,8 +2,8 @@ title: $:/language/flibbles/xml/
 
 Error/BundleParserError: Unable to parse XML tiddler bundle in file: <$text text=<<file>> />
 Error/DOMParserError: Unable to parse XML in tiddler "<$text text=<<currentTiddler>> />"
-Error/XSelect/SyntaxError: Invalid Selector: <<xselect>>
+Error/XSelect/SyntaxError: Invalid Selector: <$text text=<<xselect>> />
 Error/XPath/NamespaceError: Could not resolve namespaces in XPath expression "<<xpath>>" for tiddler "<$text text=<<currentTiddler>> />"
-Error/XPath/SyntaxError: Invalid XPath expression: <<xpath>>
+Error/XPath/SyntaxError: Invalid XPath expression: <$text text=<<xpath>> />
 Error/XPath/UnsupportedBrowserError: This browser does not support XPath
 Error/XPath/MissingDependenciesError: xpath dependency is required on Node.JS for this operation. Install xpath with `npm install xpath`

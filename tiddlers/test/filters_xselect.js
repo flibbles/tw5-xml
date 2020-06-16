@@ -27,6 +27,10 @@ it("emits helpful output for malformed HTML", function() {
 
 it("handles selector errors gracefully", function() {
 	test("..div", ["Invalid Selector: ..div"]);
+
+	// doesn't render queries in errors as though it were wikitext
+	var query = "..dog<$text text='5'/>";
+	test(query, ["Invalid Selector: " + query])
 });
 
 it("gets textContent, not innerHTML", function() {
