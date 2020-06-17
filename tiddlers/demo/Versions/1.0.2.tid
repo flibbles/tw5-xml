@@ -1,0 +1,4 @@
+created: 20200617030349643
+
+* Made "Invalid query" error messages properly display the invalid query they were given.
+* Cleaned up the demo examples, and added one for dynamically created queries.
