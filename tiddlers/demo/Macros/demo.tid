@@ -1,0 +1,13 @@
+tags: $:/tags/Macro
+title: Macros/demo
+
+\define demo(code, pragma)
+```
+$pragma$$code$
+```
+
+<blockquote>
+
+$code$
+</blockquote>
+\end
