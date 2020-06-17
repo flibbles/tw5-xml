@@ -1,42 +1,31 @@
-description: ''tw5-xml'' supports namespaces. These examples show the ways.<ol><li>Namespace/prefix pairs declared in the root element don't need any special action to be used.</li><li>For some namespaces, like those declared mid-document, you may need to declare the namespace prefix yourself. It doesn't have to match what's in the file.</li><li>Namespace declarations persist into their content. You can define them manually using `<$set>`, `<$vars>`, or `\define` if you want.</li></ol>
+description: <<description>>
+
+\define description()
+''tw5-xml'' supports namespaces. These examples show the ways.
+
+# Namespace/prefix pairs declared in the root element don't need any special action to be used.
+# For some namespaces, like those declared mid-document, you may need to declare the namespace prefix yourself. It doesn't have to match what's in the file.
+# Namespace declarations persist into their content. You can define them manually using `<$set>`, `<$vars>`, or `\define` if you want.
+\end
 
 !! 1. Implicitly declared namespaces
 
-```
+<$macrocall $name="demo" code="""
 <$xpath for-each="/d:dogs/d:dog[d:breed='Doberman']/@name" />
-```
-
-<blockquote>
-
-<$xpath for-each="/d:dogs/d:dog[d:breed='Doberman']/@name" />
-
-</blockquote>
+""" />
 
 !! 2. Explicitly declared namespaces
 
-```
+<$macrocall $name="demo" code="""
 <$xpath xmlns:v="https://vet-archive.com" for-each="/d:dogs/v:record/v:appointment/@date" />
-```
+""" />
 
-<blockquote>
-
-<$xpath xmlns:v="https://vet-archive.com" for-each="/d:dogs/v:record/v:appointment/@date" />
-
-</blockquote>
 !! 3. Namespace scope
 
-```
-<$set name="xmlns:vet" value="https://vet-archive.com">
+<$macrocall $name="demo" code="""
+<$vars xmlns:vet="https://vet-archive.com">
 
 <$xpath for-each="/d:dogs/vet:record/vet:appointment/@name" />
 
-</$set>
-```
-<blockquote>
-
-<$set name="xmlns:vet" value="https://vet-archive.com">
-
-<$xpath for-each="/d:dogs/vet:record/vet:appointment/@name" />
-
-</$set>
-</blockquote>
+</$vars>
+""" />

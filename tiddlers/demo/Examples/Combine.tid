@@ -5,18 +5,9 @@ source: Examples/Combine.svg
 title: Examples/Combine
 tags: Examples/XPathWidget Examples/XSelectWidget
 
-```
+<$macrocall $name="demo" code="""
 <$xselect for-each="circle.focus">
 
 Radius of <$xpath value-of='@id'/>: <$xpath value-of='@r'/>
 </$xselect>
-```
-
-<blockquote>
-
-<$xselect for-each="circle.focus">
-
-Radius of <$xpath value-of='@id'/>: <$xpath value-of='@r'/>
-</$xselect>
-
-</blockquote>
+""" />

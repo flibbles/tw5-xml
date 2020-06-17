@@ -1,20 +1,10 @@
 list-before: 
 
-```
+<$macrocall $name="demo" code="""
 !! Sections
 <ul>
  <$xselect for-each="section .my-header">
   <li><<currentNode>></li>
  </$xselect>
 </ul>
-```
-
-<blockquote>
-
-!! Sections
-<ul>
- <$xselect for-each="section .my-header">
-  <li><<currentNode>></li>
- </$xselect>
-</ul>
-</blockquote>
+""" />

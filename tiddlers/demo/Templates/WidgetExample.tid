@@ -1,5 +1,6 @@
 title: Templates/WidgetExample
 
+\import [<currentTab>]
 \define block(content)
 <div class="xml-text">
 
@@ -8,8 +9,6 @@ $(content)$
 ```
 </div>
 \end
-
-!! <$link>{{!!caption}}</$link>
 
 <$transclude tiddler=<<currentTab>> field="description" />
 
@@ -29,4 +28,3 @@ $(content)$
 
 </$set>
 </$vars>
-

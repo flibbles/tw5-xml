@@ -1,11 +1,7 @@
-description: query strings can be dynamically created, though Tiddlywiki syntax can sometimes make that tricky.
+description: Query strings can be dynamically created, though Tiddlywiki syntax can sometimes make that tricky.
 
 \define query() //dog[@age=$(age)$]/@name
-\define pragma() 
-\define query() $(query)$
-
-
-\end
+\define pragma() \define query() $(query)$
 \define code()
 <$list variable="age" filter="1 2 3 4">
 
@@ -21,6 +17,9 @@ description: query strings can be dynamically created, though Tiddlywiki syntax 
 
 <$vars age="$(age)$">
 
-<$macrocall $name="demo" code=<<code>> pragma=<<pragma>> />
+<$macrocall $name="demo"
+	pragma=<<pragma>>
+	code=<<code>>
+/>
 
 </$vars>

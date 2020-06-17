@@ -1,18 +1,9 @@
 list-before: 
 
-```
+<$macrocall $name="demo" code="""
 <ul>
  <$xpath for-each="/dogs/dog/@name">
   <li><<currentNode>></li>
  </$xpath>
 </ul>
-```
-
-<blockquote>
-
-<ul>
- <$xpath for-each="/dogs/dog/@name">
-  <li><<currentNode>></li>
- </$xpath>
-</ul>
-</blockquote>
+""" />

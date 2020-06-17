@@ -1,6 +1,6 @@
 description: `<$xpath>` elements can be nested. Inner `<$xpath>` widgets will start their XPath queries from the node set by the outer widget's context. This allows for nested iteration.
 
-```
+<$macrocall $name="demo" code="""
 <$xpath for-each="/dogs/dog">
 
 !!! <$xpath value-of="@name" />
@@ -10,17 +10,4 @@ description: `<$xpath>` elements can be nested. Inner `<$xpath>` widgets will st
  </$xpath>
 </ul>
 </$xpath>
-```
-
-<blockquote>
-
-<$xpath for-each="/dogs/dog">
-
-!!! <$xpath value-of="@name" />
-<ul>
- <$xpath variable="trick" for-each="./trick">
-  <li><<trick>></li>
- </$xpath>
-</ul>
-</$xpath>
-</blockquote>
+""" />

@@ -1,6 +1,6 @@
 description: `<$xselect>` elements can be nested. Inner `<$xselect>` widgets will start their XPath queries from the node set by the outer widget's context. This allows for nested iteration.
 
-```
+<$macrocall $name="demo" code="""
 <$xselect for-each="article section">
 
 !!! <$xselect value-of="h1.my-header" />
@@ -11,18 +11,4 @@ description: `<$xselect>` elements can be nested. Inner `<$xselect>` widgets wil
 
 </$xselect>
 </$xselect>
-```
-
-<blockquote>
-
-<$xselect for-each="article section">
-
-!!! <$xselect value-of="h1.my-header" />
-
-<$xselect variable="paragraph" for-each="div">
-
-<<paragraph>>
-
-</$xselect>
-</$xselect>
-</blockquote>
+""" />

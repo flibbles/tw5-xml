@@ -1,35 +1,17 @@
 description: ''for-each'' sets variable equal to the Dom Type inside its template, which can be useful for printing chunks of XML. ''value-of'' always returns a String Type, which is stripped of child elements.
 
-```
+<$macrocall $name="demo" code="""
 <$xpath for-each="/report/text" variable="text">
 
 <<text>>
 
 </$xpath>
-```
+""" />
 
-<blockquote>
-
-<$xpath for-each="/report/text" variable="text">
-
-<<text>>
-
-</$xpath>
-</blockquote>
-
-```
+<$macrocall $name="demo" code="""
 <$xpath value-of="/report/text" variable="text">
 
 <<text>>
 
 </$xpath>
-```
-
-<blockquote>
-
-<$xpath value-of="/report/text" variable="text">
-
-<<text>>
-
-</$xpath>
-</blockquote>
+""" />

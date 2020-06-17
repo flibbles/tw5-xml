@@ -2,12 +2,15 @@ tags: $:/tags/Macro
 title: Macros/demo
 
 \define demo(code, pragma)
-```
-$pragma$$code$
-```
+<$vars nl="
+
+">
+
+<$codeblock code={{{[<__pragma__>trim[]!match[]] [<__code__>trim[]] +[join<nl>]}}} />
 
 <blockquote>
 
 $code$
 </blockquote>
+</$vars>
 \end
