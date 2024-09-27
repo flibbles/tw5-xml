@@ -45,12 +45,12 @@ it('deals with illegal xpath gracefully', function() {
 
 	// namespace error
 	text = transform("<dogs/>", "<$xpath value-of='/bad:dogs' />");
-	expect(text).toBe('<p><span class="tc-error">Could not resolve namespaces in XPath expression &quot;/bad:dogs&quot; for tiddler &quot;xml&quot;</span></p>');
+	expect(text).toBe('<p><span class="tc-error">Could not resolve namespaces in XPath expression "/bad:dogs" for tiddler "xml"</span></p>');
 });
 
 it('deals with malformed XML gracefully', function() {
 	var text = transform("<$dogs>B</$dogs>", "<$xpath for-each='/' />\n");
-	expect(text).toBe('<span class="tc-error">Unable to parse XML in tiddler &quot;xml&quot;</span>');
+	expect(text).toBe('<span class="tc-error">Unable to parse XML in tiddler "xml"</span>');
 });
 
 it('deals with missing or illegal-type currentTiddler gracefully', function() {
