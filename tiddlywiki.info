@@ -12,7 +12,8 @@
 	"build": {
 		"test": [
 			"--output", "./docs/",
-			"--rendertiddler","$:/core/save/all","test.html","text/plain", "", "publishFilter", "-$:/plugins/tiddlywiki/xmldom"
+			"--rendertiddler","$:/core/save/all","test.html","text/plain", "", "publishFilter", "-$:/plugins/tiddlywiki/xmldom",
+			"--test"
 		],
 		"demo": [
 			"--setfield", "$:/plugins/flibbles/xml", "created", "Templates/release-date", "text/plain",
